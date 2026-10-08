@@ -1,0 +1,45 @@
+table DimGeografia
+	lineageTag: 06142432-53a7-552b-b5e4-6abfd4016c8b
+
+	column Region
+		dataType: string
+		lineageTag: 774c6487-ba1d-5463-a261-d88bce3189cf
+		summarizeBy: none
+		sourceColumn: Region
+
+	column Departamento
+		dataType: string
+		lineageTag: 83b9ace7-af79-5203-a17b-01d2eba24984
+		summarizeBy: none
+		sourceColumn: Departamento
+
+	column Ciudad
+		dataType: string
+		lineageTag: 3bde3b2a-6eb3-52ef-8e75-27e586e27b28
+		summarizeBy: none
+		sourceColumn: Ciudad
+
+	hierarchy 'Region - Ciudad'
+		lineageTag: b33ebb71-422a-58d7-a61e-0e81aad6bb92
+
+		level Region
+			lineageTag: bcb880a5-b1c6-5ddd-ba87-c98724a4e5e4
+			column: Region
+
+		level Ciudad
+			lineageTag: 961a5d7b-9c4c-5183-bc90-4fa80caf37bd
+			column: Ciudad
+
+	partition DimGeografia = m
+		mode: import
+		source =
+				let
+				    Origen = Base,
+				    Columnas = Table.SelectColumns(Origen, {"region", "departamento", "ciudad"}),
+				    Distintos = Table.Distinct(Columnas),
+				    Nombres = Table.RenameColumns(Distintos, {{"region", "Region"}, {"departamento", "Departamento"}, {"ciudad", "Ciudad"}})
+				in
+				    Nombres
+
+	annotation PBI_ResultType = Table
+

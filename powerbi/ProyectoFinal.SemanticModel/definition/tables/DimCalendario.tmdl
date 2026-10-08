@@ -1,0 +1,92 @@
+table DimCalendario
+	lineageTag: 7229e07b-6ffc-5a14-89af-0d5ffb578981
+	dataCategory: Time
+
+	column Fecha
+		dataType: dateTime
+		isKey
+		formatString: dd/mm/yyyy
+		lineageTag: ef4c4012-6be5-51bf-8471-37e4c7189540
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Fecha]
+
+	column Año
+		dataType: int64
+		formatString: 0
+		lineageTag: ca8c56da-f58b-5dbc-95d3-6be637869ab9
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Año]
+
+	column Trimestre
+		dataType: string
+		lineageTag: 150297da-cfc0-519e-9e8a-b40cd1504cf2
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Trimestre]
+
+	column MesNum
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: 658521d1-b836-58a4-a012-83c06cd50898
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [MesNum]
+
+	column Mes
+		dataType: string
+		lineageTag: fab04ce0-8c70-5865-86e2-8d42a14611cb
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Mes]
+		sortByColumn: MesNum
+
+	column AñoMes
+		dataType: string
+		lineageTag: bcf2fca8-6a3d-522d-a395-2bb35392efbc
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [AñoMes]
+
+	column EsPeriodoComparable
+		dataType: boolean
+		lineageTag: 1d9d0781-a1a2-5744-999a-5566ce84252d
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [EsPeriodoComparable]
+
+	column TieneDatos
+		dataType: boolean
+		lineageTag: 9dfceead-a708-5f55-87ff-4c8c9810a3eb
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [TieneDatos]
+
+	partition DimCalendario = calculated
+		mode: import
+		source =
+				VAR PrimeraFecha = MIN ( FactVentas[fecha] )
+				VAR UltimaFecha = MAX ( FactVentas[fecha] )
+				VAR Fechas =
+				    SELECTCOLUMNS (
+				        CALENDAR ( DATE ( YEAR ( PrimeraFecha ), 1, 1 ), DATE ( YEAR ( UltimaFecha ), 12, 31 ) ),
+				        "Fecha", [Date]
+				    )
+				RETURN
+				    ADDCOLUMNS (
+				        Fechas,
+				        "Año", YEAR ( [Fecha] ),
+				        "Trimestre", "T" & QUARTER ( [Fecha] ),
+				        "MesNum", MONTH ( [Fecha] ),
+				        "Mes", SWITCH ( MONTH ( [Fecha] ),
+				            1, "Ene", 2, "Feb", 3, "Mar", 4, "Abr", 5, "May", 6, "Jun",
+				            7, "Jul", 8, "Ago", 9, "Sep", 10, "Oct", 11, "Nov", 12, "Dic" ),
+				        "AñoMes", FORMAT ( [Fecha], "yyyy-mm" ),
+				        "EsPeriodoComparable", MONTH ( [Fecha] ) <= MONTH ( UltimaFecha ),
+				        "TieneDatos", [Fecha] <= UltimaFecha
+				    )
+
+	annotation PBI_ResultType = Table
+

@@ -41,6 +41,14 @@ print(f"id_transaccion distintos: {df.id_transaccion.nunique():,}")
 print(f"Faltantes: {int(df.isna().sum().sum())} | Filas duplicadas: {int(df.duplicated().sum())}")
 print(f"Fechas: {df.fecha.min().date()} a {df.fecha.max().date()} "
       f"({df.fecha.dt.to_period('M').nunique()} meses, {df.fecha.nunique()} días con datos)")
+crudo = pd.read_csv(CSV, encoding="utf-8-sig", dtype=str, keep_default_na=False)
+CENTINELAS = ["NA", "N/A", "NULL", "null", "None", "nan", "-", "?", "ND", "Sin dato", "Desconocido"]
+ocultos = {c: int((crudo[c].isin(CENTINELAS) | (crudo[c] != crudo[c].str.strip())).sum())
+           for c in crudo.columns}
+print(f"Celdas vacías: {int((crudo == '').sum().sum())} | "
+      f"textos centinela o con espacios sobrantes: {sum(ocultos.values())}")
+print(f"descuento_pct = 0: {(df.descuento_pct == 0).sum():,} | "
+      f"líneas 'Sin promoción': {(df.promocion == 'Sin promoción').sum():,}")
 print("\nTipos inferidos:")
 print(df.dtypes.astype(str).to_string())
 
@@ -126,6 +134,15 @@ print(df[df.id_transaccion == "T-0003774"][["id_linea", "fecha", "ciudad", "form
                                             "canal", "medio_pago", "venta_neta_cop"]].to_string(index=False))
 print(f"\nReferencia (guía): Transacciones = {df.id_transaccion.nunique():,}; "
       f"Ticket promedio = {ventas / df.id_transaccion.nunique():,.2f}")
+print(f"Correlación número de ID vs fecha: {df.id_transaccion.str[2:].astype(int).corr(df.fecha.astype('int64')):.4f}")
+print(f"Grupos id_transaccion + fecha: {df.groupby(['id_transaccion', 'fecha']).ngroups:,} (≈ 1 por línea)")
+print("\nTicket por ID segmentado por región (prueba de incoherencia):")
+t = df.groupby("region").agg(ventas=("venta_neta_cop", "sum"), tx=("id_transaccion", "nunique"),
+                             lineas=("id_linea", "count"))
+t["ticket_id"] = (t.ventas / t.tx).round(0)
+t["venta_linea"] = (t.ventas / t.lineas).round(0)
+print(t.to_string())
+print(f"Suma de transacciones por región: {t.tx.sum():,} vs total {df.id_transaccion.nunique():,}")
 
 # ----------------------------------------------------- señal por dimensión
 titulo("8. Variación entre grupos (insumo para la regla de materialidad)")

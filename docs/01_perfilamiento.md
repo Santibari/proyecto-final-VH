@@ -10,11 +10,12 @@ _Estado: **pendiente de validación por el equipo.**_
 
 | Aspecto | Resultado | Implicación |
 |---|---|---|
+| Origen | Dataset **sintético y anonimizado** de una cadena de supermercados simulada (según el enunciado oficial) | Explica patrones artificiales como el de `id_transaccion`. |
 | Unidad de observación | **1 fila = 1 línea de venta** (`id_linea`, 60.000 únicos) | Es la granularidad de la tabla de hechos. |
-| Completitud | 0 faltantes, 0 filas duplicadas, 0 días sin ventas en el rango | No se requiere limpieza ni imputación. |
+| Completitud | 0 faltantes, 0 filas duplicadas, 0 días sin ventas en el rango. El enunciado anuncia faltantes intencionales, pero también se buscaron celdas vacías, textos centinela ("N/A", "NULL", "-", etc.) y espacios sobrantes, y hay 0. | No se requiere limpieza ni imputación. Queda documentado que se verificó. |
 | Cobertura | 01/01/2024 – 30/09/2026 (33 meses, 1.004 días) | **2026 es parcial**: toda comparación anual se hace enero–septiembre vs enero–septiembre. |
 | Consistencia interna | Jerarquía geográfica limpia; promoción ↔ descuento coherentes; costo < venta en el 100 % de las líneas | Los datos son confiables para medir ventas, margen estimado y quiebre. |
-| **Problema principal** | `id_transaccion` **no representa una compra**: ninguno de los 16.852 IDs con varias líneas es consistente en fecha, ciudad, formato, canal ni medio de pago | Afecta los KPI "Transacciones" y "Ticket promedio" de la guía. **Decisión del equipo** (sección 6). |
+| **Problema principal** | `id_transaccion` **no representa una compra**: ninguno de los 16.852 IDs con varias líneas es consistente en fecha, ciudad, formato, canal ni medio de pago | Afecta los KPI "Transacciones" y "Ticket promedio" de la guía. **Decisión: solución mixta** (sección 5.1). |
 | Señal analítica | Margen % y quiebre % casi idénticos entre grupos; las diferencias están en el **volumen y el crecimiento** | Hay que aplicar la regla de materialidad del plan. |
 
 ## 2. Diccionario de datos
@@ -90,13 +91,40 @@ Entre la primera y la última línea de un mismo ID pasan **509 días en la medi
 | SUP-022980 | 2025-05-28 | Cali | Hipermercado | Crédito | $9.366 |
 | SUP-002207 | 2026-07-14 | Barranquilla | Supermercado | Débito | $13.930 |
 
-**Conclusión:** el ID parece asignado al azar al generar el dataset. Como referencia, el cálculo de la guía daría 21.264 transacciones y un ticket promedio de **$73.366**, pero ese valor mezcla compras distintas.
+**No se puede reconstruir la compra:**
+- Con `id_transaccion` + `fecha` salen 59.930 grupos, prácticamente uno por línea (solo 70 tendrían 2 líneas).
+- Una clave con fecha + ciudad + formato + canal + medio de pago + fidelizado agrupa líneas que coinciden por azar, no compras reales. Usarla sería inventar datos.
+- La correlación entre el número del ID y la fecha es 0,003: el ID se asignó al azar al generar el dataset sintético.
+
+**El ticket por ID es incoherente al segmentarlo:**
+
+| Región | Ticket por ID | Venta por línea |
+|---|---|---|
+| Centro | $37.188 | $25.980 |
+| Caribe | $33.085 | $25.906 |
+| Noroccidente | $30.923 | $26.010 |
+| Eje Cafetero | $30.378 | $26.795 |
+| Nororiente | $30.268 | $25.960 |
+| Suroccidente | $29.525 | $25.493 |
+| Orinoquía | $28.051 | $26.327 |
+| **Total** | **$73.366** | **$26.001** |
+
+Todas las regiones quedan por debajo del total, algo imposible con compras reales. La suma de "transacciones" por región da 48.106, contra 21.264 en el total.
+
+### 5.1 Tratamiento adoptado: solución mixta
+
+1. Los **KPI de análisis son por línea** (`Venta por Linea`, `Unidades por Linea`) y responden a todos los filtros.
+2. **El ticket de la guía** ($73.366 = 1.560.062.403 / 21.264) se muestra en la página 1 solo como **referencia global**: tarjeta gris, fija con `REMOVEFILTERS()` y con un tooltip que explica la limitación.
+3. Ningún gráfico segmenta Transacciones ni Ticket.
+4. El caso se explica en el paso "Preparación de datos" de la sustentación.
+
+Detalle completo y DAX: sección 8.1 del plan.
 
 ## 6. Riesgos y decisiones
 
 | # | Riesgo | Tratamiento propuesto | ¿Quién decide? |
 |---|---|---|---|
-| R1 | `id_transaccion` no es una compra | Opciones A/B/C del plan (sección 8.1). Recomendada: **consultar al profesor** con la tabla de la sección 5. | **Equipo / profesor** |
+| R1 | `id_transaccion` no es una compra | **Solución mixta** (sección 5.1). La consulta al profesor es opcional. | Decidido por el equipo |
 | R2 | 2026 es parcial | Calendario con `EsPeriodoComparable` (mes ≤ 9). YoY solo enero–septiembre. | Ya definido en el plan |
 | R3 | Señal débil en tasas (margen 27,4–27,7 %; quiebre 7,6–8,8 %) | Regla de materialidad. Enfocar el análisis en participación, crecimiento y volumen afectado. | Ya definido en el plan |
 | R4 | Tres regiones con una sola ciudad | Al profundizar región → ciudad, Noroccidente = Medellín, Suroccidente = Cali y Orinoquía = Villavicencio. Hay que mencionarlo al presentar. | Informativo |
@@ -128,9 +156,11 @@ Entre la primera y la última línea de un mismo ID pasan **509 días en la medi
 | Ciudades / regiones distintas | 12 / 7 |
 | Texto con tildes | "Bogotá D.C.", "Medellín", "Orinoquía", "Lácteos" se ven correctamente |
 | Tarjeta con el total de ventas con un segmentador de región | La suma de las 7 regiones = 1.560.062.403 (sin filas "en blanco") |
+| `Transacciones (ID dataset)` / `Ticket Promedio (ID dataset)` | 21.264 / $73.366. El ticket **no debe cambiar** al seleccionar una región. |
+| `Venta por Linea` total / Centro / Orinoquía | $26.001 / $25.980 / $26.327 |
 
 ## 8. Pendiente de validación del equipo
 
 1. ¿Están de acuerdo con el diccionario y con excluir `producto_generico`?
-2. **Decisión sobre `id_transaccion`** (R1): ¿consultan al profesor? Sin esa respuesta, la Fase 3 sigue con las medidas por línea y deja el ticket en espera.
+2. ~~Decisión sobre `id_transaccion`~~ → **solución mixta** (sección 5.1).
 3. ¿Confirman que se avanza a la **Fase 2 — Formulación del problema**?

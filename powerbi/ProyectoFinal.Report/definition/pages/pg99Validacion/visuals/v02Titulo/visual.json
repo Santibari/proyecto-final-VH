@@ -1,0 +1,76 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.13.0/schema.json",
+  "name": "v02Titulo",
+  "position": {
+    "x": 0,
+    "y": 0,
+    "z": 100,
+    "height": 96,
+    "width": 1310,
+    "tabOrder": 2
+  },
+  "visual": {
+    "visualType": "textbox",
+    "objects": {
+      "general": [
+        {
+          "properties": {
+            "paragraphs": [
+              {
+                "textRuns": [
+                  {
+                    "value": "Validación técnica — cifras de control contra el CSV",
+                    "textStyle": {
+                      "fontSize": "20pt",
+                      "color": "#FFFFFF",
+                      "fontWeight": "bold"
+                    }
+                  }
+                ]
+              },
+              {
+                "textRuns": [
+                  {
+                    "value": "Valores esperados: scripts/validacion/01_perfilamiento.py y docs/03_modelo.md",
+                    "textStyle": {
+                      "fontSize": "10pt",
+                      "color": "#DCE4EF"
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "visualContainerObjects": {
+      "title": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "subTitle": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,24 @@
+relationship 2fffbe28-de6a-5179-9437-dfba723362e7
+	fromColumn: FactVentas.fecha
+	toColumn: DimCalendario.Fecha
+
+relationship 0e0fb4e7-a400-512b-a08c-f0fe0d76881c
+	fromColumn: FactVentas.ciudad
+	toColumn: DimGeografia.Ciudad
+
+relationship 1c606d1a-f959-5a0c-bdfa-5bd63c5c7b20
+	fromColumn: FactVentas.formato_tienda
+	toColumn: DimFormato.Formato
+
+relationship 880faec3-bae6-5ae8-9d9c-413634f93513
+	fromColumn: FactVentas.categoria
+	toColumn: DimCategoria.Categoria
+
+relationship 7b05ce42-b52e-5e50-a149-e4c390eef6b2
+	fromColumn: FactVentas.promocion
+	toColumn: DimPromocion.Promocion
+
+relationship d55c9c1a-e923-5191-a438-9275344a7411
+	fromColumn: FactVentas.clave_condicion
+	toColumn: DimCondicionVenta.clave_condicion
+

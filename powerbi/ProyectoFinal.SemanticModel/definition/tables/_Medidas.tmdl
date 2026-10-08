@@ -1,0 +1,177 @@
+table _Medidas
+	lineageTag: aff8686a-c532-54da-9277-97ce6e2e4c6e
+
+	measure 'Ventas Netas' = SUM ( FactVentas[venta_neta_cop] )
+		formatString: \$#,0;(\$#,0);\$#,0
+		displayFolder: 1. Ventas
+		lineageTag: 894919cc-358c-5c51-8cac-3d9c9f7d5703
+
+	measure 'Costo Estimado' = SUM ( FactVentas[costo_estimado_cop] )
+		formatString: \$#,0;(\$#,0);\$#,0
+		displayFolder: 1. Ventas
+		lineageTag: fd9b37aa-4e01-5b3e-a9ac-156d8f5e26bd
+
+	measure 'Lineas de Venta' = COUNTROWS ( FactVentas )
+		formatString: #,0
+		displayFolder: 1. Ventas
+		lineageTag: a20f7bb5-0cb0-5dcb-94f1-245af87dc850
+
+	measure Unidades = SUM ( FactVentas[unidades] )
+		formatString: #,0
+		displayFolder: 1. Ventas
+		lineageTag: 3ea9802e-ebed-5256-8192-e3977c307c36
+
+	measure 'Margen Estimado' = [Ventas Netas] - [Costo Estimado]
+		formatString: \$#,0;(\$#,0);\$#,0
+		displayFolder: 2. Margen
+		lineageTag: 2e055f33-e256-5816-98cc-a3b8b41029c1
+
+	measure 'Margen Estimado %' = DIVIDE ( [Margen Estimado], [Ventas Netas] )
+		formatString: 0.00%;-0.00%;0.00%
+		displayFolder: 2. Margen
+		lineageTag: 2155e71f-57fb-57a1-9404-accfabb4cfa0
+
+	measure 'Ventas Ene-Sep' = CALCULATE ( [Ventas Netas], KEEPFILTERS ( DimCalendario[EsPeriodoComparable] = TRUE () ) )
+		formatString: \$#,0;(\$#,0);\$#,0
+		displayFolder: 3. Tiempo (Ene-Sep)
+		lineageTag: 7ac883d8-692f-5e6a-8315-058073609a7f
+
+	measure 'Ventas Ene-Sep Año Anterior' =
+			-- Solo con un año en contexto: con varios años la comparación no tiene sentido
+			IF (
+			    HASONEVALUE ( DimCalendario[Año] ),
+			    CALCULATE ( [Ventas Ene-Sep], DATEADD ( DimCalendario[Fecha], -1, YEAR ) )
+			)
+		formatString: \$#,0;(\$#,0);\$#,0
+		displayFolder: 3. Tiempo (Ene-Sep)
+		lineageTag: f8214d7f-a6c1-5325-b4c4-47fe437f21f5
+
+	measure 'Variacion Ventas Ene-Sep' =
+			VAR Anterior = [Ventas Ene-Sep Año Anterior]
+			RETURN
+			    IF ( NOT ISBLANK ( Anterior ), [Ventas Ene-Sep] - Anterior )
+		formatString: \$#,0;(\$#,0);\$#,0
+		displayFolder: 3. Tiempo (Ene-Sep)
+		lineageTag: b901969f-6a58-5a26-8420-b7f434b85420
+
+	measure 'Crecimiento Ventas Ene-Sep %' =
+			VAR Anterior = [Ventas Ene-Sep Año Anterior]
+			RETURN
+			    DIVIDE ( [Ventas Ene-Sep] - Anterior, Anterior )
+		formatString: 0.00%;-0.00%;0.00%
+		displayFolder: 3. Tiempo (Ene-Sep)
+		lineageTag: ff5771e0-f55a-5e82-b567-452b7ff75f43
+
+	measure 'Lineas con Quiebre' = SUM ( FactVentas[quiebre_flag] )
+		formatString: #,0
+		displayFolder: 4. Quiebre
+		lineageTag: 1f1d1381-2a0f-5854-b102-a9000dcca180
+
+	measure '% Quiebre' = DIVIDE ( [Lineas con Quiebre], [Lineas de Venta] )
+		formatString: 0.00%;-0.00%;0.00%
+		displayFolder: 4. Quiebre
+		lineageTag: e831796c-0897-5d22-98ea-fca6ef11be3d
+
+	measure 'Ventas con Quiebre' = CALCULATE ( [Ventas Netas], FactVentas[quiebre_flag] = 1 )
+		formatString: \$#,0;(\$#,0);\$#,0
+		displayFolder: 4. Quiebre
+		lineageTag: 01407a4c-8e94-5ce6-a001-204e91b46c88
+
+	measure 'Venta por Linea' = DIVIDE ( [Ventas Netas], [Lineas de Venta] )
+		formatString: \$#,0;(\$#,0);\$#,0
+		displayFolder: 5. Por linea
+		lineageTag: 06737d4e-5b25-5c69-bbe0-cb1f3a71276f
+
+	measure 'Unidades por Linea' = DIVIDE ( [Unidades], [Lineas de Venta] )
+		formatString: 0.00
+		displayFolder: 5. Por linea
+		lineageTag: 7904508e-aebf-5401-beae-f2823076a1c0
+
+	measure 'Ventas en Promocion' = CALCULATE ( [Ventas Netas], DimPromocion[Con promocion] = "Sí" )
+		formatString: \$#,0;(\$#,0);\$#,0
+		displayFolder: 6. Promocion
+		lineageTag: 005c52ff-2b4c-5aa9-bbaf-b9a6db6b65b8
+
+	measure '% Ventas en Promocion' = DIVIDE ( [Ventas en Promocion], [Ventas Netas] )
+		formatString: 0.00%;-0.00%;0.00%
+		displayFolder: 6. Promocion
+		lineageTag: 970410ae-dc7d-5fa5-8af2-b90aadb43eb8
+
+	measure 'Transacciones (ID dataset)' = DISTINCTCOUNT ( FactVentas[id_transaccion] )
+		formatString: #,0
+		displayFolder: 9. Referencia guia (id_transaccion)
+		lineageTag: 17e0eda5-f940-5b19-b85c-e07240b8d212
+
+	measure 'Ticket Promedio (ID dataset)' =
+			-- Valor global fijo: el id_transaccion del dataset sintetico no agrupa compras reales
+			-- (ver docs/01_perfilamiento.md, seccion 5). No se segmenta.
+			CALCULATE (
+			    DIVIDE ( [Ventas Netas], [Transacciones (ID dataset)] ),
+			    REMOVEFILTERS ()
+			)
+		formatString: \$#,0;(\$#,0);\$#,0
+		displayFolder: 9. Referencia guia (id_transaccion)
+		lineageTag: 06ec1177-55f7-5782-99af-a51dab104eb8
+
+	measure 'Ventas Ene-Sep Hace 2 Años' =
+			IF (
+			    HASONEVALUE ( DimCalendario[Año] ),
+			    CALCULATE ( [Ventas Ene-Sep], DATEADD ( DimCalendario[Fecha], -2, YEAR ) )
+			)
+		formatString: \$#,0;(\$#,0);\$#,0
+		displayFolder: 3. Tiempo (Ene-Sep)
+		lineageTag: ed2d4a05-2fbe-5ecd-9b63-2312bc79cbe8
+
+	measure 'Crecimiento vs Hace 2 Años %' =
+			VAR Base = [Ventas Ene-Sep Hace 2 Años]
+			RETURN
+			    DIVIDE ( [Ventas Ene-Sep] - Base, Base )
+		formatString: 0.00%;-0.00%;0.00%
+		displayFolder: 3. Tiempo (Ene-Sep)
+		lineageTag: 3eb4c369-28ce-57fb-86bd-7243221648bd
+
+	measure 'Lectura Tendencia' =
+			-- Tendencia = mismo signo y > ±2 % frente al año anterior Y frente a hace 2 años
+			VAR A = [Crecimiento Ventas Ene-Sep %]
+			VAR B = [Crecimiento vs Hace 2 Años %]
+			RETURN
+			    SWITCH (
+			        TRUE (),
+			        ISBLANK ( A ) || ISBLANK ( B ), BLANK (),
+			        A > 0.02 && B > 0.02, "Crece (sostenido)",
+			        A < -0.02 && B < -0.02, "Cae (sostenido)",
+			        ABS ( A ) > 0.02, "Oscila (rebote)",
+			        "Estable"
+			    )
+		displayFolder: 3. Tiempo (Ene-Sep)
+		lineageTag: e0834d18-3f8a-5d07-915b-4255269e7a56
+
+	measure 'Color Crecimiento' =
+			-- Verde = crece sostenido, rojo = cae sostenido, naranja = oscila, gris = estable
+			SWITCH (
+			    [Lectura Tendencia],
+			    "Crece (sostenido)", "#2E7D32",
+			    "Cae (sostenido)", "#C62828",
+			    "Oscila (rebote)", "#EF8F00",
+			    "#9E9E9E"
+			)
+		displayFolder: 7. Formato condicional
+		lineageTag: da674d36-4ba1-5366-b086-efe6d06943ce
+
+	column Medidas
+		dataType: string
+		isHidden
+		lineageTag: 70843f8a-cb79-512e-898d-aababd57aa08
+		summarizeBy: none
+		sourceColumn: Medidas
+
+	partition _Medidas = m
+		mode: import
+		source =
+				let
+				    Fuente = #table(type table [Medidas = text], {})
+				in
+				    Fuente
+
+	annotation PBI_ResultType = Table
+

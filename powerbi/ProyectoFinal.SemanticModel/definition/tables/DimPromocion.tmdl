@@ -1,0 +1,28 @@
+table DimPromocion
+	lineageTag: 15fe3a0b-e85e-5c0f-9306-e7504574e0ab
+
+	column Promocion
+		dataType: string
+		lineageTag: c1e6453d-720c-595e-a373-6ed540961ef8
+		summarizeBy: none
+		sourceColumn: Promocion
+
+	column 'Con promocion'
+		dataType: string
+		lineageTag: 72022c2a-4823-5544-946e-c0afd7007bb6
+		summarizeBy: none
+		sourceColumn: Con promocion
+
+	partition DimPromocion = m
+		mode: import
+		source =
+				let
+				    Origen = Base,
+				    Columnas = Table.Distinct(Table.SelectColumns(Origen, {"promocion"})),
+				    Nombres = Table.RenameColumns(Columnas, {{"promocion", "Promocion"}}),
+				    ConPromo = Table.AddColumn(Nombres, "Con promocion", each if [Promocion] = "Sin promoción" then "No" else "Sí", type text)
+				in
+				    ConPromo
+
+	annotation PBI_ResultType = Table
+

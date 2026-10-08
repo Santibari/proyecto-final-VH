@@ -1,0 +1,509 @@
+cultureInfo es-MX
+
+	linguisticMetadata =
+			{
+			  "Version": "2.0.0",
+			  "Language": "en-US",
+			  "Entities": {
+			    "dimcalendario.año": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "DimCalendario",
+			          "ConceptualProperty": "Año"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "Año": {
+			            "State": "Suggested",
+			            "Source": {
+			              "Type": "External",
+			              "Agent": "PowerBI.VisualColumnRename"
+			            },
+			            "Weight": 0.9
+			          }
+			        }
+			      ]
+			    },
+			    "dimgeografia.region": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "DimGeografia",
+			          "ConceptualProperty": "Region"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "Región": {
+			            "State": "Suggested",
+			            "Source": {
+			              "Type": "External",
+			              "Agent": "PowerBI.VisualColumnRename"
+			            },
+			            "Weight": 0.9
+			          }
+			        }
+			      ]
+			    },
+			    "dimformato.formato": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "DimFormato",
+			          "ConceptualProperty": "Formato"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "Formato": {
+			            "State": "Suggested",
+			            "Source": {
+			              "Type": "External",
+			              "Agent": "PowerBI.VisualColumnRename"
+			            },
+			            "Weight": 0.9
+			          }
+			        }
+			      ]
+			    },
+			    "dimcategoria.categoria": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "DimCategoria",
+			          "ConceptualProperty": "Categoria"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "Categoría": {
+			            "State": "Suggested",
+			            "Source": {
+			              "Type": "External",
+			              "Agent": "PowerBI.VisualColumnRename"
+			            },
+			            "Weight": 0.9
+			          }
+			        }
+			      ]
+			    },
+			    "table_medidas.ventas_enesep": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "_Medidas",
+			          "ConceptualProperty": "Ventas Ene-Sep"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "Ventas netas (ene–sep del año)": {
+			            "State": "Suggested",
+			            "Source": {
+			              "Type": "External",
+			              "Agent": "PowerBI.VisualColumnRename"
+			            },
+			            "Weight": 0.9
+			          }
+			        },
+			        {
+			          "Ventas ene–sep": {
+			            "State": "Suggested",
+			            "Source": {
+			              "Type": "External",
+			              "Agent": "PowerBI.VisualColumnRename"
+			            },
+			            "Weight": 0.9
+			          }
+			        },
+			        {
+			          "Ventas": {
+			            "State": "Suggested",
+			            "Source": {
+			              "Type": "External",
+			              "Agent": "PowerBI.VisualColumnRename"
+			            },
+			            "Weight": 0.9
+			          }
+			        }
+			      ]
+			    },
+			    "table_medidas.crecimiento_ventas_enesep_": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "_Medidas",
+			          "ConceptualProperty": "Crecimiento Ventas Ene-Sep %"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "Crecimiento vs año anterior": {
+			            "State": "Suggested",
+			            "Source": {
+			              "Type": "External",
+			              "Agent": "PowerBI.VisualColumnRename"
+			            },
+			            "Weight": 0.9
+			          }
+			        },
+			        {
+			          "Crec. vs año ant.": {
+			            "State": "Suggested",
+			            "Source": {
+			              "Type": "External",
+			              "Agent": "PowerBI.VisualColumnRename"
+			            },
+			            "Weight": 0.9
+			          }
+			        },
+			        {
+			          "vs año anterior": {
+			            "State": "Suggested",
+			            "Source": {
+			              "Type": "External",
+			              "Agent": "PowerBI.VisualColumnRename"
+			            },
+			            "Weight": 0.9
+			          }
+			        }
+			      ]
+			    },
+			    "table_medidas.margen_estimado_": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "_Medidas",
+			          "ConceptualProperty": "Margen Estimado %"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "Margen estimado %": {
+			            "State": "Suggested",
+			            "Source": {
+			              "Type": "External",
+			              "Agent": "PowerBI.VisualColumnRename"
+			            },
+			            "Weight": 0.9
+			          }
+			        },
+			        {
+			          "Margen estimado % (igual en todos los grupos)": {
+			            "State": "Suggested",
+			            "Source": {
+			              "Type": "External",
+			              "Agent": "PowerBI.VisualColumnRename"
+			            },
+			            "Weight": 0.9
+			          }
+			        }
+			      ]
+			    },
+			    "table_medidas.quiebre": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "_Medidas",
+			          "ConceptualProperty": "% Quiebre"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "% líneas con quiebre de stock": {
+			            "State": "Suggested",
+			            "Source": {
+			              "Type": "External",
+			              "Agent": "PowerBI.VisualColumnRename"
+			            },
+			            "Weight": 0.9
+			          }
+			        },
+			        {
+			          "% líneas con quiebre": {
+			            "State": "Suggested",
+			            "Source": {
+			              "Type": "External",
+			              "Agent": "PowerBI.VisualColumnRename"
+			            },
+			            "Weight": 0.9
+			          }
+			        },
+			        {
+			          "% quiebre": {
+			            "State": "Suggested",
+			            "Source": {
+			              "Type": "External",
+			              "Agent": "PowerBI.VisualColumnRename"
+			            },
+			            "Weight": 0.9
+			          }
+			        }
+			      ]
+			    },
+			    "table_medidas.venta_por_linea": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "_Medidas",
+			          "ConceptualProperty": "Venta por Linea"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "Venta promedio por línea": {
+			            "State": "Suggested",
+			            "Source": {
+			              "Type": "External",
+			              "Agent": "PowerBI.VisualColumnRename"
+			            },
+			            "Weight": 0.9
+			          }
+			        },
+			        {
+			          "Venta por línea": {
+			            "State": "Suggested",
+			            "Source": {
+			              "Type": "External",
+			              "Agent": "PowerBI.VisualColumnRename"
+			            },
+			            "Weight": 0.9
+			          }
+			        }
+			      ]
+			    },
+			    "table_medidas.ticket_promedio_id_dataset": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "_Medidas",
+			          "ConceptualProperty": "Ticket Promedio (ID dataset)"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "Ticket según ID del dataset (referencia global ⓘ)": {
+			            "State": "Suggested",
+			            "Source": {
+			              "Type": "External",
+			              "Agent": "PowerBI.VisualColumnRename"
+			            },
+			            "Weight": 0.9
+			          }
+			        }
+			      ]
+			    },
+			    "table_medidas.ventas_netas": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "_Medidas",
+			          "ConceptualProperty": "Ventas Netas"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "Ventas": {
+			            "State": "Suggested",
+			            "Source": {
+			              "Type": "External",
+			              "Agent": "PowerBI.VisualColumnRename"
+			            },
+			            "Weight": 0.9
+			          }
+			        }
+			      ]
+			    },
+			    "table_medidas.crecimiento_vs_hace_2_años_": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "_Medidas",
+			          "ConceptualProperty": "Crecimiento vs Hace 2 Años %"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "Crecimiento vs hace 2 años": {
+			            "State": "Suggested",
+			            "Source": {
+			              "Type": "External",
+			              "Agent": "PowerBI.VisualColumnRename"
+			            },
+			            "Weight": 0.9
+			          }
+			        },
+			        {
+			          "Crec. vs hace 2 años": {
+			            "State": "Suggested",
+			            "Source": {
+			              "Type": "External",
+			              "Agent": "PowerBI.VisualColumnRename"
+			            },
+			            "Weight": 0.9
+			          }
+			        },
+			        {
+			          "vs hace 2 años": {
+			            "State": "Suggested",
+			            "Source": {
+			              "Type": "External",
+			              "Agent": "PowerBI.VisualColumnRename"
+			            },
+			            "Weight": 0.9
+			          }
+			        }
+			      ]
+			    },
+			    "table_medidas.lectura_tendencia": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "_Medidas",
+			          "ConceptualProperty": "Lectura Tendencia"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "Lectura": {
+			            "State": "Suggested",
+			            "Source": {
+			              "Type": "External",
+			              "Agent": "PowerBI.VisualColumnRename"
+			            },
+			            "Weight": 0.9
+			          }
+			        }
+			      ]
+			    },
+			    "table_medidas.variacion_ventas_enesep": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "_Medidas",
+			          "ConceptualProperty": "Variacion Ventas Ene-Sep"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "Variación $ vs año ant.": {
+			            "State": "Suggested",
+			            "Source": {
+			              "Type": "External",
+			              "Agent": "PowerBI.VisualColumnRename"
+			            },
+			            "Weight": 0.9
+			          }
+			        }
+			      ]
+			    },
+			    "table_medidas.ventas_en_promocion": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "_Medidas",
+			          "ConceptualProperty": "% Ventas en Promocion"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "% de las ventas con promoción": {
+			            "State": "Suggested",
+			            "Source": {
+			              "Type": "External",
+			              "Agent": "PowerBI.VisualColumnRename"
+			            },
+			            "Weight": 0.9
+			          }
+			        }
+			      ]
+			    },
+			    "table_medidas.unidades_por_linea": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "_Medidas",
+			          "ConceptualProperty": "Unidades por Linea"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "Unidades por línea": {
+			            "State": "Suggested",
+			            "Source": {
+			              "Type": "External",
+			              "Agent": "PowerBI.VisualColumnRename"
+			            },
+			            "Weight": 0.9
+			          }
+			        }
+			      ]
+			    },
+			    "table_medidas.lineas_con_quiebre": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "_Medidas",
+			          "ConceptualProperty": "Lineas con Quiebre"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "Líneas con quiebre": {
+			            "State": "Suggested",
+			            "Source": {
+			              "Type": "External",
+			              "Agent": "PowerBI.VisualColumnRename"
+			            },
+			            "Weight": 0.9
+			          }
+			        },
+			        {
+			          "Líneas": {
+			            "State": "Suggested",
+			            "Source": {
+			              "Type": "External",
+			              "Agent": "PowerBI.VisualColumnRename"
+			            },
+			            "Weight": 0.9
+			          }
+			        }
+			      ]
+			    },
+			    "table_medidas.ventas_con_quiebre": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "_Medidas",
+			          "ConceptualProperty": "Ventas con Quiebre"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "Ventas registradas con quiebre": {
+			            "State": "Suggested",
+			            "Source": {
+			              "Type": "External",
+			              "Agent": "PowerBI.VisualColumnRename"
+			            },
+			            "Weight": 0.9
+			          }
+			        },
+			        {
+			          "Ventas con quiebre": {
+			            "State": "Suggested",
+			            "Source": {
+			              "Type": "External",
+			              "Agent": "PowerBI.VisualColumnRename"
+			            },
+			            "Weight": 0.9
+			          }
+			        }
+			      ]
+			    }
+			  }
+			}
+		contentType: json
+

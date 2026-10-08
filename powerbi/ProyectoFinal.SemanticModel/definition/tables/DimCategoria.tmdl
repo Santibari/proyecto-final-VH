@@ -1,0 +1,22 @@
+table DimCategoria
+	lineageTag: 7b72ae81-3263-5e17-aef9-ec841f93be0f
+
+	column Categoria
+		dataType: string
+		lineageTag: 7ccd7e08-5a1b-575c-a2f0-de3f34e7999e
+		summarizeBy: none
+		sourceColumn: Categoria
+
+	partition DimCategoria = m
+		mode: import
+		source =
+				let
+				    Origen = Base,
+				    Columnas = Table.SelectColumns(Origen, {"categoria"}),
+				    Distintos = Table.Distinct(Columnas),
+				    Nombres = Table.RenameColumns(Distintos, {{"categoria", "Categoria"}})
+				in
+				    Nombres
+
+	annotation PBI_ResultType = Table
+

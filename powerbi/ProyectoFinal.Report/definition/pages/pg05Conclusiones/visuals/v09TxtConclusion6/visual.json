@@ -1,0 +1,157 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.13.0/schema.json",
+  "name": "v09TxtConclusion6",
+  "position": {
+    "x": 968,
+    "y": 480,
+    "z": 1009,
+    "height": 164,
+    "width": 928,
+    "tabOrder": 9
+  },
+  "visual": {
+    "visualType": "textbox",
+    "objects": {
+      "general": [
+        {
+          "properties": {
+            "paragraphs": [
+              {
+                "textRuns": [
+                  {
+                    "value": "■ ",
+                    "textStyle": {
+                      "fontSize": "18pt",
+                      "color": "#EF8F00",
+                      "fontWeight": "bold"
+                    }
+                  },
+                  {
+                    "value": "6. Reposición para toda la cadena",
+                    "textStyle": {
+                      "fontSize": "16pt",
+                      "color": "#1F3A5F",
+                      "fontWeight": "bold"
+                    }
+                  }
+                ]
+              },
+              {
+                "textRuns": [
+                  {
+                    "value": "El quiebre (~8 %) es parejo y estable: no hay focos aislados. Priorizar por volumen afectado (Bogotá y Carnes).",
+                    "textStyle": {
+                      "fontSize": "12pt",
+                      "color": "#2B2B2B"
+                    }
+                  }
+                ]
+              },
+              {
+                "textRuns": [
+                  {
+                    "value": "Responsable: Operaciones",
+                    "textStyle": {
+                      "fontSize": "10pt",
+                      "color": "#9E9E9E"
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "visualContainerObjects": {
+      "title": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "subTitle": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "background": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "color": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "Literal": {
+                      "Value": "'#FFFFFF'"
+                    }
+                  }
+                }
+              }
+            },
+            "transparency": {
+              "expr": {
+                "Literal": {
+                  "Value": "0D"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "border": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "color": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "Literal": {
+                      "Value": "'#DDE2EA'"
+                    }
+                  }
+                }
+              }
+            },
+            "radius": {
+              "expr": {
+                "Literal": {
+                  "Value": "8D"
+                }
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+}

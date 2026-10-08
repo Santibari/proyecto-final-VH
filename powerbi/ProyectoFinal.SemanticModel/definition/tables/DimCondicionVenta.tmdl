@@ -1,0 +1,41 @@
+table DimCondicionVenta
+	lineageTag: bcd20996-7813-5ecc-b2d1-d22b919c9ccf
+
+	column clave_condicion
+		dataType: string
+		isHidden
+		lineageTag: a92d1abc-618d-5f7f-8fb3-d5e83ab23e5c
+		summarizeBy: none
+		sourceColumn: clave_condicion
+
+	column Canal
+		dataType: string
+		lineageTag: 5604368b-ec29-57cf-85ce-ae33195cc536
+		summarizeBy: none
+		sourceColumn: Canal
+
+	column 'Medio de pago'
+		dataType: string
+		lineageTag: a3251147-784b-5a1a-8ede-9a9d38909c6c
+		summarizeBy: none
+		sourceColumn: Medio de pago
+
+	column 'Cliente fidelizado'
+		dataType: string
+		lineageTag: f84ce28c-b0ee-5b67-b461-6247d4229ddf
+		summarizeBy: none
+		sourceColumn: Cliente fidelizado
+
+	partition DimCondicionVenta = m
+		mode: import
+		source =
+				let
+				    Origen = Base,
+				    Columnas = Table.Distinct(Table.SelectColumns(Origen, {"canal", "medio_pago", "cliente_fidelizado"})),
+				    Clave = Table.AddColumn(Columnas, "clave_condicion", each [canal] & "|" & [medio_pago] & "|" & [cliente_fidelizado], type text),
+				    Nombres = Table.RenameColumns(Clave, {{"canal", "Canal"}, {"medio_pago", "Medio de pago"}, {"cliente_fidelizado", "Cliente fidelizado"}})
+				in
+				    Nombres
+
+	annotation PBI_ResultType = Table
+

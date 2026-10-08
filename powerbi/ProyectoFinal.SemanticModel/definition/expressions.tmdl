@@ -1,0 +1,24 @@
+expression RutaCSV = "C:\Users\USUARIO\Documents\Sabana universidad\Sabana 7 semestre\Herramientas de dataviz BI\proyecto-final-VH\data\raw\03_cadena_supermercados.csv" meta [IsParameterQuery = true, Type = "Text", IsParameterQueryRequired = true]
+	lineageTag: 7cfd7ffb-bf20-5762-bea6-87432c034a43
+
+	annotation PBI_ResultType = Text
+
+expression Base =
+		let
+		    Origen = Csv.Document(File.Contents(RutaCSV), [Delimiter = ",", Columns = 19, Encoding = 65001, QuoteStyle = QuoteStyle.Csv]),
+		    Encabezados = Table.PromoteHeaders(Origen, [PromoteAllScalars = true]),
+		    SinBOM = Table.TransformColumnNames(Encabezados, each Text.Remove(_, {Character.FromNumber(65279)})),
+		    Tipos = Table.TransformColumnTypes(SinBOM, {
+		        {"id_linea", type text}, {"id_transaccion", type text}, {"fecha", type date},
+		        {"ciudad", type text}, {"departamento", type text}, {"region", type text},
+		        {"formato_tienda", type text}, {"categoria", type text}, {"producto_generico", type text},
+		        {"unidades", Int64.Type}, {"precio_unitario_cop", Int64.Type}, {"promocion", type text},
+		        {"descuento_pct", type number}, {"venta_neta_cop", Int64.Type}, {"costo_estimado_cop", Int64.Type},
+		        {"medio_pago", type text}, {"cliente_fidelizado", type text}, {"canal", type text},
+		        {"quiebre_stock_ult_7d", type text}}, "en-US")
+		in
+		    Tipos
+	lineageTag: 8a48c8a3-4afb-5db8-96d1-0f81f74cdecd
+
+	annotation PBI_ResultType = Table
+

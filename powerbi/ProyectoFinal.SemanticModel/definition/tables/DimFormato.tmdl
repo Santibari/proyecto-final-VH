@@ -1,0 +1,22 @@
+table DimFormato
+	lineageTag: 32ddc1a0-c3f7-5be1-8674-dd01e9835ebd
+
+	column Formato
+		dataType: string
+		lineageTag: c16c6650-2266-5600-b536-68521b81d010
+		summarizeBy: none
+		sourceColumn: Formato
+
+	partition DimFormato = m
+		mode: import
+		source =
+				let
+				    Origen = Base,
+				    Columnas = Table.SelectColumns(Origen, {"formato_tienda"}),
+				    Distintos = Table.Distinct(Columnas),
+				    Nombres = Table.RenameColumns(Distintos, {{"formato_tienda", "Formato"}})
+				in
+				    Nombres
+
+	annotation PBI_ResultType = Table
+

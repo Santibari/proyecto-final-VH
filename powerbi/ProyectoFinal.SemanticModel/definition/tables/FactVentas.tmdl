@@ -1,0 +1,124 @@
+table FactVentas
+	lineageTag: b1549e20-f008-55a0-b50e-d73cf2c8fe36
+
+	column id_linea
+		dataType: string
+		isHidden
+		lineageTag: 8b17400a-6f07-5de6-98fe-48f7e9f6ed35
+		summarizeBy: none
+		sourceColumn: id_linea
+
+	column id_transaccion
+		dataType: string
+		isHidden
+		lineageTag: 7000b6ec-9596-57a7-8987-273028f49d1c
+		summarizeBy: none
+		sourceColumn: id_transaccion
+
+	column fecha
+		dataType: dateTime
+		isHidden
+		formatString: dd/mm/yyyy
+		lineageTag: 9e2dbe6e-6a4d-5fa0-ab89-ec4714b6de34
+		summarizeBy: none
+		sourceColumn: fecha
+
+	column ciudad
+		dataType: string
+		isHidden
+		lineageTag: 67aa3268-44ed-5826-9eb0-ef7e7822d347
+		summarizeBy: none
+		sourceColumn: ciudad
+
+	column formato_tienda
+		dataType: string
+		isHidden
+		lineageTag: b097a255-9351-5921-9c49-11eb27b51546
+		summarizeBy: none
+		sourceColumn: formato_tienda
+
+	column categoria
+		dataType: string
+		isHidden
+		lineageTag: ed349f0c-49e4-5537-b837-77f1b0e44028
+		summarizeBy: none
+		sourceColumn: categoria
+
+	column promocion
+		dataType: string
+		isHidden
+		lineageTag: 84888286-84b2-5e59-b8c3-fb77f194f99e
+		summarizeBy: none
+		sourceColumn: promocion
+
+	column clave_condicion
+		dataType: string
+		isHidden
+		lineageTag: dd926f9e-349a-59a3-ae95-d59289fb7483
+		summarizeBy: none
+		sourceColumn: clave_condicion
+
+	column unidades
+		dataType: int64
+		isHidden
+		formatString: #,0
+		lineageTag: 2fdcecdf-040f-5950-afde-0f5ff84e0e36
+		summarizeBy: sum
+		sourceColumn: unidades
+
+	column precio_unitario_cop
+		dataType: int64
+		isHidden
+		formatString: \$#,0;(\$#,0);\$#,0
+		lineageTag: b604e14d-a4ee-5aa8-8f74-0c17978cf2b1
+		summarizeBy: sum
+		sourceColumn: precio_unitario_cop
+
+	column descuento_pct
+		dataType: double
+		isHidden
+		formatString: 0.00
+		lineageTag: 527ce267-0909-5d01-8487-f09acb512566
+		summarizeBy: sum
+		sourceColumn: descuento_pct
+
+	column venta_neta_cop
+		dataType: int64
+		isHidden
+		formatString: \$#,0;(\$#,0);\$#,0
+		lineageTag: c43beda9-bfaf-5ac5-9f60-117607318290
+		summarizeBy: sum
+		sourceColumn: venta_neta_cop
+
+	column costo_estimado_cop
+		dataType: int64
+		isHidden
+		formatString: \$#,0;(\$#,0);\$#,0
+		lineageTag: ed00def8-e951-53f1-b240-9d3612456039
+		summarizeBy: sum
+		sourceColumn: costo_estimado_cop
+
+	column quiebre_flag
+		dataType: int64
+		isHidden
+		formatString: #,0
+		lineageTag: 06275668-2824-5653-b36e-7a6540a51a5b
+		summarizeBy: sum
+		sourceColumn: quiebre_flag
+
+	partition FactVentas = m
+		mode: import
+		source =
+				let
+				    Origen = Base,
+				    Quiebre = Table.AddColumn(Origen, "quiebre_flag", each if [quiebre_stock_ult_7d] = "Sí" then 1 else 0, Int64.Type),
+				    Clave = Table.AddColumn(Quiebre, "clave_condicion", each [canal] & "|" & [medio_pago] & "|" & [cliente_fidelizado], type text),
+				    Columnas = Table.SelectColumns(Clave, {
+				        "id_linea", "id_transaccion", "fecha", "ciudad", "formato_tienda", "categoria", "promocion",
+				        "clave_condicion", "unidades", "precio_unitario_cop", "descuento_pct", "venta_neta_cop",
+				        "costo_estimado_cop", "quiebre_flag"})
+				in
+				    Columnas
+
+	annotation PBI_ResultType = Table
+

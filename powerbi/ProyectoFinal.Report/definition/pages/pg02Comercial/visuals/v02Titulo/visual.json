@@ -1,0 +1,76 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.13.0/schema.json",
+  "name": "v02Titulo",
+  "position": {
+    "x": 0,
+    "y": 0,
+    "z": 100,
+    "height": 96,
+    "width": 1310,
+    "tabOrder": 2
+  },
+  "visual": {
+    "visualType": "textbox",
+    "objects": {
+      "general": [
+        {
+          "properties": {
+            "paragraphs": [
+              {
+                "textRuns": [
+                  {
+                    "value": "Desempeño comercial — ¿Qué regiones, ciudades, formatos y categorías explican el resultado?",
+                    "textStyle": {
+                      "fontSize": "20pt",
+                      "color": "#FFFFFF",
+                      "fontWeight": "bold"
+                    }
+                  }
+                ]
+              },
+              {
+                "textRuns": [
+                  {
+                    "value": "Seleccione una región o categoría para filtrar los demás gráficos · Tendencia = mismo signo frente a 2025 y a 2024",
+                    "textStyle": {
+                      "fontSize": "10pt",
+                      "color": "#DCE4EF"
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "visualContainerObjects": {
+      "title": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "subTitle": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,26 @@
+model Model
+	culture: es-MX
+	defaultPowerBIDataSourceVersion: powerBI_V3
+	sourceQueryCulture: es-MX
+	valueFilterBehavior: independent
+	dataAccessOptions
+		legacyRedirects
+		returnErrorValuesAsNull
+
+annotation __PBI_TimeIntelligenceEnabled = 0
+
+annotation PBI_ProTooling = ["DevMode"]
+
+annotation PBI_QueryOrder = ["FactVentas","DimGeografia","DimFormato","DimCategoria","DimPromocion","DimCondicionVenta","_Medidas","RutaCSV","Base"]
+
+ref table FactVentas
+ref table DimCalendario
+ref table DimGeografia
+ref table DimFormato
+ref table DimCategoria
+ref table DimPromocion
+ref table DimCondicionVenta
+ref table _Medidas
+
+ref cultureInfo es-MX
+
