@@ -27,26 +27,8 @@
                 }
               },
               "queryRef": "DimPromocion.Promocion",
-              "nativeQueryRef": "Promocion"
-            }
-          ]
-        },
-        "Y": {
-          "projections": [
-            {
-              "field": {
-                "Measure": {
-                  "Expression": {
-                    "SourceRef": {
-                      "Entity": "_Medidas"
-                    }
-                  },
-                  "Property": "Crecimiento Ventas Ene-Sep %"
-                }
-              },
-              "queryRef": "_Medidas.Crecimiento Ventas Ene-Sep %",
-              "nativeQueryRef": "Crecimiento Ventas Ene-Sep %",
-              "displayName": "Crecimiento vs año anterior"
+              "nativeQueryRef": "Promocion",
+              "active": true
             }
           ]
         },
@@ -81,6 +63,25 @@
               "queryRef": "_Medidas.Ventas Ene-Sep",
               "nativeQueryRef": "Ventas Ene-Sep",
               "displayName": "Ventas ene–sep"
+            }
+          ]
+        },
+        "Y": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "_Medidas"
+                    }
+                  },
+                  "Property": "Crecimiento Ventas Ene-Sep %"
+                }
+              },
+              "queryRef": "_Medidas.Crecimiento Ventas Ene-Sep %",
+              "nativeQueryRef": "Crecimiento Ventas Ene-Sep %",
+              "displayName": "Crecimiento vs año anterior"
             }
           ]
         }

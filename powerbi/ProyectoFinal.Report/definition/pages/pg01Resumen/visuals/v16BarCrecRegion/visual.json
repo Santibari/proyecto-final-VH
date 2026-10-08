@@ -27,26 +27,8 @@
                 }
               },
               "queryRef": "DimGeografia.Region",
-              "nativeQueryRef": "Region"
-            }
-          ]
-        },
-        "Y": {
-          "projections": [
-            {
-              "field": {
-                "Measure": {
-                  "Expression": {
-                    "SourceRef": {
-                      "Entity": "_Medidas"
-                    }
-                  },
-                  "Property": "Crecimiento Ventas Ene-Sep %"
-                }
-              },
-              "queryRef": "_Medidas.Crecimiento Ventas Ene-Sep %",
-              "nativeQueryRef": "Crecimiento Ventas Ene-Sep %",
-              "displayName": "Crecimiento vs año anterior"
+              "nativeQueryRef": "Region",
+              "active": true
             }
           ]
         },
@@ -81,6 +63,25 @@
               "queryRef": "_Medidas.Lectura Tendencia",
               "nativeQueryRef": "Lectura Tendencia",
               "displayName": "Lectura"
+            }
+          ]
+        },
+        "Y": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "_Medidas"
+                    }
+                  },
+                  "Property": "Crecimiento Ventas Ene-Sep %"
+                }
+              },
+              "queryRef": "_Medidas.Crecimiento Ventas Ene-Sep %",
+              "nativeQueryRef": "Crecimiento Ventas Ene-Sep %",
+              "displayName": "Crecimiento vs año anterior"
             }
           ]
         }

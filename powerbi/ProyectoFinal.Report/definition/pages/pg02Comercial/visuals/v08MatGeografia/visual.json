@@ -27,7 +27,8 @@
                 }
               },
               "queryRef": "DimGeografia.Region",
-              "nativeQueryRef": "Region"
+              "nativeQueryRef": "Region",
+              "active": true
             },
             {
               "field": {
@@ -41,7 +42,8 @@
                 }
               },
               "queryRef": "DimGeografia.Ciudad",
-              "nativeQueryRef": "Ciudad"
+              "nativeQueryRef": "Ciudad",
+              "active": false
             }
           ]
         },

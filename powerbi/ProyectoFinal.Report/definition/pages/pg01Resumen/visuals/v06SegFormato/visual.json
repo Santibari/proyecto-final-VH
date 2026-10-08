@@ -28,6 +28,7 @@
               },
               "queryRef": "DimFormato.Formato",
               "nativeQueryRef": "Formato",
+              "active": true,
               "displayName": "Formato"
             }
           ]
@@ -99,11 +100,6 @@
           }
         }
       ]
-    },
-    "syncGroup": {
-      "groupName": "Formato",
-      "fieldChanges": true,
-      "filterChanges": true
     },
     "visualContainerObjects": {
       "title": [
@@ -194,6 +190,11 @@
           }
         }
       ]
+    },
+    "syncGroup": {
+      "groupName": "Formato",
+      "fieldChanges": true,
+      "filterChanges": true
     }
   }
 }

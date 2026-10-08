@@ -27,7 +27,26 @@
                 }
               },
               "queryRef": "DimFormato.Formato",
-              "nativeQueryRef": "Formato"
+              "nativeQueryRef": "Formato",
+              "active": true
+            }
+          ]
+        },
+        "Series": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "DimCondicionVenta"
+                    }
+                  },
+                  "Property": "Canal"
+                }
+              },
+              "queryRef": "DimCondicionVenta.Canal",
+              "nativeQueryRef": "Canal"
             }
           ]
         },
@@ -47,24 +66,6 @@
               "queryRef": "_Medidas.Ventas Ene-Sep",
               "nativeQueryRef": "Ventas Ene-Sep",
               "displayName": "Ventas"
-            }
-          ]
-        },
-        "Series": {
-          "projections": [
-            {
-              "field": {
-                "Column": {
-                  "Expression": {
-                    "SourceRef": {
-                      "Entity": "DimCondicionVenta"
-                    }
-                  },
-                  "Property": "Canal"
-                }
-              },
-              "queryRef": "DimCondicionVenta.Canal",
-              "nativeQueryRef": "Canal"
             }
           ]
         }

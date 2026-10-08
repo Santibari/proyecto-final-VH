@@ -27,7 +27,8 @@
                 }
               },
               "queryRef": "DimCategoria.Categoria",
-              "nativeQueryRef": "Categoria"
+              "nativeQueryRef": "Categoria",
+              "active": true
             }
           ]
         },

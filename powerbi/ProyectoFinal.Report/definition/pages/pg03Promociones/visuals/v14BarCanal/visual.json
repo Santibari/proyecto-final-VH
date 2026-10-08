@@ -27,7 +27,8 @@
                 }
               },
               "queryRef": "DimCondicionVenta.Canal",
-              "nativeQueryRef": "Canal"
+              "nativeQueryRef": "Canal",
+              "active": true
             }
           ]
         },

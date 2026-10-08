@@ -27,26 +27,8 @@
                 }
               },
               "queryRef": "DimGeografia.Ciudad",
-              "nativeQueryRef": "Ciudad"
-            }
-          ]
-        },
-        "Y": {
-          "projections": [
-            {
-              "field": {
-                "Measure": {
-                  "Expression": {
-                    "SourceRef": {
-                      "Entity": "_Medidas"
-                    }
-                  },
-                  "Property": "Variacion Ventas Ene-Sep"
-                }
-              },
-              "queryRef": "_Medidas.Variacion Ventas Ene-Sep",
-              "nativeQueryRef": "Variacion Ventas Ene-Sep",
-              "displayName": "Variación $ vs año ant."
+              "nativeQueryRef": "Ciudad",
+              "active": true
             }
           ]
         },
@@ -81,6 +63,25 @@
               "queryRef": "_Medidas.Crecimiento vs Hace 2 Años %",
               "nativeQueryRef": "Crecimiento vs Hace 2 Años %",
               "displayName": "Crec. vs hace 2 años"
+            }
+          ]
+        },
+        "Y": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "_Medidas"
+                    }
+                  },
+                  "Property": "Variacion Ventas Ene-Sep"
+                }
+              },
+              "queryRef": "_Medidas.Variacion Ventas Ene-Sep",
+              "nativeQueryRef": "Variacion Ventas Ene-Sep",
+              "displayName": "Variación $ vs año ant."
             }
           ]
         }

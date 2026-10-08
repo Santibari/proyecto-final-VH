@@ -13,6 +13,25 @@
     "visualType": "pivotTable",
     "query": {
       "queryState": {
+        "Columns": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "DimFormato"
+                    }
+                  },
+                  "Property": "Formato"
+                }
+              },
+              "queryRef": "DimFormato.Formato",
+              "nativeQueryRef": "Formato",
+              "active": true
+            }
+          ]
+        },
         "Rows": {
           "projections": [
             {
@@ -27,7 +46,8 @@
                 }
               },
               "queryRef": "DimGeografia.Region",
-              "nativeQueryRef": "Region"
+              "nativeQueryRef": "Region",
+              "active": true
             }
           ]
         },
@@ -47,24 +67,6 @@
               "queryRef": "_Medidas.Crecimiento Ventas Ene-Sep %",
               "nativeQueryRef": "Crecimiento Ventas Ene-Sep %",
               "displayName": "Crec. vs año ant."
-            }
-          ]
-        },
-        "Columns": {
-          "projections": [
-            {
-              "field": {
-                "Column": {
-                  "Expression": {
-                    "SourceRef": {
-                      "Entity": "DimFormato"
-                    }
-                  },
-                  "Property": "Formato"
-                }
-              },
-              "queryRef": "DimFormato.Formato",
-              "nativeQueryRef": "Formato"
             }
           ]
         }

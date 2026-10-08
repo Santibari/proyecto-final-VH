@@ -27,26 +27,8 @@
                 }
               },
               "queryRef": "DimCondicionVenta.Cliente fidelizado",
-              "nativeQueryRef": "Cliente fidelizado"
-            }
-          ]
-        },
-        "Y": {
-          "projections": [
-            {
-              "field": {
-                "Measure": {
-                  "Expression": {
-                    "SourceRef": {
-                      "Entity": "_Medidas"
-                    }
-                  },
-                  "Property": "Venta por Linea"
-                }
-              },
-              "queryRef": "_Medidas.Venta por Linea",
-              "nativeQueryRef": "Venta por Linea",
-              "displayName": "Venta por línea"
+              "nativeQueryRef": "Cliente fidelizado",
+              "active": true
             }
           ]
         },
@@ -81,6 +63,25 @@
               "queryRef": "_Medidas.Margen Estimado %",
               "nativeQueryRef": "Margen Estimado %",
               "displayName": "Margen estimado %"
+            }
+          ]
+        },
+        "Y": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "_Medidas"
+                    }
+                  },
+                  "Property": "Venta por Linea"
+                }
+              },
+              "queryRef": "_Medidas.Venta por Linea",
+              "nativeQueryRef": "Venta por Linea",
+              "displayName": "Venta por línea"
             }
           ]
         }

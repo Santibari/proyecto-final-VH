@@ -27,7 +27,26 @@
                 }
               },
               "queryRef": "DimCalendario.Mes",
-              "nativeQueryRef": "Mes"
+              "nativeQueryRef": "Mes",
+              "active": true
+            }
+          ]
+        },
+        "Series": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "DimCalendario"
+                    }
+                  },
+                  "Property": "Año"
+                }
+              },
+              "queryRef": "DimCalendario.Año",
+              "nativeQueryRef": "Año"
             }
           ]
         },
@@ -47,24 +66,6 @@
               "queryRef": "_Medidas.Ventas Netas",
               "nativeQueryRef": "Ventas Netas",
               "displayName": "Ventas"
-            }
-          ]
-        },
-        "Series": {
-          "projections": [
-            {
-              "field": {
-                "Column": {
-                  "Expression": {
-                    "SourceRef": {
-                      "Entity": "DimCalendario"
-                    }
-                  },
-                  "Property": "Año"
-                }
-              },
-              "queryRef": "DimCalendario.Año",
-              "nativeQueryRef": "Año"
             }
           ]
         }
