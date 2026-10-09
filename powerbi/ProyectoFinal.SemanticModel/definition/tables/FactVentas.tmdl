@@ -17,8 +17,8 @@ table FactVentas
 
 	column fecha
 		dataType: dateTime
-		formatString: dd/mm/yyyy
 		isHidden
+		formatString: dd/mm/yyyy
 		lineageTag: 9e2dbe6e-6a4d-5fa0-ab89-ec4714b6de34
 		summarizeBy: none
 		sourceColumn: fecha
@@ -60,48 +60,48 @@ table FactVentas
 
 	column unidades
 		dataType: int64
-		formatString: #,0
 		isHidden
+		formatString: #,0
 		lineageTag: 2fdcecdf-040f-5950-afde-0f5ff84e0e36
 		summarizeBy: sum
 		sourceColumn: unidades
 
 	column precio_unitario_cop
 		dataType: int64
-		formatString: \$#,0;(\$#,0);\$#,0
 		isHidden
+		formatString: \$#,0;(\$#,0);\$#,0
 		lineageTag: b604e14d-a4ee-5aa8-8f74-0c17978cf2b1
 		summarizeBy: sum
 		sourceColumn: precio_unitario_cop
 
 	column descuento_pct
 		dataType: double
-		formatString: 0.00
 		isHidden
+		formatString: 0.00
 		lineageTag: 527ce267-0909-5d01-8487-f09acb512566
 		summarizeBy: sum
 		sourceColumn: descuento_pct
 
 	column venta_neta_cop
 		dataType: int64
-		formatString: \$#,0;(\$#,0);\$#,0
 		isHidden
+		formatString: \$#,0;(\$#,0);\$#,0
 		lineageTag: c43beda9-bfaf-5ac5-9f60-117607318290
 		summarizeBy: sum
 		sourceColumn: venta_neta_cop
 
 	column costo_estimado_cop
 		dataType: int64
-		formatString: \$#,0;(\$#,0);\$#,0
 		isHidden
+		formatString: \$#,0;(\$#,0);\$#,0
 		lineageTag: ed00def8-e951-53f1-b240-9d3612456039
 		summarizeBy: sum
 		sourceColumn: costo_estimado_cop
 
 	column quiebre_flag
 		dataType: int64
-		formatString: #,0
 		isHidden
+		formatString: #,0
 		lineageTag: 06275668-2824-5653-b36e-7a6540a51a5b
 		summarizeBy: sum
 		sourceColumn: quiebre_flag
@@ -121,3 +121,4 @@ table FactVentas
 				    Columnas
 
 	annotation PBI_ResultType = Table
+

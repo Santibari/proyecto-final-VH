@@ -19,3 +19,4 @@ table DimCategoria
 				    Nombres
 
 	annotation PBI_ResultType = Table
+

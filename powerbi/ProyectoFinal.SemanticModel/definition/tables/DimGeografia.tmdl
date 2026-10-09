@@ -42,3 +42,4 @@ table DimGeografia
 				    Nombres
 
 	annotation PBI_ResultType = Table
+
