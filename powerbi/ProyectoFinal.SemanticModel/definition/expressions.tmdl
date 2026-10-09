@@ -1,4 +1,4 @@
-expression RutaCSV = "C:\Users\USUARIO\Documents\Sabana universidad\Sabana 7 semestre\Herramientas de dataviz BI\proyecto-final-VH\data\raw\03_cadena_supermercados.csv" meta [IsParameterQuery = true, Type = "Text", IsParameterQueryRequired = true]
+expression RutaCSV = "C:\Users\diego\Documents\GitHub\proyecto-final-VH\data\raw\03_cadena_supermercados.csv" meta [IsParameterQuery = true, Type = "Text", IsParameterQueryRequired = true]
 	lineageTag: 7cfd7ffb-bf20-5762-bea6-87432c034a43
 
 	annotation PBI_ResultType = Text

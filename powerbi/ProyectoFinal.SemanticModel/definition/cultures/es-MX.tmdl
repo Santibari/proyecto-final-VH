@@ -99,27 +99,7 @@ cultureInfo es-MX
 			      "State": "Generated",
 			      "Terms": [
 			        {
-			          "Ventas netas (ene–sep del año)": {
-			            "State": "Suggested",
-			            "Source": {
-			              "Type": "External",
-			              "Agent": "PowerBI.VisualColumnRename"
-			            },
-			            "Weight": 0.9
-			          }
-			        },
-			        {
 			          "Ventas ene–sep": {
-			            "State": "Suggested",
-			            "Source": {
-			              "Type": "External",
-			              "Agent": "PowerBI.VisualColumnRename"
-			            },
-			            "Weight": 0.9
-			          }
-			        },
-			        {
-			          "Ventas": {
 			            "State": "Suggested",
 			            "Source": {
 			              "Type": "External",
@@ -178,29 +158,7 @@ cultureInfo es-MX
 			          "ConceptualProperty": "Margen Estimado %"
 			        }
 			      },
-			      "State": "Generated",
-			      "Terms": [
-			        {
-			          "Margen estimado %": {
-			            "State": "Suggested",
-			            "Source": {
-			              "Type": "External",
-			              "Agent": "PowerBI.VisualColumnRename"
-			            },
-			            "Weight": 0.9
-			          }
-			        },
-			        {
-			          "Margen estimado % (igual en todos los grupos)": {
-			            "State": "Suggested",
-			            "Source": {
-			              "Type": "External",
-			              "Agent": "PowerBI.VisualColumnRename"
-			            },
-			            "Weight": 0.9
-			          }
-			        }
-			      ]
+			      "State": "Generated"
 			    },
 			    "table_medidas.quiebre": {
 			      "Definition": {
@@ -211,26 +169,6 @@ cultureInfo es-MX
 			      },
 			      "State": "Generated",
 			      "Terms": [
-			        {
-			          "% líneas con quiebre de stock": {
-			            "State": "Suggested",
-			            "Source": {
-			              "Type": "External",
-			              "Agent": "PowerBI.VisualColumnRename"
-			            },
-			            "Weight": 0.9
-			          }
-			        },
-			        {
-			          "% líneas con quiebre": {
-			            "State": "Suggested",
-			            "Source": {
-			              "Type": "External",
-			              "Agent": "PowerBI.VisualColumnRename"
-			            },
-			            "Weight": 0.9
-			          }
-			        },
 			        {
 			          "% quiebre": {
 			            "State": "Suggested",
@@ -250,29 +188,7 @@ cultureInfo es-MX
 			          "ConceptualProperty": "Venta por Linea"
 			        }
 			      },
-			      "State": "Generated",
-			      "Terms": [
-			        {
-			          "Venta promedio por línea": {
-			            "State": "Suggested",
-			            "Source": {
-			              "Type": "External",
-			              "Agent": "PowerBI.VisualColumnRename"
-			            },
-			            "Weight": 0.9
-			          }
-			        },
-			        {
-			          "Venta por línea": {
-			            "State": "Suggested",
-			            "Source": {
-			              "Type": "External",
-			              "Agent": "PowerBI.VisualColumnRename"
-			            },
-			            "Weight": 0.9
-			          }
-			        }
-			      ]
+			      "State": "Generated"
 			    },
 			    "table_medidas.ticket_promedio_id_dataset": {
 			      "Definition": {
@@ -281,19 +197,7 @@ cultureInfo es-MX
 			          "ConceptualProperty": "Ticket Promedio (ID dataset)"
 			        }
 			      },
-			      "State": "Generated",
-			      "Terms": [
-			        {
-			          "Ticket según ID del dataset (referencia global ⓘ)": {
-			            "State": "Suggested",
-			            "Source": {
-			              "Type": "External",
-			              "Agent": "PowerBI.VisualColumnRename"
-			            },
-			            "Weight": 0.9
-			          }
-			        }
-			      ]
+			      "State": "Generated"
 			    },
 			    "table_medidas.ventas_netas": {
 			      "Definition": {
@@ -406,19 +310,7 @@ cultureInfo es-MX
 			          "ConceptualProperty": "% Ventas en Promocion"
 			        }
 			      },
-			      "State": "Generated",
-			      "Terms": [
-			        {
-			          "% de las ventas con promoción": {
-			            "State": "Suggested",
-			            "Source": {
-			              "Type": "External",
-			              "Agent": "PowerBI.VisualColumnRename"
-			            },
-			            "Weight": 0.9
-			          }
-			        }
-			      ]
+			      "State": "Generated"
 			    },
 			    "table_medidas.unidades_por_linea": {
 			      "Definition": {
@@ -427,19 +319,7 @@ cultureInfo es-MX
 			          "ConceptualProperty": "Unidades por Linea"
 			        }
 			      },
-			      "State": "Generated",
-			      "Terms": [
-			        {
-			          "Unidades por línea": {
-			            "State": "Suggested",
-			            "Source": {
-			              "Type": "External",
-			              "Agent": "PowerBI.VisualColumnRename"
-			            },
-			            "Weight": 0.9
-			          }
-			        }
-			      ]
+			      "State": "Generated"
 			    },
 			    "table_medidas.lineas_con_quiebre": {
 			      "Definition": {
@@ -450,16 +330,6 @@ cultureInfo es-MX
 			      },
 			      "State": "Generated",
 			      "Terms": [
-			        {
-			          "Líneas con quiebre": {
-			            "State": "Suggested",
-			            "Source": {
-			              "Type": "External",
-			              "Agent": "PowerBI.VisualColumnRename"
-			            },
-			            "Weight": 0.9
-			          }
-			        },
 			        {
 			          "Líneas": {
 			            "State": "Suggested",
@@ -482,16 +352,6 @@ cultureInfo es-MX
 			      "State": "Generated",
 			      "Terms": [
 			        {
-			          "Ventas registradas con quiebre": {
-			            "State": "Suggested",
-			            "Source": {
-			              "Type": "External",
-			              "Agent": "PowerBI.VisualColumnRename"
-			            },
-			            "Weight": 0.9
-			          }
-			        },
-			        {
 			          "Ventas con quiebre": {
 			            "State": "Suggested",
 			            "Source": {
@@ -502,6 +362,60 @@ cultureInfo es-MX
 			          }
 			        }
 			      ]
+			    },
+			    "table_medidas.unidades": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "_Medidas",
+			          "ConceptualProperty": "Unidades"
+			        }
+			      },
+			      "State": "Generated"
+			    },
+			    "table_medidas.svg_tiquete": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "_Medidas",
+			          "ConceptualProperty": "SVG Tiquete"
+			        }
+			      },
+			      "State": "Generated"
+			    },
+			    "table_medidas.svg_titulo_resumen": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "_Medidas",
+			          "ConceptualProperty": "SVG Titulo Resumen"
+			        }
+			      },
+			      "State": "Generated"
+			    },
+			    "table_medidas.svg_kpis": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "_Medidas",
+			          "ConceptualProperty": "SVG KPIs"
+			        }
+			      },
+			      "State": "Generated"
+			    },
+			    "table_medidas.svg_podio": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "_Medidas",
+			          "ConceptualProperty": "SVG Podio"
+			        }
+			      },
+			      "State": "Generated"
+			    },
+			    "table_medidas.svg_posiciones": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "_Medidas",
+			          "ConceptualProperty": "SVG Posiciones"
+			        }
+			      },
+			      "State": "Generated"
 			    }
 			  }
 			}

@@ -14,7 +14,7 @@
               "color": {
                 "expr": {
                   "Literal": {
-                    "Value": "'#F4F6F9'"
+                    "Value": "'#F5F0E6'"
                   }
                 }
               }
@@ -26,6 +26,33 @@
                 "Value": "0D"
               }
             }
+          },
+          "image": {
+            "image": {
+              "name": {
+                "expr": {
+                  "Literal": {
+                    "Value": "'fondo_pg04Disponibilidad.png'"
+                  }
+                }
+              },
+              "url": {
+                "expr": {
+                  "ResourcePackageItem": {
+                    "PackageName": "RegisteredResources",
+                    "PackageType": 1,
+                    "ItemName": "fondo_pg04Disponibilidad.png"
+                  }
+                }
+              },
+              "scaling": {
+                "expr": {
+                  "Literal": {
+                    "Value": "'Fit'"
+                  }
+                }
+              }
+            }
           }
         }
       }
@@ -33,7 +60,7 @@
   },
   "visualInteractions": [
     {
-      "source": "v04SegAno",
+      "source": "v06SegAno",
       "target": "v12LineaQuiebreMes",
       "type": "NoFilter"
     }

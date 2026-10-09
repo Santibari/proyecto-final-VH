@@ -1,7 +1,7 @@
 # Fases 5–7 — Diseño, construcción y validación del dashboard
 
 _Proyecto final BI 2026-2 · Grupo 3 · Cadena nacional de supermercados_
-_Estado: **primera versión funcional**. El diseño visual se ajustará en una iteración posterior._
+_Estado: **rediseño visual aplicado** (09/10/2026) con la skill `dashboard-design-studio`: dirección "tiquete + editorial"._
 
 ## Cómo se construye
 
@@ -18,25 +18,48 @@ Los cambios hechos a mano en Desktop sobre las páginas generadas se pierden si 
 
 | Página | Pregunta | Contenido |
 |---|---|---|
-| 1. Resumen ejecutivo | ¿Cómo está el negocio y dónde mirar primero? | 5 KPI + ticket de referencia (gris), ventas enero–septiembre por año, estacionalidad mensual por año, crecimiento por región y por categoría, recuadro "Dónde mirar primero" |
+| 0. Portada | ¿De qué se trata y por dónde empiezo? | Titular, audiencia y datos; tiquete con las ventas ene–sep 2024–2026 y la variación (medida SVG Tiquete); índice navegable |
+| 1. Resumen ejecutivo | ¿Cómo está el negocio y dónde mirar primero? | Titular dinámico, 5 KPI (con ticket de referencia ⓘ), podio top 3 de regiones, tabla de posiciones con puestos ganados/perdidos, estacionalidad mensual por año y crecimiento por categoría |
 | 2. Desempeño comercial (P1) | ¿Qué regiones, ciudades, formatos y categorías explican el resultado? | Matriz región → ciudad con crecimiento frente a 2025 y 2024 y su lectura; matriz región × formato con fondo semántico; categorías frente a dos años base; aporte en $ por ciudad |
 | 3. Promociones, clientes y canales (P2) | ¿Qué palancas comerciales muestran oportunidades? | KPI (% de ventas en promoción, margen, unidades por línea), crecimiento por promoción, mezcla de canales por formato, canales frente a dos años base, fidelizados frente a no fidelizados, medio de pago |
 | 4. Disponibilidad (P3) | ¿Dónde los quiebres requieren atención? | KPI de quiebre, % de quiebre mensual 2024–2026, volumen afectado por ciudad y por categoría, matriz categoría × formato |
 | 5. Conclusiones | Síntesis y decisiones | 6 decisiones con su responsable (cumple la estructura mínima del PDF, punto 9) |
 | Validación técnica (oculta) | ¿Cuadra con el CSV? | Tablas con las cifras de control |
 
+## Rediseño visual "tiquete + editorial"
+
+Elegido entre 3 propuestas (A "El tiquete", B "La liga", C "Editorial"); el equipo pidió la mezcla A + C.
+
+| Decisión | Qué se hizo | Por qué |
+|---|---|---|
+| Concepto | La portada es un **tiquete de caja**: las cifras ene–sep de 2024–2026 son los renglones, la variación es el "total" y el índice de páginas es navegable (Ctrl + clic). | Metáfora del dominio (supermercado) en lugar de decoración genérica. |
+| Tipografía | Titulares en serif (Cambria), cifras en monoespaciada (Consolas, como una caja registradora), texto en Segoe UI. | Jerarquía clara: titular-hallazgo → cifra → detalle. |
+| Fondo | Papel cálido `#F5F0E6` con reglas editoriales; tarjetas `#FFFDF8`. | Menos "plantilla corporativa"; el dato es la figura, el fondo no compite. |
+| Retícula | 12 columnas (margen 60, medianil 24) en lienzo 1920 × 1080. | Alineación consistente entre páginas. |
+| Podio top 3 | Medida **SVG Podio**: las 3 regiones con mayor crecimiento ene–sep, con medallas oro/plata/bronce y la comparación contra hace 2 años. Se anima al cargar o al filtrar. | Pedido del equipo; responde "¿dónde está el crecimiento?" en 1 segundo. |
+| Tabla de posiciones | Medida **SVG Posiciones**: puesto actual, **puestos ganados o perdidos** frente al año anterior (▲▼) y barra de crecimiento con color semántico. | Muestra que el total plano esconde movimientos (Orinoquía ▲6). |
+| KPI | Medida **SVG KPIs**: cifras con formato colombiano y nota de contexto (años anteriores, ticket de referencia ⓘ). | Formato independiente de la configuración regional del equipo. |
+| Titular dinámico | Medida **SVG Titulo Resumen**: "El negocio está plano (+0,9 %), pero las regiones se mueven" y cambia con el año. | Titular = hallazgo, no tema. |
+
+Las medidas SVG (carpeta `8. Diseño (SVG y textos)` de `_Medidas`) se generan en `scripts/pbip/medidas_diseno.py`
+y se muestran con el **visual de imagen** (origen: "Seleccionar de los datos"). Responden a todos los segmentadores.
+
 ## Color semántico
+
+Paleta validada con `.claude/skills/dashboard-design-studio/scripts/paleta.py` (contraste sobre el papel y daltonismo).
 
 | Color | Significado | Dónde se ve |
 |---|---|---|
-| Azul `#1F3A5F` | Identidad y dato principal (2026, valores) | Encabezados, KPI, barras de volumen |
-| Azul claro `#8FA8C8` / gris claro | Comparación (años anteriores, "vs hace 2 años") | Estacionalidad, barras de dos comparaciones |
-| Verde `#2E7D32` | Crece de forma sostenida (frente a 2025 y 2024) | Barras y matrices de crecimiento (medida `Color Crecimiento`) |
-| Rojo `#C62828` | Cae de forma sostenida | Ídem |
-| Naranja `#EF8F00` | Advertencia: rebote u oscilación, quiebre de stock | Crecimiento que oscila, KPI % quiebre |
-| Gris `#9E9E9E` | Estable, neutro o referencia | Crecimiento estable, ticket de referencia, fidelización |
+| Azul petróleo `#0E4D64` | Identidad y dato principal (2026, valores) | Titulares, cifras, barras de volumen, línea 2026 |
+| Gris azulado `#5E7F8C` / arena `#C9C2B3` | Comparación (2025 / 2024) | Estacionalidad, segunda comparación |
+| Verde `#2E7D32` | Crece de forma sostenida (frente a 2025 y 2024) | Medida `Color Crecimiento`, tabla de posiciones, ▲ |
+| Rojo `#C62828` | Cae de forma sostenida | Ídem, ▼ |
+| Naranja `#B26A00` | Advertencia: rebote u oscilación, quiebre de stock | Crecimiento que oscila, % quiebre |
+| Gris `#7D858C` | Estable, neutro o referencia | Crecimiento estable |
+| Oro / plata / bronce | Puesto 1, 2 y 3 (solo en el podio y la tabla) | Medallas |
 
-El color de crecimiento **no es manual**: lo calcula la medida `Color Crecimiento` a partir de `Lectura Tendencia`. Por eso se mantiene coherente con cualquier filtro.
+El naranja y el gris se oscurecieron frente a la primera versión (`#EF8F00` y `#9E9E9E` no llegaban a 3:1 sobre el fondo).
+El verde y el rojo siempre van con signo (▲ ▼, + / −) para quien no distingue esos colores.
 
 ## Distribución (patrón F)
 
@@ -76,7 +99,9 @@ Se verificó en Power BI Desktop, en la página "Validación técnica", el 07/10
 
 ## Pendientes para la iteración de diseño
 
-- La línea de % de quiebre debe salir en naranja (hoy sale en el azul por defecto) y su eje debería empezar en 0 % para no exagerar la variación.
-- Las etiquetas del gráfico de ventas por año usan el formato "0,43 mil M"; conviene mostrarlas en "mill.".
+- ~~Línea de % de quiebre en naranja y eje desde 0 %~~ (resuelto en el rediseño).
+- ~~Gráfico de ventas por año y tarjeta del ticket truncada~~ (reemplazados por la fila de KPI SVG).
 - Tooltips personalizados (páginas de información sobre herramientas) para región y categoría.
-- Afinar tamaños y espacios; revisar los textos truncados en la tarjeta del ticket.
+- Las tarjetas de las páginas 3 y 4 muestran los decimales según la configuración regional del computador
+  (punto o coma); las cifras SVG siempre usan formato colombiano.
+- Reemplazar "Nombre 1 · Nombre 2 · Nombre 3" en la portada por los integrantes.

@@ -1,0 +1,41 @@
+{
+  "name": "Tiquete editorial",
+  "dataColors": [
+    "#0E4D64",
+    "#5E7F8C",
+    "#C9C2B3",
+    "#A87B22",
+    "#9A4A2C",
+    "#7D858C",
+    "#9C7A12",
+    "#3F6B5E"
+  ],
+  "background": "#FFFDF8",
+  "foreground": "#1E2B2F",
+  "tableAccent": "#0E4D64",
+  "good": "#0E4D64",
+  "bad": "#9A4A2C",
+  "neutral": "#A87B22",
+  "textClasses": {
+    "label": {
+      "fontFace": "Segoe UI",
+      "fontSize": 10,
+      "color": "#5B6770"
+    },
+    "callout": {
+      "fontFace": "Consolas",
+      "fontSize": 28,
+      "color": "#1E2B2F"
+    },
+    "title": {
+      "fontFace": "Segoe UI Semibold",
+      "fontSize": 12,
+      "color": "#1E2B2F"
+    },
+    "header": {
+      "fontFace": "Segoe UI Semibold",
+      "fontSize": 12,
+      "color": "#1E2B2F"
+    }
+  }
+}

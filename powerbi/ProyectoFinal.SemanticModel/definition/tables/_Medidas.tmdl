@@ -147,16 +147,248 @@ table _Medidas
 		lineageTag: e0834d18-3f8a-5d07-915b-4255269e7a56
 
 	measure 'Color Crecimiento' =
-			-- Verde = crece sostenido, rojo = cae sostenido, naranja = oscila, gris = estable
+			-- Petróleo = crece sostenido, terracota = cae sostenido, ocre = oscila, gris = estable
 			SWITCH (
 			    [Lectura Tendencia],
-			    "Crece (sostenido)", "#2E7D32",
-			    "Cae (sostenido)", "#C62828",
-			    "Oscila (rebote)", "#EF8F00",
-			    "#9E9E9E"
+			    "Crece (sostenido)", "#0E4D64",
+			    "Cae (sostenido)", "#9A4A2C",
+			    "Oscila (rebote)", "#A87B22",
+			    "#7D858C"
 			)
 		displayFolder: 7. Formato condicional
 		lineageTag: da674d36-4ba1-5366-b086-efe6d06943ce
+
+	measure 'Crecimiento Año Anterior %' = CALCULATE ( [Crecimiento Ventas Ene-Sep %], DATEADD ( DimCalendario[Fecha], -1, YEAR ) )
+		formatString: 0.00%;-0.00%;0.00%
+		displayFolder: 3. Tiempo (Ene-Sep)
+		lineageTag: f11ce9a4-33eb-5277-ae2c-30ac16fa5635
+
+	measure 'SVG Podio' =
+			VAR Anio = SELECTEDVALUE ( DimCalendario[Año] )
+			VAR T =
+			    ADDCOLUMNS (
+			        ALL ( DimGeografia[Region] ),
+			        "@g", [Crecimiento Ventas Ene-Sep %],
+			        "@g2", [Crecimiento vs Hace 2 Años %],
+			        "@gp", [Crecimiento Año Anterior %]
+			    )
+			VAR TV = FILTER ( T, NOT ISBLANK ( [@g] ) )
+			VAR TP = FILTER ( TV, NOT ISBLANK ( [@gp] ) )
+			VAR R =
+			    ADDCOLUMNS (
+			        TV,
+			        "@r", RANKX ( TV, [@g], , DESC, SKIP ),
+			        "@rp", IF ( NOT ISBLANK ( [@gp] ), RANKX ( TP, [@gp], , DESC, SKIP ) ),
+			        "@c", SWITCH (
+			            TRUE (),
+			            [@g] > 0.02 && [@g2] > 0.02, "#0E4D64",
+			            [@g] < -0.02 && [@g2] < -0.02, "#9A4A2C",
+			            ABS ( [@g] ) > 0.02, "#A87B22",
+			            "#7D858C"
+			        )
+			    )
+			VAR F1 = FILTER ( R, [@r] = 1 )
+			VAR N1 = MAXX ( F1, DimGeografia[Region] )
+			VAR G1 = MAXX ( F1, [@g] )
+			VAR H1 = MAXX ( F1, [@g2] )
+			VAR P1 = IF ( ISBLANK ( N1 ), "", IF ( G1 > 0, "+", IF ( G1 < 0, "−", "" ) ) & SUBSTITUTE ( FORMAT ( ABS ( G1 ) * 100, "0.0" ), ".", "," ) & " %" )
+			VAR S1 = IF ( ISBLANK ( N1 ), "", "vs " & ( Anio - 1 ) & IF ( ISBLANK ( H1 ), "", " · " & IF ( H1 > 0, "+", IF ( H1 < 0, "−", "" ) ) & SUBSTITUTE ( FORMAT ( ABS ( H1 ) * 100, "0.0" ), ".", "," ) & " %" & " vs " & ( Anio - 2 ) ) )
+			VAR F2 = FILTER ( R, [@r] = 2 )
+			VAR N2 = MAXX ( F2, DimGeografia[Region] )
+			VAR G2 = MAXX ( F2, [@g] )
+			VAR H2 = MAXX ( F2, [@g2] )
+			VAR P2 = IF ( ISBLANK ( N2 ), "", IF ( G2 > 0, "+", IF ( G2 < 0, "−", "" ) ) & SUBSTITUTE ( FORMAT ( ABS ( G2 ) * 100, "0.0" ), ".", "," ) & " %" )
+			VAR S2 = IF ( ISBLANK ( N2 ), "", "vs " & ( Anio - 1 ) & IF ( ISBLANK ( H2 ), "", " · " & IF ( H2 > 0, "+", IF ( H2 < 0, "−", "" ) ) & SUBSTITUTE ( FORMAT ( ABS ( H2 ) * 100, "0.0" ), ".", "," ) & " %" & " vs " & ( Anio - 2 ) ) )
+			VAR F3 = FILTER ( R, [@r] = 3 )
+			VAR N3 = MAXX ( F3, DimGeografia[Region] )
+			VAR G3 = MAXX ( F3, [@g] )
+			VAR H3 = MAXX ( F3, [@g2] )
+			VAR P3 = IF ( ISBLANK ( N3 ), "", IF ( G3 > 0, "+", IF ( G3 < 0, "−", "" ) ) & SUBSTITUTE ( FORMAT ( ABS ( G3 ) * 100, "0.0" ), ".", "," ) & " %" )
+			VAR S3 = IF ( ISBLANK ( N3 ), "", "vs " & ( Anio - 1 ) & IF ( ISBLANK ( H3 ), "", " · " & IF ( H3 > 0, "+", IF ( H3 < 0, "−", "" ) ) & SUBSTITUTE ( FORMAT ( ABS ( H3 ) * 100, "0.0" ), ".", "," ) & " %" & " vs " & ( Anio - 2 ) ) )
+			VAR RP1_ = MAXX ( FILTER ( R, [@r] = 1 ), [@rp] )
+			VAR NP_ = COUNTROWS ( TP )
+			VAR TIT =
+			    SWITCH (
+			        TRUE (),
+			        ISBLANK ( RP1_ ), N1 & " lidera el crecimiento",
+			        RP1_ = 1, N1 & " repite en el primer puesto",
+			        RP1_ = NP_, N1 & " pasó del último puesto al primero",
+			        N1 & " subió del puesto " & RP1_ & " al primero"
+			    )
+			VAR Msg = IF ( ISBLANK ( Anio ), "Seleccione un solo año", "Sin año anterior para comparar" )
+			VAR Svg = IF ( ISBLANK ( N1 ), "<svg xmlns='http://www.w3.org/2000/svg' width='888' height='380'><text x='444' y='190' text-anchor='middle' font-family='Segoe UI, Arial, sans-serif' font-size='22' fill='#5B6770'>" & Msg & "</text></svg>", "<svg xmlns='http://www.w3.org/2000/svg' width='888' height='460' viewBox='0 0 888 460' font-family='Segoe UI, Arial, sans-serif'><text x='0' y='16' font-size='13' letter-spacing='2' font-weight='700' fill='#5B6770'>EL PODIO · CRECIMIENTO ENE–SEP FRENTE AL AÑO ANTERIOR</text><text x='0' y='52' font-family='Cambria, Georgia, serif' font-size='28' font-weight='700' fill='#1E2B2F'>" & ( TIT ) & "</text><rect x='33' y='450' width='250' height='0' rx='10' fill='#A9B1B9' fill-opacity='.16' stroke='#A9B1B9' stroke-width='2'><animate attributeName='height' from='0' to='119' dur='.8s' begin='0.25s' fill='freeze' calcMode='spline' keySplines='.2 .8 .2 1'/><animate attributeName='y' from='450' to='331' dur='.8s' begin='0.25s' fill='freeze' calcMode='spline' keySplines='.2 .8 .2 1'/></rect><g opacity='0'><animate attributeName='opacity' from='0' to='1' dur='.5s' begin='0.85s' fill='freeze'/><text x='158' y='383' text-anchor='middle' font-size='44' font-weight='800' fill='#1E2B2F'>" & ( P2 ) & "</text><text x='158' y='411' text-anchor='middle' font-size='14' fill='#5B6770'>" & ( S2 ) & "</text></g><g opacity='0' transform='translate(0,-30)'><animate attributeName='opacity' from='0' to='1' dur='.4s' begin='0.95s' fill='freeze'/><animateTransform attributeName='transform' type='translate' from='0 -30' to='0 0' dur='.5s' begin='0.95s' fill='freeze' calcMode='spline' keySplines='.3 1.4 .5 1'/><path d='M140 181h14l8 30h-14z' fill='#7A8A92'/><path d='M176 181h-14l-8 30h14z' fill='#52626A'/><circle cx='158' cy='243' r='36' fill='#A9B1B9'/><circle cx='158' cy='243' r='26' fill='none' stroke='rgba(255,255,255,.6)' stroke-width='2.5'/><text x='158' y='254' text-anchor='middle' font-size='32' font-weight='800' fill='#fff'>2</text><text x='158' y='309' text-anchor='middle' font-size='24' font-weight='700' fill='#1E2B2F'>" & ( N2 ) & "</text></g><rect x='319' y='450' width='250' height='0' rx='10' fill='#C9A227' fill-opacity='.16' stroke='#C9A227' stroke-width='2'><animate attributeName='height' from='0' to='170' dur='.8s' begin='0.5s' fill='freeze' calcMode='spline' keySplines='.2 .8 .2 1'/><animate attributeName='y' from='450' to='280' dur='.8s' begin='0.5s' fill='freeze' calcMode='spline' keySplines='.2 .8 .2 1'/></rect><g opacity='0'><animate attributeName='opacity' from='0' to='1' dur='.5s' begin='1.1s' fill='freeze'/><text x='444' y='332' text-anchor='middle' font-size='44' font-weight='800' fill='#1E2B2F'>" & ( P1 ) & "</text><text x='444' y='360' text-anchor='middle' font-size='14' fill='#5B6770'>" & ( S1 ) & "</text></g><g opacity='0' transform='translate(0,-30)'><animate attributeName='opacity' from='0' to='1' dur='.4s' begin='1.2s' fill='freeze'/><animateTransform attributeName='transform' type='translate' from='0 -30' to='0 0' dur='.5s' begin='1.2s' fill='freeze' calcMode='spline' keySplines='.3 1.4 .5 1'/><path d='M426 130h14l8 30h-14z' fill='#7A8A92'/><path d='M462 130h-14l-8 30h14z' fill='#52626A'/><circle cx='444' cy='192' r='36' fill='#C9A227'/><circle cx='444' cy='192' r='26' fill='none' stroke='rgba(255,255,255,.6)' stroke-width='2.5'/><text x='444' y='203' text-anchor='middle' font-size='32' font-weight='800' fill='#fff'>1</text><text x='444' y='258' text-anchor='middle' font-size='24' font-weight='700' fill='#1E2B2F'>" & ( N1 ) & "</text></g><rect x='605' y='450' width='250' height='0' rx='10' fill='#B9773F' fill-opacity='.16' stroke='#B9773F' stroke-width='2'><animate attributeName='height' from='0' to='88' dur='.8s' begin='0.0s' fill='freeze' calcMode='spline' keySplines='.2 .8 .2 1'/><animate attributeName='y' from='450' to='362' dur='.8s' begin='0.0s' fill='freeze' calcMode='spline' keySplines='.2 .8 .2 1'/></rect><g opacity='0'><animate attributeName='opacity' from='0' to='1' dur='.5s' begin='0.6s' fill='freeze'/><text x='730' y='414' text-anchor='middle' font-size='44' font-weight='800' fill='#1E2B2F'>" & ( P3 ) & "</text><text x='730' y='442' text-anchor='middle' font-size='14' fill='#5B6770'>" & ( S3 ) & "</text></g><g opacity='0' transform='translate(0,-30)'><animate attributeName='opacity' from='0' to='1' dur='.4s' begin='0.7s' fill='freeze'/><animateTransform attributeName='transform' type='translate' from='0 -30' to='0 0' dur='.5s' begin='0.7s' fill='freeze' calcMode='spline' keySplines='.3 1.4 .5 1'/><path d='M712 212h14l8 30h-14z' fill='#7A8A92'/><path d='M748 212h-14l-8 30h14z' fill='#52626A'/><circle cx='730' cy='274' r='36' fill='#B9773F'/><circle cx='730' cy='274' r='26' fill='none' stroke='rgba(255,255,255,.6)' stroke-width='2.5'/><text x='730' y='285' text-anchor='middle' font-size='32' font-weight='800' fill='#fff'>3</text><text x='730' y='340' text-anchor='middle' font-size='24' font-weight='700' fill='#1E2B2F'>" & ( N3 ) & "</text></g></svg>" )
+			RETURN
+			    "data:image/svg+xml;utf8," & SUBSTITUTE ( SUBSTITUTE ( Svg, "%", "%25" ), "#", "%23" )
+		displayFolder: 8. Diseño (SVG y textos)
+		lineageTag: dc299613-5cd2-5f48-8d8b-bfae6ccde00d
+		dataCategory: ImageUrl
+
+	measure 'SVG Posiciones' =
+			VAR Anio = SELECTEDVALUE ( DimCalendario[Año] )
+			VAR T =
+			    ADDCOLUMNS (
+			        ALL ( DimGeografia[Region] ),
+			        "@g", [Crecimiento Ventas Ene-Sep %],
+			        "@g2", [Crecimiento vs Hace 2 Años %],
+			        "@gp", [Crecimiento Año Anterior %]
+			    )
+			VAR TV = FILTER ( T, NOT ISBLANK ( [@g] ) )
+			VAR TP = FILTER ( TV, NOT ISBLANK ( [@gp] ) )
+			VAR R =
+			    ADDCOLUMNS (
+			        TV,
+			        "@r", RANKX ( TV, [@g], , DESC, SKIP ),
+			        "@rp", IF ( NOT ISBLANK ( [@gp] ), RANKX ( TP, [@gp], , DESC, SKIP ) ),
+			        "@c", SWITCH (
+			            TRUE (),
+			            [@g] > 0.02 && [@g2] > 0.02, "#0E4D64",
+			            [@g] < -0.02 && [@g2] < -0.02, "#9A4A2C",
+			            ABS ( [@g] ) > 0.02, "#A87B22",
+			            "#7D858C"
+			        )
+			    )
+			VAR NR = COUNTROWS ( R )
+			VAR MaxP = MAXX ( R, MAX ( [@g], 0 ) )
+			VAR MaxN = MAXX ( R, MAX ( - [@g], 0 ) )
+			VAR Esc = MIN ( IF ( MaxP > 0, 235.3 / MaxP, 1E9 ), IF ( MaxN > 0, 100.3 / MaxN, 1E9 ) )
+			VAR Filas = CONCATENATEX ( R,
+			            VAR Y = 36 + ( [@r] - 1 ) * 50
+			            VAR WB = ROUND ( ABS ( [@g] ) * Esc, 1 )
+			            VAR XB = IF ( [@g] >= 0, 483.8, 483.8 - WB )
+			            RETURN "<line x1='0' x2='816' y1='" & ( Y + 50 ) & "' y2='" & ( Y + 50 ) & "' stroke='#E2DACB'/>" & ( IF ( [@r] <= 3, "<circle cx='22' cy='" & ( Y + 25.0 ) & "' r='17' fill='" & SWITCH ( [@r], 1, "#C9A227", 2, "#A9B1B9", "#B9773F" ) & "'/><text x='22' y='" & ( Y + 31.0 ) & "' text-anchor='middle' font-size='17' font-weight='800' fill='#fff'>" & [@r] & "</text>", "<text x='22' y='" & ( Y + 32.0 ) & "' text-anchor='middle' font-size='20' font-weight='700' fill='#5B6770'>" & [@r] & "</text>" ) ) & ( SWITCH ( TRUE (), ISBLANK ( [@rp] ), "", [@rp] > [@r], "<text x='96' y='" & ( Y + 31.0 ) & "' font-size='17' font-weight='700' fill='#0E4D64'>▲ " & ( [@rp] - [@r] ) & "</text>", [@rp] < [@r], "<text x='96' y='" & ( Y + 31.0 ) & "' font-size='17' font-weight='700' fill='#9A4A2C'>▼ " & ( [@r] - [@rp] ) & "</text>", "<text x='96' y='" & ( Y + 31.0 ) & "' font-size='17' fill='#5B6770'>=</text>" ) ) & "<text x='170' y='" & ( Y + 32.0 ) & "' font-size='20' font-weight='" & ( IF ( [@r] <= 3, 700, 500 ) ) & "' fill='#1E2B2F'>" & ( DimGeografia[Region] ) & "</text><rect x='483.8' y='" & ( Y + 15 ) & "' width='0' height='20' rx='4' fill='" & ( [@c] ) & "'><animate attributeName='width' from='0' to='" & ( FORMAT ( WB, "0.0", "en-US" ) ) & "' dur='.9s' begin='0." & ( [@r] - 1 ) & "s' fill='freeze' calcMode='spline' keySplines='.2 .8 .2 1'/><animate attributeName='x' from='483.8' to='" & ( FORMAT ( XB, "0.0", "en-US" ) ) & "' dur='.9s' begin='0." & ( [@r] - 1 ) & "s' fill='freeze' calcMode='spline' keySplines='.2 .8 .2 1'/></rect><text x='810' y='" & ( Y + 32.0 ) & "' text-anchor='end' font-size='20' font-weight='700' fill='" & ( [@c] ) & "'>" & ( IF ( [@g] > 0, "+", IF ( [@g] < 0, "−", "" ) ) & SUBSTITUTE ( FORMAT ( ABS ( [@g] ) * 100, "0.0" ), ".", "," ) & " %" ) & "</text>",
+			        "", [@r], ASC )
+			VAR Msg = IF ( ISBLANK ( Anio ), "Seleccione un solo año", "Sin año anterior para comparar" )
+			VAR M_ = ADDCOLUMNS ( FILTER ( R, NOT ISBLANK ( [@rp] ) ), "@m", [@rp] - [@r] )
+			VAR MinM_ = MINX ( M_, [@m] )
+			VAR Peores_ = FILTER ( M_, [@m] = MinM_ )
+			VAR TIT =
+			    SWITCH (
+			        TRUE (),
+			        ISEMPTY ( M_ ), "Sin tabla de " & ( Anio - 1 ) & " para comparar puestos",
+			        MinM_ >= 0, "Ninguna región perdió puestos frente a " & ( Anio - 1 ),
+			        CONCATENATEX ( Peores_, DimGeografia[Region], " y ", DimGeografia[Region], ASC )
+			            & IF ( COUNTROWS ( Peores_ ) > 1, " bajaron ", " bajó " ) & ( - MinM_ )
+			            & IF ( MinM_ = -1, " puesto", " puestos" )
+			    )
+			VAR Svg = IF ( NR = 0, "<svg xmlns='http://www.w3.org/2000/svg' width='888' height='380'><text x='444' y='190' text-anchor='middle' font-family='Segoe UI, Arial, sans-serif' font-size='22' fill='#5B6770'>" & Msg & "</text></svg>", "<svg xmlns='http://www.w3.org/2000/svg' width='816' height='474' viewBox='0 0 816 474' font-family='Segoe UI, Arial, sans-serif'><text x='0' y='16' font-size='13' letter-spacing='2' font-weight='700' fill='#5B6770'>TABLA DE POSICIONES · PUESTOS GANADOS O PERDIDOS</text><text x='0' y='52' font-family='Cambria, Georgia, serif' font-size='28' font-weight='700' fill='#1E2B2F'>" & ( TIT ) & "</text><g transform='translate(0,80)'><text x='0' y='18' font-size='12' letter-spacing='1.5' font-weight='700' fill='#5B6770'>PUESTO</text><text x='96' y='18' font-size='12' letter-spacing='1.5' font-weight='700' fill='#5B6770'>MOV.</text><text x='170' y='18' font-size='12' letter-spacing='1.5' font-weight='700' fill='#5B6770'>REGIÓN</text><text x='810' y='18' text-anchor='end' font-size='12' letter-spacing='1.5' font-weight='700' fill='#5B6770'>VS " & ( Anio - 1 ) & "</text><line x1='483.8' x2='483.8' y1='36' y2='" & ( 36 + NR * 50 ) & "' stroke='#5B6770' stroke-opacity='.5'/>" & Filas & "</g></svg>" )
+			RETURN
+			    "data:image/svg+xml;utf8," & SUBSTITUTE ( SUBSTITUTE ( Svg, "%", "%25" ), "#", "%23" )
+		displayFolder: 8. Diseño (SVG y textos)
+		lineageTag: 09b5c084-526c-5f9d-ada6-eaf2f7b450ce
+		dataCategory: ImageUrl
+
+	measure 'SVG Tiquete' =
+			VAR Ult = YEAR ( CALCULATE ( MAX ( FactVentas[fecha] ), REMOVEFILTERS () ) )
+			VAR A0 = Ult - 2
+			VAR V0 = CALCULATE ( [Ventas Ene-Sep], REMOVEFILTERS ( DimCalendario ), DimCalendario[Año] = A0 )
+			VAR T0 = "$" & SUBSTITUTE ( FORMAT ( V0, "#,0" ), ",", "." )
+			VAR A1 = Ult - 1
+			VAR V1 = CALCULATE ( [Ventas Ene-Sep], REMOVEFILTERS ( DimCalendario ), DimCalendario[Año] = A1 )
+			VAR T1 = "$" & SUBSTITUTE ( FORMAT ( V1, "#,0" ), ",", "." )
+			VAR A2 = Ult - 0
+			VAR V2 = CALCULATE ( [Ventas Ene-Sep], REMOVEFILTERS ( DimCalendario ), DimCalendario[Año] = A2 )
+			VAR T2 = "$" & SUBSTITUTE ( FORMAT ( V2, "#,0" ), ",", "." )
+			VAR Crec = DIVIDE ( V2 - V1, V1 )
+			VAR VX = IF ( Crec > 0, "+", IF ( Crec < 0, "−", "" ) ) & SUBSTITUTE ( FORMAT ( ABS ( Crec ) * 100, "0.00" ), ".", "," ) & " %"
+			VAR Svg = "<svg xmlns='http://www.w3.org/2000/svg' width='568' height='760' viewBox='0 0 568 760' font-family='Consolas, Courier New, monospace'><text x='284.0' y='26' text-anchor='middle' font-size='25' font-weight='700' letter-spacing='2' fill='#1E2B2F'>CADENA NACIONAL</text><text x='284.0' y='56' text-anchor='middle' font-size='18' fill='#1E2B2F'>DE SUPERMERCADOS</text><text x='284.0' y='84' text-anchor='middle' font-size='18' fill='#5B6770'>TIQUETE DE VENTAS · ENE–SEP</text><line x1='0' x2='568' y1='124' y2='124' stroke='#E2DACB' stroke-width='2' stroke-dasharray='8 6'/><g opacity='0'><animate attributeName='opacity' from='0' to='1' dur='.25s' begin='0.15s' fill='freeze'/><text x='0' y='170' font-size='22' fill='#1E2B2F' font-weight='400'>ENE–SEP " & ( A0 ) & "</text><text x='568' y='170' text-anchor='end' font-size='22' fill='#1E2B2F' font-weight='400'>" & ( T0 ) & "</text></g><g opacity='0'><animate attributeName='opacity' from='0' to='1' dur='.25s' begin='0.40s' fill='freeze'/><text x='0' y='212' font-size='22' fill='#1E2B2F' font-weight='400'>ENE–SEP " & ( A1 ) & "</text><text x='568' y='212' text-anchor='end' font-size='22' fill='#1E2B2F' font-weight='400'>" & ( T1 ) & "</text></g><g opacity='0'><animate attributeName='opacity' from='0' to='1' dur='.25s' begin='0.65s' fill='freeze'/><text x='0' y='254' font-size='22' fill='#1E2B2F' font-weight='700'>ENE–SEP " & ( A2 ) & "</text><text x='568' y='254' text-anchor='end' font-size='22' fill='#1E2B2F' font-weight='700'>" & ( T2 ) & "</text></g><line x1='0' x2='568' y1='290' y2='290' stroke='#E2DACB' stroke-width='2' stroke-dasharray='8 6'/><g opacity='0'><animate attributeName='opacity' from='0' to='1' dur='.3s' begin='1s' fill='freeze'/><text x='0' y='352' font-size='22' font-weight='700' fill='#1E2B2F'>VARIACIÓN</text><text x='568' y='362' text-anchor='end' font-size='66' font-weight='700' fill='#0E4D64'>" & ( VX ) & "</text></g><text x='0' y='410' font-size='15' fill='#5B6770'>* PLANO EN EL TOTAL. POR DENTRO, NO.</text><line x1='0' x2='568' y1='446' y2='446' stroke='#E2DACB' stroke-width='2' stroke-dasharray='8 6'/><text x='0' y='500' font-size='20' font-weight='700' fill='#0E4D64'>01</text><text x='40' y='500' font-size='20' fill='#1E2B2F'>RESUMEN EJECUTIVO</text><line x1='239' x2='538' y1='495' y2='495' stroke='#5B6770' stroke-width='2' stroke-dasharray='1 5' stroke-linecap='round'/><text x='568' y='500' text-anchor='end' font-size='20' fill='#1E2B2F'>→</text><text x='0' y='546' font-size='20' font-weight='700' fill='#0E4D64'>02</text><text x='40' y='546' font-size='20' fill='#1E2B2F'>DESEMPEÑO COMERCIAL</text><line x1='261' x2='538' y1='541' y2='541' stroke='#5B6770' stroke-width='2' stroke-dasharray='1 5' stroke-linecap='round'/><text x='568' y='546' text-anchor='end' font-size='20' fill='#1E2B2F'>→</text><text x='0' y='592' font-size='20' font-weight='700' fill='#0E4D64'>03</text><text x='40' y='592' font-size='20' fill='#1E2B2F'>PROMOCIONES Y CANALES</text><line x1='283' x2='538' y1='587' y2='587' stroke='#5B6770' stroke-width='2' stroke-dasharray='1 5' stroke-linecap='round'/><text x='568' y='592' text-anchor='end' font-size='20' fill='#1E2B2F'>→</text><text x='0' y='638' font-size='20' font-weight='700' fill='#0E4D64'>04</text><text x='40' y='638' font-size='20' fill='#1E2B2F'>DISPONIBILIDAD</text><line x1='206' x2='538' y1='633' y2='633' stroke='#5B6770' stroke-width='2' stroke-dasharray='1 5' stroke-linecap='round'/><text x='568' y='638' text-anchor='end' font-size='20' fill='#1E2B2F'>→</text><text x='0' y='684' font-size='20' font-weight='700' fill='#0E4D64'>05</text><text x='40' y='684' font-size='20' fill='#1E2B2F'>CONCLUSIONES</text><line x1='184' x2='538' y1='679' y2='679' stroke='#5B6770' stroke-width='2' stroke-dasharray='1 5' stroke-linecap='round'/><text x='568' y='684' text-anchor='end' font-size='20' fill='#1E2B2F'>→</text><rect x='184' y='700' width='3' height='54' fill='#1E2B2F'/><rect x='189' y='700' width='1' height='54' fill='#1E2B2F'/><rect x='194' y='700' width='4' height='54' fill='#1E2B2F'/><rect x='201' y='700' width='2' height='54' fill='#1E2B2F'/><rect x='206' y='700' width='1' height='54' fill='#1E2B2F'/><rect x='210' y='700' width='3' height='54' fill='#1E2B2F'/><rect x='215' y='700' width='2' height='54' fill='#1E2B2F'/><rect x='221' y='700' width='1' height='54' fill='#1E2B2F'/><rect x='225' y='700' width='4' height='54' fill='#1E2B2F'/><rect x='232' y='700' width='1' height='54' fill='#1E2B2F'/><rect x='237' y='700' width='3' height='54' fill='#1E2B2F'/><rect x='243' y='700' width='2' height='54' fill='#1E2B2F'/><rect x='247' y='700' width='1' height='54' fill='#1E2B2F'/><rect x='251' y='700' width='4' height='54' fill='#1E2B2F'/><rect x='259' y='700' width='2' height='54' fill='#1E2B2F'/><rect x='264' y='700' width='1' height='54' fill='#1E2B2F'/><rect x='268' y='700' width='3' height='54' fill='#1E2B2F'/><rect x='273' y='700' width='1' height='54' fill='#1E2B2F'/><rect x='278' y='700' width='2' height='54' fill='#1E2B2F'/><rect x='283' y='700' width='4' height='54' fill='#1E2B2F'/><rect x='289' y='700' width='1' height='54' fill='#1E2B2F'/><rect x='294' y='700' width='3' height='54' fill='#1E2B2F'/><rect x='300' y='700' width='2' height='54' fill='#1E2B2F'/><rect x='305' y='700' width='1' height='54' fill='#1E2B2F'/><rect x='310' y='700' width='3' height='54' fill='#1E2B2F'/><rect x='316' y='700' width='2' height='54' fill='#1E2B2F'/><rect x='320' y='700' width='1' height='54' fill='#1E2B2F'/><rect x='325' y='700' width='4' height='54' fill='#1E2B2F'/><rect x='331' y='700' width='2' height='54' fill='#1E2B2F'/><rect x='336' y='700' width='1' height='54' fill='#1E2B2F'/><rect x='340' y='700' width='3' height='54' fill='#1E2B2F'/><rect x='347' y='700' width='2' height='54' fill='#1E2B2F'/><rect x='352' y='700' width='3' height='54' fill='#1E2B2F'/><rect x='357' y='700' width='1' height='54' fill='#1E2B2F'/><rect x='362' y='700' width='4' height='54' fill='#1E2B2F'/><rect x='369' y='700' width='2' height='54' fill='#1E2B2F'/><rect x='374' y='700' width='1' height='54' fill='#1E2B2F'/><rect x='378' y='700' width='3' height='54' fill='#1E2B2F'/><rect x='383' y='700' width='2' height='54' fill='#1E2B2F'/></svg>"
+			RETURN
+			    "data:image/svg+xml;utf8," & SUBSTITUTE ( SUBSTITUTE ( Svg, "%", "%25" ), "#", "%23" )
+		displayFolder: 8. Diseño (SVG y textos)
+		lineageTag: e40a74b9-39d9-5398-94b5-5a6e1b0f46d8
+		dataCategory: ImageUrl
+
+	measure 'SVG KPIs' =
+			VAR Anio = SELECTEDVALUE ( DimCalendario[Año] )
+			VAR V = [Ventas Ene-Sep]
+			VAR C = [Crecimiento Ventas Ene-Sep %]
+			VAR Lect = [Lectura Tendencia]
+			VAR A1 = CALCULATE ( [Ventas Ene-Sep], DimCalendario[Año] = Anio - 1 )
+			VAR A2 = CALCULATE ( [Ventas Ene-Sep], DimCalendario[Año] = Anio - 2 )
+			VAR K0 = IF ( ISBLANK ( V ), "—", "$" & SUBSTITUTE ( FORMAT ( V / 1E6, "0.0" ), ".", "," ) & " M" )
+			VAR K1 = IF ( ISBLANK ( C ), "—", IF ( C > 0, "▲ ", IF ( C < 0, "▼ ", "" ) ) & SUBSTITUTE ( FORMAT ( ABS ( C ) * 100, "0.00" ), ".", "," ) & " %" )
+			VAR K2 = SUBSTITUTE ( FORMAT ( [Margen Estimado %] * 100, "0.0" ), ".", "," ) & " %"
+			VAR K3 = SUBSTITUTE ( FORMAT ( [% Quiebre] * 100, "0.0" ), ".", "," ) & " %"
+			VAR K4 = "$" & SUBSTITUTE ( FORMAT ( [Venta por Linea], "#,0" ), ",", "." )
+			VAR C0 = "#1E2B2F"
+			VAR C1 = SWITCH ( Lect, "Crece (sostenido)", "#0E4D64", "Cae (sostenido)", "#9A4A2C", "#0E4D64" )
+			VAR C2 = "#1E2B2F"
+			VAR C3 = "#A87B22"
+			VAR C4 = "#1E2B2F"
+			VAR N0 = IF ( ISBLANK ( Anio ), "Seleccione un solo año", IF ( ISBLANK ( A1 ), "Primer año de la serie", ( Anio - 1 ) & ": " & "$" & SUBSTITUTE ( FORMAT ( A1 / 1E6, "0.0" ), ".", "," ) & " M" & IF ( ISBLANK ( A2 ), "", " · " & ( Anio - 2 ) & ": " & "$" & SUBSTITUTE ( FORMAT ( A2 / 1E6, "0.0" ), ".", "," ) & " M" ) ) )
+			VAR N1 = SWITCH ( TRUE (), ISBLANK ( C ), "Sin año anterior", ABS ( C ) < 0.02, "Plano: no es tendencia", Lect = "Crece (sostenido)", "Crece frente a dos años", Lect = "Cae (sostenido)", "Cae frente a dos años", "Rebote: no es tendencia" )
+			VAR N2 = "Igual en todos los grupos"
+			VAR N3 = "Parejo en toda la cadena"
+			VAR N4 = "Ticket ref. ID: $" & SUBSTITUTE ( FORMAT ( [Ticket Promedio (ID dataset)], "#,0" ), ",", "." ) & " ⓘ"
+			VAR Svg = "<svg xmlns='http://www.w3.org/2000/svg' width='1800' height='112' viewBox='0 0 1800 112' font-family='Segoe UI, Arial, sans-serif'><text x='0' y='14' font-size='13' letter-spacing='2' font-weight='700' fill='#5B6770'>VENTAS ENE–SEP</text><g opacity='0' transform='translate(0,12)'><animate attributeName='opacity' from='0' to='1' dur='.4s' begin='0.00s' fill='freeze'/><animateTransform attributeName='transform' type='translate' from='0 12' to='0 0' dur='.5s' begin='0.00s' fill='freeze' calcMode='spline' keySplines='.2 .8 .2 1'/><text x='0' y='68' font-family='Consolas, Courier New, monospace' font-size='46' font-weight='700' fill='" & ( C0 ) & "'>" & ( K0 ) & "</text></g><text x='0' y='100' font-size='14' fill='#5B6770'>" & ( N0 ) & "</text><line x1='348' x2='348' y1='0' y2='112' stroke='#E2DACB'/><text x='364' y='14' font-size='13' letter-spacing='2' font-weight='700' fill='#5B6770'>FRENTE A " & ( Anio - 1 ) & "</text><g opacity='0' transform='translate(0,12)'><animate attributeName='opacity' from='0' to='1' dur='.4s' begin='0.12s' fill='freeze'/><animateTransform attributeName='transform' type='translate' from='0 12' to='0 0' dur='.5s' begin='0.12s' fill='freeze' calcMode='spline' keySplines='.2 .8 .2 1'/><text x='364' y='68' font-family='Consolas, Courier New, monospace' font-size='46' font-weight='700' fill='" & ( C1 ) & "'>" & ( K1 ) & "</text></g><text x='364' y='100' font-size='14' fill='#5B6770'>" & ( N1 ) & "</text><line x1='712' x2='712' y1='0' y2='112' stroke='#E2DACB'/><text x='728' y='14' font-size='13' letter-spacing='2' font-weight='700' fill='#5B6770'>MARGEN ESTIMADO</text><g opacity='0' transform='translate(0,12)'><animate attributeName='opacity' from='0' to='1' dur='.4s' begin='0.24s' fill='freeze'/><animateTransform attributeName='transform' type='translate' from='0 12' to='0 0' dur='.5s' begin='0.24s' fill='freeze' calcMode='spline' keySplines='.2 .8 .2 1'/><text x='728' y='68' font-family='Consolas, Courier New, monospace' font-size='46' font-weight='700' fill='" & ( C2 ) & "'>" & ( K2 ) & "</text></g><text x='728' y='100' font-size='14' fill='#5B6770'>" & ( N2 ) & "</text><line x1='1076' x2='1076' y1='0' y2='112' stroke='#E2DACB'/><text x='1092' y='14' font-size='13' letter-spacing='2' font-weight='700' fill='#5B6770'>LÍNEAS CON QUIEBRE</text><g opacity='0' transform='translate(0,12)'><animate attributeName='opacity' from='0' to='1' dur='.4s' begin='0.36s' fill='freeze'/><animateTransform attributeName='transform' type='translate' from='0 12' to='0 0' dur='.5s' begin='0.36s' fill='freeze' calcMode='spline' keySplines='.2 .8 .2 1'/><text x='1092' y='68' font-family='Consolas, Courier New, monospace' font-size='46' font-weight='700' fill='" & ( C3 ) & "'>" & ( K3 ) & "</text></g><text x='1092' y='100' font-size='14' fill='#5B6770'>" & ( N3 ) & "</text><line x1='1440' x2='1440' y1='0' y2='112' stroke='#E2DACB'/><text x='1456' y='14' font-size='13' letter-spacing='2' font-weight='700' fill='#5B6770'>VENTA POR LÍNEA</text><g opacity='0' transform='translate(0,12)'><animate attributeName='opacity' from='0' to='1' dur='.4s' begin='0.48s' fill='freeze'/><animateTransform attributeName='transform' type='translate' from='0 12' to='0 0' dur='.5s' begin='0.48s' fill='freeze' calcMode='spline' keySplines='.2 .8 .2 1'/><text x='1456' y='68' font-family='Consolas, Courier New, monospace' font-size='46' font-weight='700' fill='" & ( C4 ) & "'>" & ( K4 ) & "</text></g><text x='1456' y='100' font-size='14' fill='#5B6770'>" & ( N4 ) & "</text></svg>"
+			RETURN
+			    "data:image/svg+xml;utf8," & SUBSTITUTE ( SUBSTITUTE ( Svg, "%", "%25" ), "#", "%23" )
+		displayFolder: 8. Diseño (SVG y textos)
+		lineageTag: 24b83bd9-3137-545c-9ccb-a82e507bfc17
+		dataCategory: ImageUrl
+
+	measure 'SVG Titulo Resumen' =
+			VAR C = [Crecimiento Ventas Ene-Sep %]
+			VAR P = IF ( C > 0, "+", IF ( C < 0, "−", "" ) ) & SUBSTITUTE ( FORMAT ( ABS ( C ) * 100, "0.0" ), ".", "," ) & " %"
+			VAR T1 = SWITCH ( TRUE (), ISBLANK ( C ), "Seleccione un año con año anterior", ABS ( C ) < 0.02, "El negocio está plano (", C > 0, "El negocio crece (", "El negocio cae (" )
+			VAR T2 = IF ( ISBLANK ( C ), "", P )
+			VAR T3 = IF ( ISBLANK ( C ), "", "), pero las regiones se mueven" )
+			VAR Svg = "<svg xmlns='http://www.w3.org/2000/svg' width='1110' height='60' viewBox='0 0 1110 60' font-family='Cambria, Georgia, serif'><text x='0' y='42' font-size='38' font-weight='700' fill='#1E2B2F'>" & ( T1 ) & "<tspan fill='#0E4D64'>" & ( T2 ) & "</tspan>" & ( T3 ) & "</text></svg>"
+			RETURN
+			    "data:image/svg+xml;utf8," & SUBSTITUTE ( SUBSTITUTE ( Svg, "%", "%25" ), "#", "%23" )
+		displayFolder: 8. Diseño (SVG y textos)
+		lineageTag: 0043af26-2c80-505a-bb0b-77a06e525529
+		dataCategory: ImageUrl
+
+	measure 'SVG KPIs Promociones' =
+			VAR K0 = SUBSTITUTE ( FORMAT ( [% Ventas en Promocion] * 100, "0.0" ), ".", "," ) & " %"
+			VAR K1 = SUBSTITUTE ( FORMAT ( [Margen Estimado %] * 100, "0.0" ), ".", "," ) & " %"
+			VAR K2 = SUBSTITUTE ( FORMAT ( [Unidades por Linea], "0.00" ), ".", "," )
+			VAR N0 = "$" & SUBSTITUTE ( FORMAT ( [Ventas en Promocion] / 1E6, "0.0" ), ".", "," ) & " M" & " de " & "$" & SUBSTITUTE ( FORMAT ( [Ventas Netas] / 1E6, "0.0" ), ".", "," ) & " M"
+			VAR N1 = "Igual en todos los grupos"
+			VAR N2 = "Promedio por línea de venta"
+			VAR Svg = "<svg xmlns='http://www.w3.org/2000/svg' width='870' height='112' viewBox='0 0 870 112' font-family='Segoe UI, Arial, sans-serif'><text x='0' y='14' font-size='13' letter-spacing='2' font-weight='700' fill='#5B6770'>VENTAS CON PROMOCIÓN</text><g opacity='0' transform='translate(0,12)'><animate attributeName='opacity' from='0' to='1' dur='.4s' begin='0.00s' fill='freeze'/><animateTransform attributeName='transform' type='translate' from='0 12' to='0 0' dur='.5s' begin='0.00s' fill='freeze' calcMode='spline' keySplines='.2 .8 .2 1'/><text x='0' y='68' font-family='Consolas, Courier New, monospace' font-size='44' font-weight='700' fill='#1E2B2F'>" & ( K0 ) & "</text></g><text x='0' y='100' font-size='14' fill='#5B6770'>" & ( N0 ) & "</text><line x1='274' x2='274' y1='0' y2='112' stroke='#E2DACB'/><text x='290' y='14' font-size='13' letter-spacing='2' font-weight='700' fill='#5B6770'>MARGEN ESTIMADO</text><g opacity='0' transform='translate(0,12)'><animate attributeName='opacity' from='0' to='1' dur='.4s' begin='0.12s' fill='freeze'/><animateTransform attributeName='transform' type='translate' from='0 12' to='0 0' dur='.5s' begin='0.12s' fill='freeze' calcMode='spline' keySplines='.2 .8 .2 1'/><text x='290' y='68' font-family='Consolas, Courier New, monospace' font-size='44' font-weight='700' fill='#1E2B2F'>" & ( K1 ) & "</text></g><text x='290' y='100' font-size='14' fill='#5B6770'>" & ( N1 ) & "</text><line x1='564' x2='564' y1='0' y2='112' stroke='#E2DACB'/><text x='580' y='14' font-size='13' letter-spacing='2' font-weight='700' fill='#5B6770'>UNIDADES POR LÍNEA</text><g opacity='0' transform='translate(0,12)'><animate attributeName='opacity' from='0' to='1' dur='.4s' begin='0.24s' fill='freeze'/><animateTransform attributeName='transform' type='translate' from='0 12' to='0 0' dur='.5s' begin='0.24s' fill='freeze' calcMode='spline' keySplines='.2 .8 .2 1'/><text x='580' y='68' font-family='Consolas, Courier New, monospace' font-size='44' font-weight='700' fill='#1E2B2F'>" & ( K2 ) & "</text></g><text x='580' y='100' font-size='14' fill='#5B6770'>" & ( N2 ) & "</text></svg>"
+			RETURN
+			    "data:image/svg+xml;utf8," & SUBSTITUTE ( SUBSTITUTE ( Svg, "%", "%25" ), "#", "%23" )
+		displayFolder: 8. Diseño (SVG y textos)
+		lineageTag: 0739a6a7-e4d3-5e21-b205-5c004bc48c56
+		dataCategory: ImageUrl
+
+	measure 'SVG KPIs Disponibilidad' =
+			VAR K0 = SUBSTITUTE ( FORMAT ( [% Quiebre] * 100, "0.0" ), ".", "," ) & " %"
+			VAR K1 = SUBSTITUTE ( FORMAT ( [Lineas con Quiebre], "#,0" ), ",", "." )
+			VAR K2 = "$" & SUBSTITUTE ( FORMAT ( [Ventas con Quiebre] / 1E6, "0.0" ), ".", "," ) & " M"
+			VAR N0 = "Estable: cerca de 8 % en 2024–2026"
+			VAR N1 = "de " & SUBSTITUTE ( FORMAT ( [Lineas de Venta], "#,0" ), ",", "." ) & " líneas de venta"
+			VAR N2 = "Registradas en quiebre; no son pérdidas"
+			VAR Svg = "<svg xmlns='http://www.w3.org/2000/svg' width='870' height='112' viewBox='0 0 870 112' font-family='Segoe UI, Arial, sans-serif'><text x='0' y='14' font-size='13' letter-spacing='2' font-weight='700' fill='#5B6770'>LÍNEAS CON QUIEBRE</text><g opacity='0' transform='translate(0,12)'><animate attributeName='opacity' from='0' to='1' dur='.4s' begin='0.00s' fill='freeze'/><animateTransform attributeName='transform' type='translate' from='0 12' to='0 0' dur='.5s' begin='0.00s' fill='freeze' calcMode='spline' keySplines='.2 .8 .2 1'/><text x='0' y='68' font-family='Consolas, Courier New, monospace' font-size='44' font-weight='700' fill='#A87B22'>" & ( K0 ) & "</text></g><text x='0' y='100' font-size='14' fill='#5B6770'>" & ( N0 ) & "</text><line x1='274' x2='274' y1='0' y2='112' stroke='#E2DACB'/><text x='290' y='14' font-size='13' letter-spacing='2' font-weight='700' fill='#5B6770'>LÍNEAS AFECTADAS</text><g opacity='0' transform='translate(0,12)'><animate attributeName='opacity' from='0' to='1' dur='.4s' begin='0.12s' fill='freeze'/><animateTransform attributeName='transform' type='translate' from='0 12' to='0 0' dur='.5s' begin='0.12s' fill='freeze' calcMode='spline' keySplines='.2 .8 .2 1'/><text x='290' y='68' font-family='Consolas, Courier New, monospace' font-size='44' font-weight='700' fill='#1E2B2F'>" & ( K1 ) & "</text></g><text x='290' y='100' font-size='14' fill='#5B6770'>" & ( N1 ) & "</text><line x1='564' x2='564' y1='0' y2='112' stroke='#E2DACB'/><text x='580' y='14' font-size='13' letter-spacing='2' font-weight='700' fill='#5B6770'>VENTAS CON QUIEBRE</text><g opacity='0' transform='translate(0,12)'><animate attributeName='opacity' from='0' to='1' dur='.4s' begin='0.24s' fill='freeze'/><animateTransform attributeName='transform' type='translate' from='0 12' to='0 0' dur='.5s' begin='0.24s' fill='freeze' calcMode='spline' keySplines='.2 .8 .2 1'/><text x='580' y='68' font-family='Consolas, Courier New, monospace' font-size='44' font-weight='700' fill='#1E2B2F'>" & ( K2 ) & "</text></g><text x='580' y='100' font-size='14' fill='#5B6770'>" & ( N2 ) & "</text></svg>"
+			RETURN
+			    "data:image/svg+xml;utf8," & SUBSTITUTE ( SUBSTITUTE ( Svg, "%", "%25" ), "#", "%23" )
+		displayFolder: 8. Diseño (SVG y textos)
+		lineageTag: 6b5198d7-8b60-5885-9899-88aa7940c1bd
+		dataCategory: ImageUrl
+
+	measure 'SVG Fidelizacion' =
+			VAR VLS = CALCULATE ( [Venta por Linea], DimCondicionVenta[Cliente fidelizado] = "Sí" )
+			VAR VLN = CALCULATE ( [Venta por Linea], DimCondicionVenta[Cliente fidelizado] = "No" )
+			VAR MGS = CALCULATE ( [Margen Estimado %], DimCondicionVenta[Cliente fidelizado] = "Sí" )
+			VAR MGN = CALCULATE ( [Margen Estimado %], DimCondicionVenta[Cliente fidelizado] = "No" )
+			VAR PS = DIVIDE ( CALCULATE ( [Ventas Ene-Sep], DimCondicionVenta[Cliente fidelizado] = "Sí" ), [Ventas Ene-Sep] )
+			VAR Dif = DIVIDE ( VLS - VLN, VLN )
+			VAR Igual = ABS ( Dif ) < 0.02 && ABS ( MGS - MGN ) < 0.01
+			VAR TIT = IF ( Igual, "Misma venta por línea y mismo margen", "La venta por línea difiere " & SUBSTITUTE ( FORMAT ( ABS ( Dif ) * 100, "0.0" ), ".", "," ) & " %" )
+			VAR SIG = IF ( Igual, "=", "≠" )
+			VAR VS = "$" & SUBSTITUTE ( FORMAT ( VLS, "#,0" ), ",", "." )
+			VAR VN = "$" & SUBSTITUTE ( FORMAT ( VLN, "#,0" ), ",", "." )
+			VAR MS = SUBSTITUTE ( FORMAT ( MGS * 100, "0.0" ), ".", "," ) & " %"
+			VAR MN = SUBSTITUTE ( FORMAT ( MGN * 100, "0.0" ), ".", "," ) & " %"
+			VAR PST = SUBSTITUTE ( FORMAT ( PS * 100, "0" ), ".", "," ) & " %"
+			VAR PNT = SUBSTITUTE ( FORMAT ( ( 1 - PS ) * 100, "0" ), ".", "," ) & " % no fidelizados"
+			VAR Svg = "<svg xmlns='http://www.w3.org/2000/svg' width='594' height='362' viewBox='0 0 594 362' font-family='Segoe UI, Arial, sans-serif'><text x='0' y='16' font-size='13' letter-spacing='2' font-weight='700' fill='#5B6770'>FIDELIZADOS VS NO FIDELIZADOS</text><text x='0' y='50' font-family='Cambria, Georgia, serif' font-size='24' font-weight='700' fill='#1E2B2F'>" & ( TIT ) & "</text><text x='148' y='100' text-anchor='middle' font-size='13' letter-spacing='2' font-weight='700' fill='#0E4D64'>FIDELIZADOS</text><text x='446' y='100' text-anchor='middle' font-size='13' letter-spacing='2' font-weight='700' fill='#5B6770'>NO FIDELIZADOS</text><text x='297' y='178' text-anchor='middle' font-size='64' font-weight='300' fill='#7D858C'>" & ( SIG ) & "</text><text x='148' y='160' text-anchor='middle' font-family='Consolas, Courier New, monospace' font-size='40' font-weight='700' fill='#1E2B2F'>" & ( VS ) & "</text><text x='446' y='160' text-anchor='middle' font-family='Consolas, Courier New, monospace' font-size='40' font-weight='700' fill='#1E2B2F'>" & ( VN ) & "</text><text x='148' y='182' text-anchor='middle' font-size='13' fill='#5B6770'>venta por línea</text><text x='446' y='182' text-anchor='middle' font-size='13' fill='#5B6770'>venta por línea</text><text x='148' y='236' text-anchor='middle' font-family='Consolas, Courier New, monospace' font-size='28' font-weight='700' fill='#1E2B2F'>" & ( MS ) & "</text><text x='446' y='236' text-anchor='middle' font-family='Consolas, Courier New, monospace' font-size='28' font-weight='700' fill='#1E2B2F'>" & ( MN ) & "</text><text x='148' y='256' text-anchor='middle' font-size='13' fill='#5B6770'>margen estimado</text><text x='446' y='256' text-anchor='middle' font-size='13' fill='#5B6770'>margen estimado</text><rect x='0' y='296' width='594' height='18' rx='3' fill='#C9C2B3'/><rect x='0' y='296' width='0' height='18' rx='3' fill='#0E4D64'><animate attributeName='width' from='0' to='" & ( FORMAT ( PS * 594, "0.0", "en-US" ) ) & "' dur='.9s' fill='freeze' calcMode='spline' keySplines='.2 .8 .2 1'/></rect><text x='0' y='338' font-size='14' fill='#1E2B2F'><tspan font-weight='700'>" & ( PST ) & "</tspan> de las ventas ene–sep</text><text x='594' y='338' text-anchor='end' font-size='14' fill='#5B6770'><tspan font-weight='700'>" & ( PNT ) & "</tspan></text></svg>"
+			RETURN
+			    "data:image/svg+xml;utf8," & SUBSTITUTE ( SUBSTITUTE ( Svg, "%", "%25" ), "#", "%23" )
+		displayFolder: 8. Diseño (SVG y textos)
+		lineageTag: e761f27e-e0ac-5846-aea5-6d882c3e4b7f
+		dataCategory: ImageUrl
 
 	column Medidas
 		dataType: string

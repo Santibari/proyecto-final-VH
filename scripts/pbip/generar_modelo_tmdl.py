@@ -8,6 +8,7 @@ Requisitos:
 Qué hace (idempotente: se puede volver a ejecutar):
   * definition/expressions.tmdl  → parámetro RutaCSV + consulta Base (no cargada)
   * definition/tables/*.tmdl      → FactVentas, dimensiones, DimCalendario, _Medidas
+                                    (+ medidas de diseño de medidas_diseno.py)
   * definition/relationships.tmdl → relaciones 1:* de filtro único
   * definition/model.tmdl         → desactiva fecha/hora automática y referencia las tablas
 
@@ -17,6 +18,9 @@ from pathlib import Path
 import re
 import sys
 import uuid
+
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+import medidas_diseno  # noqa: E402  (medidas del rediseño: SVG animados y textos)
 
 RAIZ = Path(__file__).resolve().parents[2]
 CSV = RAIZ / "data" / "raw" / "03_cadena_supermercados.csv"
@@ -278,9 +282,9 @@ MEDIDAS = [
      "        A < -0.02 && B < -0.02, \"Cae (sostenido)\",\n"
      "        ABS ( A ) > 0.02, \"Oscila (rebote)\",\n        \"Estable\"\n    )", None),
     ("7. Formato condicional", "Color Crecimiento",
-     "-- Verde = crece sostenido, rojo = cae sostenido, naranja = oscila, gris = estable\n"
-     "SWITCH (\n    [Lectura Tendencia],\n    \"Crece (sostenido)\", \"#2E7D32\",\n"
-     "    \"Cae (sostenido)\", \"#C62828\",\n    \"Oscila (rebote)\", \"#EF8F00\",\n    \"#9E9E9E\"\n)", None),
+     "-- Petróleo = crece sostenido, terracota = cae sostenido, ocre = oscila, gris = estable\n"
+     "SWITCH (\n    [Lectura Tendencia],\n    \"Crece (sostenido)\", \"#0E4D64\",\n"
+     "    \"Cae (sostenido)\", \"#9A4A2C\",\n    \"Oscila (rebote)\", \"#A87B22\",\n    \"#7D858C\"\n)", None),
     ("4. Quiebre", "Lineas con Quiebre", "SUM ( FactVentas[quiebre_flag] )", ENTERO),
     ("4. Quiebre", "% Quiebre", "DIVIDE ( [Lineas con Quiebre], [Lineas de Venta] )", PCT),
     ("4. Quiebre", "Ventas con Quiebre", "CALCULATE ( [Ventas Netas], FactVentas[quiebre_flag] = 1 )", MONEDA),
@@ -301,13 +305,16 @@ MEDIDAS = [
 def medidas():
     t = "_Medidas"
     bloques = []
-    for carpeta, nombre, dax, formato in MEDIDAS:
+    lista = [m + (None,) for m in MEDIDAS] + medidas_diseno.medidas()
+    for carpeta, nombre, dax, formato, categoria in lista:
         if "\n" in dax:
             cuerpo = f"\tmeasure {q(nombre)} = ```\n{indentar(dax, 3)}\n\t\t\t```\n"
         else:
             cuerpo = f"\tmeasure {q(nombre)} = {dax}\n"
         if formato:
             cuerpo += f"\t\tformatString: {formato}\n"
+        if categoria:
+            cuerpo += f"\t\tdataCategory: {categoria}\n"
         cuerpo += (f"\t\tdisplayFolder: {carpeta}\n"
                    f"\t\tlineageTag: {tag('medida.' + nombre)}\n")
         bloques.append(cuerpo)

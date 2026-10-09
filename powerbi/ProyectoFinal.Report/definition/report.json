@@ -9,6 +9,15 @@
         "page": "2.3.1"
       },
       "type": "SharedResources"
+    },
+    "customTheme": {
+      "name": "TiqueteEditorial.json",
+      "reportVersionAtImport": {
+        "visual": "2.13.0",
+        "report": "3.4.0",
+        "page": "2.3.1"
+      },
+      "type": "RegisteredResources"
     }
   },
   "objects": {
@@ -35,6 +44,52 @@
           "name": "Fluent2-CY26SU09",
           "path": "BaseThemes/Fluent2-CY26SU09.json",
           "type": "BaseTheme"
+        }
+      ]
+    },
+    {
+      "name": "RegisteredResources",
+      "type": "RegisteredResources",
+      "items": [
+        {
+          "name": "fondo_pg02Comercial.png",
+          "path": "fondo_pg02Comercial.png",
+          "type": "Image"
+        },
+        {
+          "name": "fondo_pg03Promociones.png",
+          "path": "fondo_pg03Promociones.png",
+          "type": "Image"
+        },
+        {
+          "name": "fondo_pg04Disponibilidad.png",
+          "path": "fondo_pg04Disponibilidad.png",
+          "type": "Image"
+        },
+        {
+          "name": "fondo_pg05Conclusiones.png",
+          "path": "fondo_pg05Conclusiones.png",
+          "type": "Image"
+        },
+        {
+          "name": "fondo_pg99Validacion.png",
+          "path": "fondo_pg99Validacion.png",
+          "type": "Image"
+        },
+        {
+          "name": "fondo_portada.png",
+          "path": "fondo_portada.png",
+          "type": "Image"
+        },
+        {
+          "name": "fondo_resumen.png",
+          "path": "fondo_resumen.png",
+          "type": "Image"
+        },
+        {
+          "name": "TiqueteEditorial.json",
+          "path": "TiqueteEditorial.json",
+          "type": "CustomTheme"
         }
       ]
     }

@@ -1,6 +1,7 @@
 {
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/pagesMetadata/1.1.0/schema.json",
   "pageOrder": [
+    "pg00Portada",
     "pg01Resumen",
     "pg02Comercial",
     "pg03Promociones",
@@ -8,5 +9,5 @@
     "pg05Conclusiones",
     "pg99Validacion"
   ],
-  "activePageName": "pg01Resumen"
+  "activePageName": "pg02Comercial"
 }

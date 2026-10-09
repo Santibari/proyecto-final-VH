@@ -2,11 +2,11 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.13.0/schema.json",
   "name": "v11TxtLectura",
   "position": {
-    "x": 924,
+    "x": 925,
     "y": 186,
     "z": 1011,
     "height": 120,
-    "width": 972,
+    "width": 935,
     "tabOrder": 11
   },
   "visual": {
@@ -19,10 +19,10 @@
               {
                 "textRuns": [
                   {
-                    "value": "Lectura: ",
+                    "value": "LECTURA  ",
                     "textStyle": {
-                      "fontSize": "12pt",
-                      "color": "#1F3A5F",
+                      "fontSize": "9.5pt",
+                      "color": "#0E4D64",
                       "fontWeight": "bold"
                     }
                   },
@@ -30,7 +30,7 @@
                     "value": "“Puntos dobles” cae de forma sostenida (−7,1 % vs 2025; −8,2 % vs 2024). El crecimiento de Domicilio es un rebote (cayó en 2025). Fidelización y medio de pago no muestran diferencias.",
                     "textStyle": {
                       "fontSize": "11pt",
-                      "color": "#2B2B2B"
+                      "color": "#1E2B2F"
                     }
                   }
                 ]
@@ -73,25 +73,7 @@
             "show": {
               "expr": {
                 "Literal": {
-                  "Value": "true"
-                }
-              }
-            },
-            "color": {
-              "solid": {
-                "color": {
-                  "expr": {
-                    "Literal": {
-                      "Value": "'#FFFFFF'"
-                    }
-                  }
-                }
-              }
-            },
-            "transparency": {
-              "expr": {
-                "Literal": {
-                  "Value": "0D"
+                  "Value": "false"
                 }
               }
             }
@@ -104,25 +86,41 @@
             "show": {
               "expr": {
                 "Literal": {
-                  "Value": "true"
+                  "Value": "false"
                 }
               }
-            },
-            "color": {
-              "solid": {
-                "color": {
-                  "expr": {
-                    "Literal": {
-                      "Value": "'#DDE2EA'"
-                    }
-                  }
-                }
-              }
-            },
-            "radius": {
+            }
+          }
+        }
+      ],
+      "padding": [
+        {
+          "properties": {
+            "top": {
               "expr": {
                 "Literal": {
-                  "Value": "8D"
+                  "Value": "0D"
+                }
+              }
+            },
+            "left": {
+              "expr": {
+                "Literal": {
+                  "Value": "0D"
+                }
+              }
+            },
+            "right": {
+              "expr": {
+                "Literal": {
+                  "Value": "4D"
+                }
+              }
+            },
+            "bottom": {
+              "expr": {
+                "Literal": {
+                  "Value": "0D"
                 }
               }
             }
