@@ -94,6 +94,12 @@ ADDCOLUMNS (
 | | Lectura Tendencia | "Crece (sostenido)" / "Cae (sostenido)" / "Oscila (rebote)" / "Estable", según el signo y ±2 % en ambas comparaciones (Fase 4.5) | Orinoquía: Crece (sostenido) |
 | 7. Formato condicional | Color Crecimiento | Verde / rojo / naranja / gris según `Lectura Tendencia` | — |
 
+| | Ventas Acumuladas Ene-Sep | `CALCULATE([Ventas Netas], DATESYTD(DimCalendario[Fecha]))` hasta el mes de corte | 2026 a septiembre = 428.753.035 |
+| | Participacion Ventas Ene-Sep % | Ventas ene–sep de la categoría ÷ ventas ene–sep de todas las categorías | Suma 100 % |
+| 4. Quiebre | % Quiebre Cadena | `CALCULATE([% Quiebre], REMOVEFILTERS(DimCategoria))` | 2026: 7,87 % |
+| 6. Promocion | Crecimiento Ventas en Promocion % / sin Promocion % | Crecimiento ene–sep filtrado por "Con promocion" = Sí / No | 2026: −0,80 % / +2,07 % |
+| 1. Ventas | Region Seleccionada | `SELECTEDVALUE(DimGeografia[Region], "Varias regiones")` | Título del tooltip |
+
 Las medidas que comparan contra años anteriores devuelven vacío si no hay **un solo año** en contexto (`HASONEVALUE(DimCalendario[Año])`).
 | 4. Quiebre | Lineas con Quiebre | `SUM(FactVentas[quiebre_flag])` | 4.849 |
 | | % Quiebre | `DIVIDE([Lineas con Quiebre], [Lineas de Venta])` | 8,08 % |

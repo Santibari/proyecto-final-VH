@@ -90,8 +90,9 @@ def orden(campo, desc=True):
 # ------------------------------------------------------------------ helpers de visuales
 class Pagina:
     def __init__(self, nombre, titulo, subtitulo, oculta=False, nombre_visible=None, fondo_imagen=None,
-                 kicker=None, reescalar=False):
+                 kicker=None, reescalar=False, tamano=(W, H), tooltip=False):
         self.nombre, self.titulo, self.subtitulo, self.oculta = nombre, titulo, subtitulo, oculta
+        self.tamano, self.tooltip = tamano, tooltip  # tooltip = página de información sobre herramientas
         self.nombre_visible = nombre_visible or titulo.split(" — ")[0]
         self.fondo_imagen = fondo_imagen  # archivo en scripts/pbip/recursos/ (se registra en el reporte)
         self.kicker = kicker
@@ -303,22 +304,38 @@ def boton_pagina(destino):
             "show": lit(True), "type": lit("PageNavigation"), "navigationSection": lit(destino)}}]}}
 
 
-def boton_quitar_filtros():
-    """Botón visible «Quitar filtros»: borra todos los segmentadores de la página (acción ClearAllSlicers)."""
+def boton_pildora(texto_, enlace):
+    """Botón visible en forma de píldora: borde petróleo sobre el papel; al pasar el puntero se rellena de petróleo
+    y el texto pasa a blanco. Es el estilo común de «Quitar filtros», «Anterior» y «Siguiente»."""
     estados = ["default", "hover", "press"]
     relleno = {"default": (FONDO, 0), "hover": (AZUL, 0), "press": (AZUL, 0)}
     tinta = {"default": AZUL, "hover": "#FFFFFF", "press": "#FFFFFF"}
+    # La entrada sin selector enciende la propiedad para el botón completo. Los botones de navegación traen
+    # texto, borde y relleno apagados de fábrica; sin esa entrada, Desktop ignora el "show" de cada estado.
+    general = {"properties": {"show": lit(True)}}
     return {"visualType": "actionButton", "objects": {
         "icon": [{"properties": {"show": lit(False)}, "selector": {"id": e}} for e in estados],
-        "text": [{"properties": {"show": lit(True), "text": lit("↺  QUITAR FILTROS"), "fontColor": color(tinta[e]),
+        "text": [{"properties": {"show": lit(True), "text": lit(texto_), "fontColor": color(tinta[e]),
                                  "fontSize": lit(9), "fontFamily": lit(SEMI), "bold": lit(True)},
-                  "selector": {"id": e}} for e in estados],
-        "outline": [{"properties": {"show": lit(True), "lineColor": color(AZUL), "weight": lit(1),
-                                    "roundEdge": lit(13)}, "selector": {"id": e}} for e in estados],
+                  "selector": {"id": e}} for e in estados] + [general],
+        "outline": [{"properties": {"show": lit(True), "lineColor": color(AZUL), "weight": lit(1)},
+                     "selector": {"id": e}} for e in estados] + [general],
         "fill": [{"properties": {"show": lit(True), "fillColor": color(relleno[e][0]),
-                                 "transparency": lit(relleno[e][1])}, "selector": {"id": e}} for e in estados]},
-        "visualContainerObjects": {"visualLink": [{"properties": {
-            "show": lit(True), "type": lit("ClearAllSlicers")}}]}}
+                                 "transparency": lit(relleno[e][1])}, "selector": {"id": e}} for e in estados]
+                + [general],
+        # Píldora: rectángulo con esquinas redondeadas (la mitad de la altura del botón).
+        "shape": [{"properties": {"tileShape": lit("rectangleRounded"), "roundEdge": lit(14)}}]},
+        "visualContainerObjects": {"visualLink": [{"properties": {"show": lit(True), **enlace}}]}}
+
+
+def boton_quitar_filtros():
+    """Botón «Quitar filtros»: borra todos los segmentadores de la página (acción ClearAllSlicers)."""
+    return boton_pildora("↺  QUITAR FILTROS", {"type": lit("ClearAllSlicers")})
+
+
+def boton_ir(texto_, destino):
+    """Botón «Anterior» / «Siguiente»: navega a otra página (en Desktop, Ctrl + clic)."""
+    return boton_pildora(texto_, {"type": lit("PageNavigation"), "navigationSection": lit(destino)})
 
 
 def navegador():
@@ -406,16 +423,37 @@ def pagina_resumen():
     seg = encabezado(p, titulo_svg=True)
     agregar_svg(p, "SvgTitulo", 60, 66, 1110, 60, "SVG Titulo Resumen")
     agregar_svg(p, "SvgKpis", 60, 186, medidas_diseno.KPI_W, medidas_diseno.KPI_H, "SVG KPIs")
-    agregar_svg(p, "SvgPodio", 60, 338, 888, 460, "SVG Podio")
+    # Antes: podio SVG con el top 3 (repetía la tabla de posiciones y, al ser imagen, no filtraba).
+    # Ahora: barras nativas de las 7 regiones; un clic en una región filtra toda la página.
+    p.agregar("TxtRegiones", 52, 338, 900, 26,
+              texto([[etiqueta("Regiones · crecimiento ene–sep frente al año anterior")]]), fondo=False, escalar=False)
+    p.agregar("TitRegiones", 52, 360, 900, 44,
+              texto([[("Clic en una región para filtrar la página", estilo(18, True, TEXTO, SERIF))]]),
+              fondo=False, escalar=False)
+    reg = barras(col("DimGeografia", "Region"),
+                 [(med("Crecimiento Ventas Ene-Sep %"), "Crecimiento vs año anterior")],
+                 color_cond="Color Crecimiento", ordenar=med("Crecimiento Ventas Ene-Sep %"),
+                 tooltips=[(med("Crecimiento vs Hace 2 Años %"), "Crecimiento vs hace 2 años"),
+                           (med("Lectura Tendencia"), "Lectura")])
+    reg["objects"]["valueAxis"] = [{"properties": {"show": lit(False)}}]
+    reg["objects"]["categoryAxis"] = [{"properties": {"fontSize": lit(11), "labelColor": color(TEXTO)}}]
+    reg["objects"]["labels"] = [{"properties": {"show": lit(True), "fontSize": lit(11), "color": color(TEXTO)}}]
+    reg["visualContainerObjects"] = {"visualTooltip": tooltip_region()}
+    p.agregar("BarCrecRegion", 52, 410, 900, 398, reg, fondo=False, escalar=False)
     agregar_svg(p, "SvgPosiciones", 1044, 338, 816, 474, "SVG Posiciones")
+    # Antes: ventas mensuales por año (líneas que se cruzan sin patrón). Ahora: ventas acumuladas ene–sep:
+    # las tres curvas casi se superponen, que es el mensaje "el negocio está plano".
     p.agregar("TxtLinea", 52, 838, 1150, 26,
-              texto([[etiqueta("Ventas mensuales por año · el mismo mes entre años (historia completa)")]]), fondo=False)
-    linea = lineas(col("DimCalendario", "Mes"), [(med("Ventas Netas"), "Ventas")],
+              texto([[etiqueta("Ventas acumuladas ene–sep por año · las tres curvas casi se superponen (historia completa)")]]),
+              fondo=False)
+    linea = lineas(col("DimCalendario", "Mes"), [(med("Ventas Acumuladas Ene-Sep"), "Ventas acumuladas")],
                    serie=col("DimCalendario", "Año"), colores_por_serie=COLORES_ANIO)
     linea["objects"]["legend"] = [{"properties": {"show": lit(True), "position": lit("TopRight"),
                                                   "fontSize": lit(9), "labelColor": color(SEC)}}]
-    mensual = p.agregar("LineaEstacionalidad", 52, 862, 1150, 206, linea, fondo=False)
-    sin_filtro(p, seg[0], [mensual])
+    linea["objects"]["valueAxis"] = [{"properties": {"start": lit(0), "labelDisplayUnits": lit(1000000),
+                                                     "fontSize": lit(8), "labelColor": color(SEC)}}]
+    acumulado =p.agregar("LineaAcumulado", 52, 862, 1150, 206, linea, fondo=False)
+    sin_filtro(p, seg[0], [acumulado])
     p.agregar("TxtCat", 1240, 838, 620, 26,
               texto([[etiqueta("Categorías · crecimiento frente al año anterior")]]), fondo=False)
     cat = barras(col("DimCategoria", "Categoria"),
@@ -461,12 +499,20 @@ def pagina_comercial():
                      colores=[("Crecimiento Ventas Ene-Sep %", AZUL), ("Crecimiento vs Hace 2 Años %", AZUL_CLARO)],
                      ordenar=med("Crecimiento Ventas Ene-Sep %")),
               titulo="Categorías: crecimiento frente a dos años base (solo Abarrotes crece en ambos)")
-    p.agregar("BarVariacionCiudad", 970, 642, 926, 418,
-              barras(col("DimGeografia", "Ciudad"), [(med("Variacion Ventas Ene-Sep"), "Variación $ vs año ant.")],
-                     color_cond="Color Crecimiento", ordenar=med("Variacion Ventas Ene-Sep"),
-                     tooltips=[(med("Crecimiento Ventas Ene-Sep %"), "Crec. vs año ant."),
-                               (med("Crecimiento vs Hace 2 Años %"), "Crec. vs hace 2 años")]),
-              titulo="Aporte en $ de cada ciudad a la variación (color = lectura de tendencia)")
+    # Antes: barras de aporte en $ por ciudad (repetían la columna «Variación $» de la matriz).
+    # Ahora: cascada de la variación total por región (se puede bajar a ciudad con la flecha ↓ del visual).
+    cascada = {"visualType": "waterfallChart",
+               "query": query(Category=[col("DimGeografia", "Region"), col("DimGeografia", "Ciudad")],
+                              Y=[(med("Variacion Ventas Ene-Sep"), "Variación $ vs año ant.")]),
+               "objects": {
+                   "sentimentColors": [{"properties": {"increaseFill": color(VERDE), "decreaseFill": color(ROJO),
+                                                       "totalFill": color(GRIS)}}],
+                   "labels": [{"properties": {"show": lit(True), "fontSize": lit(9)}}],
+                   "legend": [{"properties": {"show": lit(False)}}]},
+               "visualContainerObjects": {"visualTooltip": tooltip_region()}}
+    cascada["query"]["sortDefinition"] = orden(med("Variacion Ventas Ene-Sep"))
+    p.agregar("CascadaRegion", 970, 642, 926, 418, cascada,
+              titulo="De dónde sale la variación total: suman las regiones que crecen y restan las que caen")
     return p
 
 
@@ -496,22 +542,29 @@ def pagina_promociones():
                      columnas=[col("DimFormato", "Formato")],
                      color_valores=["Crecimiento Ventas Ene-Sep %"], modo="backColor", tam=15, relleno=14),
               titulo="Canal × formato: crecimiento (ocre = rebote; ningún canal crece de forma sostenida)")
-    p.agregar("BarCanal", 24, 698, 618, 362,
-              barras(col("DimCondicionVenta", "Canal"),
-                     [(med("Crecimiento Ventas Ene-Sep %"), "vs año anterior"),
-                      (med("Crecimiento vs Hace 2 Años %"), "vs hace 2 años")],
-                     colores=[("Crecimiento Ventas Ene-Sep %", AZUL), ("Crecimiento vs Hace 2 Años %", AZUL_CLARO)]),
-              titulo="Canales: crecimiento frente a dos años base")
-    # Antes: dos columnas grises iguales. Ahora: comparación directa (cifra contra cifra) y su participación.
-    fx, fw = en_reticula(658, 618)
+    # Antes: barras de canales (repetían la matriz canal × formato) y ventas por medio de pago (solo reparto, sin
+    # hallazgo). Ahora: matriz de oportunidad por categoría, que responde directamente la P2.
+    oportunidad = {"visualType": "scatterChart",
+                   "query": query(Category=[col("DimCategoria", "Categoria")],
+                                  X=[(med("Participacion Ventas Ene-Sep %"), "Peso en las ventas ene–sep")],
+                                  Y=[(med("Crecimiento Ventas Ene-Sep %"), "Crecimiento vs año anterior")],
+                                  Size=[(med("Ventas Ene-Sep"), "Ventas ene–sep")],
+                                  Tooltips=[(med("Crecimiento vs Hace 2 Años %"), "Crecimiento vs hace 2 años"),
+                                            (med("Lectura Tendencia"), "Lectura")]),
+                   "objects": {
+                       "dataPoint": [{"properties": {"fill": color_medida("Color Crecimiento")},
+                                      "selector": {"data": [{"dataViewWildcard": {"matchingOption": 1}}]}}],
+                       "categoryLabels": [{"properties": {"show": lit(True), "fontSize": lit(10),
+                                                          "color": color(TEXTO)}}],
+                       "legend": [{"properties": {"show": lit(False)}}]}}
+    p.agregar("DispOportunidad", 24, 698, 1252, 362, oportunidad,
+              titulo="Matriz de oportunidad por categoría: arriba = crece, a la derecha = pesa más en las ventas "
+                     "(tamaño = ventas ene–sep)")
+    # Comparación directa fidelizados vs no fidelizados (cifra contra cifra) y su participación.
+    fx, fw = en_reticula(1292, 604)
     p.reglas.append((fx, 698, fw))
     agregar_svg(p, "SvgFidelizacion", fx, 712, fw, round(fw * medidas_diseno.FID_H / medidas_diseno.FID_W),
                 "SVG Fidelizacion")
-    p.agregar("BarMedioPago", 1292, 698, 604, 362,
-              barras(col("DimCondicionVenta", "Medio de pago"), [(med("Ventas Ene-Sep"), "Ventas ene–sep")],
-                     colores=[("Ventas Ene-Sep", AZUL)], ordenar=med("Ventas Ene-Sep"),
-                     tooltips=[(med("Crecimiento Ventas Ene-Sep %"), "Crec. vs año ant.")]),
-              titulo="Ventas por medio de pago")
     return p
 
 
@@ -543,10 +596,25 @@ def pagina_disponibilidad():
                      colores=[("Ventas con Quiebre", AZUL)], ordenar=med("Ventas con Quiebre"),
                      tooltips=[(med("% Quiebre"), "% quiebre"), (med("Lineas con Quiebre"), "Líneas")]),
               titulo="Volumen afectado por categoría")
-    p.agregar("MatQuiebreCatFormato", 1292, 638, 604, 422,
-              matriz([col("DimCategoria", "Categoria")], [(med("% Quiebre"), "% quiebre")],
-                     columnas=[col("DimFormato", "Formato")], tam=11, relleno=4),
-              titulo="% quiebre categoría × formato (diferencias no significativas)")
+    # Antes: matriz categoría × formato (invitaba a leer «focos» que no son significativos).
+    # Ahora: % de quiebre por categoría contra la línea del promedio de la cadena: todas quedan cerca.
+    combo = {"visualType": "lineClusteredColumnComboChart",
+             "query": query(Category=[col("DimCategoria", "Categoria")],
+                            # En esta versión de Desktop los roles del combinado son Y (columnas) y Y2 (línea).
+                            Y=[(med("% Quiebre"), "% quiebre de la categoría")],
+                            Y2=[(med("% Quiebre Cadena"), "Promedio de la cadena")],
+                            Tooltips=[(med("Lineas con Quiebre"), "Líneas con quiebre")]),
+             "objects": {
+                 # Color por defecto (columnas) en ocre de quiebre; la línea del promedio en tinta.
+                 "dataPoint": [{"properties": {"fill": color(NARANJA)}},
+                               {"properties": {"fill": color(TEXTO)}, "selector": {"metadata": f"{M}.% Quiebre Cadena"}}],
+                 # Un solo eje: con eje secundario la línea quedaba en otra escala y no se comparaba con las columnas.
+                 "valueAxis": [{"properties": {"start": lit(0), "secShow": lit(False), "alignZeros": lit(True)}}],
+                 "labels": [{"properties": {"show": lit(True), "fontSize": lit(8)}}],
+                 "legend": [{"properties": {"show": lit(True), "position": lit("Top")}}]}}
+    combo["query"]["sortDefinition"] = orden(med("% Quiebre"))
+    p.agregar("ComboQuiebreCategoria", 1292, 638, 604, 422, combo,
+              titulo="% quiebre por categoría frente al promedio de la cadena: todas cerca de 8 %")
     return p
 
 
@@ -587,6 +655,33 @@ def pagina_conclusiones():
             [(cifra, estilo(28, True, c, MONO))],
             [(" ", estilo(6))],
             [(d, estilo(13, False, TEXTO))]]), escalar=False)
+    return p
+
+
+TOOLTIP_REGION = "pg98TooltipRegion"
+
+
+def tooltip_region():
+    """Configuración del visual para usar la página de tooltip de región en lugar del tooltip estándar."""
+    return [{"properties": {"show": lit(True), "type": lit("Canvas"), "section": lit(TOOLTIP_REGION)}}]
+
+
+def pagina_tooltip_region():
+    """Tooltip personalizado (oculto): al pasar sobre una región muestra sus ventas, las dos comparaciones y la lectura."""
+    p = Pagina(TOOLTIP_REGION, "Tooltip región", "", oculta=True, nombre_visible="Tooltip región",
+               tamano=(380, 250), tooltip=True)
+    nombre = {"visualType": "card", "query": query(Values=[(med("Region Seleccionada"), "Región")]),
+              "objects": {"labels": [{"properties": {"color": color(AZUL), "fontSize": lit(18),
+                                                     "fontFamily": lit(SERIF)}}],
+                          "categoryLabels": [{"properties": {"show": lit(False)}}]}}
+    p.agregar("TarRegion", 10, 6, 360, 52, nombre, fondo=False, escalar=False)
+    celdas = [("Ventas Ene-Sep", "Ventas ene–sep"), ("Lectura Tendencia", "Lectura"),
+              ("Crecimiento Ventas Ene-Sep %", "Vs año anterior"), ("Crecimiento vs Hace 2 Años %", "Vs hace 2 años")]
+    for i, (m_, e) in enumerate(celdas):
+        t = tarjeta(m_, e, AZUL)
+        t["objects"]["labels"][0]["properties"]["fontSize"] = lit(15)
+        t["objects"]["categoryLabels"][0]["properties"]["fontSize"] = lit(9)
+        p.agregar(f"Tar{i + 1}", 10 + (i % 2) * 182, 62 + (i // 2) * 92, 176, 86, t, fondo=False, escalar=False)
     return p
 
 
@@ -727,11 +822,16 @@ def escribir(defin, paginas):
                 "url": {"expr": {"ResourcePackageItem": {"PackageName": "RegisteredResources", "PackageType": 1,
                                                          "ItemName": p.fondo_imagen}}},
                 "scaling": lit("Fit")}}
+        ancho, alto = p.tamano
         page = {"$schema": sp, "name": p.nombre, "displayName": p.nombre_visible,
-                "displayOption": "FitToPage", "height": H, "width": W,
+                "displayOption": "FitToPage", "height": alto, "width": ancho,
                 "objects": {"background": [{"properties": fondo}]}}
         if p.oculta:
             page["visibility"] = "HiddenInViewMode"
+        if p.tooltip:
+            # Ambas propiedades son necesarias: sin "type" Desktop no ofrece la página como tooltip.
+            page["pageBinding"] = {"name": p.nombre, "type": "Tooltip", "parameters": []}
+            page["type"] = "Tooltip"
         if p.interacciones:
             page["visualInteractions"] = p.interacciones
         (pdir / "page.json").write_text(json.dumps(page, ensure_ascii=False, indent=2), encoding="utf-8")
@@ -756,18 +856,50 @@ def validar(defin):
     return ok
 
 
+BTN_W, BTN_H, BTN_SEP = 150, 28, 12
+
+
+def agregar_navegacion(paginas):
+    """Botones «← Anterior» y «Siguiente →» en el orden de lectura de las páginas visibles.
+
+    Portada: solo «Siguiente». Conclusiones (última): «Siguiente» vuelve a la portada.
+    Validación (oculta): «Anterior» a conclusiones y vuelta a la portada."""
+    visibles = [p for p in paginas if not p.oculta]
+    x_sig = 1858 - BTN_W
+    x_ant = x_sig - BTN_SEP - BTN_W
+    for i, p in enumerate(paginas):
+        if p.tooltip:
+            continue
+        if p.oculta:
+            anterior, siguiente = visibles[-1], visibles[0]
+        else:
+            j = visibles.index(p)
+            anterior = visibles[j - 1] if j > 0 else None
+            siguiente = visibles[j + 1] if j + 1 < len(visibles) else visibles[0]
+        texto_sig = "PORTADA  ↺" if siguiente is visibles[0] else "SIGUIENTE  →"
+        # En la portada no hay cabecera: los botones van abajo, a la altura de la ayuda del tiquete.
+        y = 1002 if p.nombre == "pg00Portada" else 114
+        if anterior is not None:
+            p.agregar("BtnAnterior", x_ant, y, BTN_W, BTN_H, boton_ir("←  ANTERIOR", anterior.nombre),
+                      z=610, fondo=False, escalar=False)
+        p.agregar("BtnSiguiente", x_sig, y, BTN_W, BTN_H, boton_ir(texto_sig, siguiente.nombre),
+                  z=611, fondo=False, escalar=False)
+
+
 def main():
     reportes = list((RAIZ / "powerbi").glob("*.Report/definition"))
     if len(reportes) != 1:
         sys.exit(f"Se esperaba un único *.Report en powerbi/, encontrados: {reportes}")
     defin = reportes[0]
     paginas = [pagina_portada(), pagina_resumen(), pagina_comercial(), pagina_promociones(),
-               pagina_disponibilidad(), pagina_conclusiones(), pagina_validacion()]
-    # Se agrega al final para no renumerar los visuales existentes. Va bajo los segmentadores, alineado a la derecha.
+               pagina_disponibilidad(), pagina_conclusiones(), pagina_validacion(), pagina_tooltip_region()]
+    # Se agregan al final para no renumerar los visuales existentes. Fila bajo los segmentadores (y = 114):
+    # «Quitar filtros» alineado con el primer segmentador y la navegación alineada al borde derecho (x = 1858).
     for p in paginas:
         if any(v["visual"]["visualType"] == "slicer" for v in p.visuales):
-            p.agregar("BtnQuitarFiltros", 1858 - 176, 114, 176, 28, boton_quitar_filtros(),
+            p.agregar("BtnQuitarFiltros", SLICER_X[0] - 6, 114, 176, 28, boton_quitar_filtros(),
                       z=600, fondo=False, escalar=False)
+    agregar_navegacion(paginas)
     escribir(defin, paginas)
     total = sum(len(p.visuales) for p in paginas)
     print(f"{len(paginas)} páginas y {total} visuales escritos en {defin}")

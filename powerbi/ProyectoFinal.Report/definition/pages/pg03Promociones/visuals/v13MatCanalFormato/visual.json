@@ -477,51 +477,5 @@
         }
       ]
     }
-  },
-  "filterConfig": {
-    "filters": [
-      {
-        "name": "7c9ee811692adbd6d630",
-        "field": {
-          "Column": {
-            "Expression": {
-              "SourceRef": {
-                "Entity": "DimCondicionVenta"
-              }
-            },
-            "Property": "Canal"
-          }
-        },
-        "type": "Categorical"
-      },
-      {
-        "name": "2cb0c37ab1c8dfa3f9ee",
-        "field": {
-          "Measure": {
-            "Expression": {
-              "SourceRef": {
-                "Entity": "_Medidas"
-              }
-            },
-            "Property": "Crecimiento Ventas Ene-Sep %"
-          }
-        },
-        "type": "Advanced"
-      },
-      {
-        "name": "c37824c2610f6826903d",
-        "field": {
-          "Column": {
-            "Expression": {
-              "SourceRef": {
-                "Entity": "DimFormato"
-              }
-            },
-            "Property": "Formato"
-          }
-        },
-        "type": "Categorical"
-      }
-    ]
   }
 }

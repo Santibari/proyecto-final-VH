@@ -2,11 +2,11 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.13.0/schema.json",
   "name": "v15SvgFidelizacion",
   "position": {
-    "x": 670,
+    "x": 1279,
     "y": 712,
     "z": 1015,
-    "height": 362,
-    "width": 594,
+    "height": 354,
+    "width": 581,
     "tabOrder": 15
   },
   "visual": {

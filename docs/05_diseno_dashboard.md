@@ -19,12 +19,13 @@ Los cambios hechos a mano en Desktop sobre las páginas generadas se pierden si 
 | Página | Pregunta | Contenido |
 |---|---|---|
 | 0. Portada | ¿De qué se trata y por dónde empiezo? | Titular, audiencia y datos; tiquete con las ventas ene–sep 2024–2026 y la variación (medida SVG Tiquete); índice navegable |
-| 1. Resumen ejecutivo | ¿Cómo está el negocio y dónde mirar primero? | Titular dinámico, 5 KPI (con ticket de referencia ⓘ), podio top 3 de regiones, tabla de posiciones con puestos ganados/perdidos, estacionalidad mensual por año y crecimiento por categoría |
-| 2. Desempeño comercial (P1) | ¿Qué regiones, ciudades, formatos y categorías explican el resultado? | Matriz región → ciudad con crecimiento frente a 2025 y 2024 y su lectura; matriz región × formato con fondo semántico; categorías frente a dos años base; aporte en $ por ciudad |
-| 3. Promociones, clientes y canales (P2) | ¿Qué palancas comerciales muestran oportunidades? | KPI (% de ventas en promoción, margen, unidades por línea), crecimiento por promoción, mezcla de canales por formato, canales frente a dos años base, fidelizados frente a no fidelizados, medio de pago |
-| 4. Disponibilidad (P3) | ¿Dónde los quiebres requieren atención? | KPI de quiebre, % de quiebre mensual 2024–2026, volumen afectado por ciudad y por categoría, matriz categoría × formato |
+| 1. Resumen ejecutivo | ¿Cómo está el negocio y dónde mirar primero? | Titular dinámico, 5 KPI (con ticket de referencia ⓘ), **barras de crecimiento por región (clic = filtra la página; tooltip personalizado)**, tabla de posiciones con puestos ganados/perdidos, **ventas acumuladas ene–sep por año** y crecimiento por categoría |
+| 2. Desempeño comercial (P1) | ¿Qué regiones, ciudades, formatos y categorías explican el resultado? | Matriz región → ciudad con crecimiento frente a 2025 y 2024 y su lectura; matriz región × formato con fondo semántico; categorías frente a dos años base; **cascada de la variación total por región** (baja a ciudad; tooltip personalizado) |
+| 3. Promociones, clientes y canales (P2) | ¿Qué palancas comerciales muestran oportunidades? | KPI (% de ventas en promoción, margen, **crecimiento con promoción vs sin promoción**), crecimiento por promoción, matriz canal × formato, **matriz de oportunidad por categoría (peso en ventas vs crecimiento)**, fidelizados frente a no fidelizados |
+| 4. Disponibilidad (P3) | ¿Dónde los quiebres requieren atención? | KPI de quiebre, % de quiebre mensual 2024–2026, volumen afectado por ciudad y por categoría, **% quiebre por categoría frente al promedio de la cadena** |
 | 5. Conclusiones | Síntesis y decisiones | 6 decisiones con su responsable (cumple la estructura mínima del PDF, punto 9) |
 | Validación técnica (oculta) | ¿Cuadra con el CSV? | Tablas con las cifras de control |
+| Tooltip región (oculta) | Tooltip personalizado | Región, ventas ene–sep, crecimiento vs año anterior y vs hace 2 años, lectura de tendencia |
 
 ## Rediseño visual "tiquete + editorial"
 
@@ -78,7 +79,8 @@ Todas las páginas siguen el mismo esquema de lectura de arriba hacia abajo y de
 | Selección cruzada | Al hacer clic en una región o categoría se filtran los demás gráficos (ejemplo de la guía: Orinoquía). |
 | Profundización en la matriz región → ciudad | Bajar de región a ciudad sin cambiar de página. |
 | Tooltips | Las barras de crecimiento muestran la segunda comparación (vs hace 2 años) y la lectura de tendencia. |
-| Navegador de páginas | Recorrer el dashboard en el orden P1 → P2 → P3 → conclusiones. |
+| Botones «← Anterior» y «Siguiente →» (píldora petróleo, igual que «Quitar filtros») | Recorrer el dashboard en el orden de lectura: Portada → Resumen → P1 → P2 → P3 → Conclusiones. En Conclusiones, «Portada ↺» cierra el recorrido. Van en la fila bajo los segmentadores, alineados a la derecha; en la portada, debajo del tiquete. En Desktop se usan con Ctrl + clic. |
+| Índice del tiquete (portada) y «← Tiquete» (cabecera) | Saltar directamente a cualquier página y volver a la portada. |
 
 ## Validación técnica (Fase 7) — resultado
 
@@ -97,11 +99,22 @@ Se verificó en Power BI Desktop, en la página "Validación técnica", el 07/10
 | Ticket por región | Fijo en 73.366 | Fijo en las 7 regiones | ✅ |
 | Tildes y decimales | "Bogotá D.C.", descuento 32,27 | Correctos | ✅ |
 
+## Revisión de gráficos (09/10/2026)
+
+| Se quitó | Por qué | Se reemplazó por |
+|---|---|---|
+| Podio top 3 (Resumen) | Repetía la tabla de posiciones y, como imagen, no filtraba | Barras de crecimiento por región (nativas, filtran la página) |
+| Ventas mensuales por año (Resumen) | Líneas que se cruzan sin patrón (el dataset no tiene estacionalidad) | Ventas acumuladas ene–sep por año: las curvas casi se superponen = "plano" |
+| Aporte en $ por ciudad (Desempeño) | Repetía la columna «Variación $» de la matriz | Cascada de la variación total por región |
+| KPI «Unidades por línea» (Promociones) | No respondía ninguna pregunta | KPI crecimiento con promoción (−0,8 %) vs sin promoción (+2,1 %) |
+| Canales frente a dos años base y Ventas por medio de pago (Promociones) | Repetían la matriz canal × formato / solo mostraban reparto | Matriz de oportunidad por categoría |
+| Matriz % quiebre categoría × formato (Disponibilidad) | Mostraba "focos" no significativos | % quiebre por categoría con la línea del promedio de la cadena |
+
 ## Pendientes para la iteración de diseño
 
 - ~~Línea de % de quiebre en naranja y eje desde 0 %~~ (resuelto en el rediseño).
 - ~~Gráfico de ventas por año y tarjeta del ticket truncada~~ (reemplazados por la fila de KPI SVG).
-- Tooltips personalizados (páginas de información sobre herramientas) para región y categoría.
+- ~~Tooltip personalizado de región~~ (página «Tooltip región», usada en las barras de región y en la cascada).
 - Las tarjetas de las páginas 3 y 4 muestran los decimales según la configuración regional del computador
   (punto o coma); las cifras SVG siempre usan formato colombiano.
 - Reemplazar "Nombre 1 · Nombre 2 · Nombre 3" en la portada por los integrantes.

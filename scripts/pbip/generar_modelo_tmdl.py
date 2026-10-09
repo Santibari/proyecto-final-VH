@@ -301,6 +301,25 @@ MEDIDAS = [
      "-- Petróleo = crece sostenido, terracota = cae sostenido, ocre = oscila, gris = estable\n"
      "SWITCH (\n    [Lectura Tendencia],\n    \"Crece (sostenido)\", \"#0E4D64\",\n"
      "    \"Cae (sostenido)\", \"#9A4A2C\",\n    \"Oscila (rebote)\", \"#A87B22\",\n    \"#7D858C\"\n)", None),
+    ("3. Tiempo (Ene-Sep)", "Ventas Acumuladas Ene-Sep",
+     "-- Ventas acumuladas desde enero hasta el mes del eje, solo hasta el mes de corte (septiembre):\n"
+     "-- así los tres años se comparan en el mismo tramo y la curva no se prolonga en oct–dic.\n"
+     "VAR MesCorte = MONTH ( CALCULATE ( MAX ( FactVentas[fecha] ), REMOVEFILTERS () ) )\nRETURN\n"
+     "    IF (\n        MAX ( DimCalendario[MesNum] ) <= MesCorte,\n"
+     "        CALCULATE ( [Ventas Netas], DATESYTD ( DimCalendario[Fecha] ) )\n    )", MONEDA),
+    ("3. Tiempo (Ene-Sep)", "Participacion Ventas Ene-Sep %",
+     "-- Peso de cada categoría en las ventas ene–sep (respeta año, región, formato; ignora el filtro de categoría)\n"
+     "DIVIDE ( [Ventas Ene-Sep], CALCULATE ( [Ventas Ene-Sep], REMOVEFILTERS ( DimCategoria ) ) )", PCT),
+    ("6. Promocion", "Crecimiento Ventas en Promocion %",
+     'CALCULATE ( [Crecimiento Ventas Ene-Sep %], DimPromocion[Con promocion] = "Sí" )', PCT),
+    ("6. Promocion", "Crecimiento Ventas sin Promocion %",
+     'CALCULATE ( [Crecimiento Ventas Ene-Sep %], DimPromocion[Con promocion] = "No" )', PCT),
+    ("1. Ventas", "Region Seleccionada",
+     '-- Nombre de la región en contexto (título del tooltip personalizado)\n'
+     'SELECTEDVALUE ( DimGeografia[Region], "Varias regiones" )', None),
+    ("4. Quiebre", "% Quiebre Cadena",
+     "-- Promedio de toda la cadena (ignora la categoría): línea de referencia del gráfico por categoría\n"
+     "CALCULATE ( [% Quiebre], REMOVEFILTERS ( DimCategoria ) )", PCT),
     ("4. Quiebre", "Lineas con Quiebre", "SUM ( FactVentas[quiebre_flag] )", ENTERO),
     ("4. Quiebre", "% Quiebre", "DIVIDE ( [Lineas con Quiebre], [Lineas de Venta] )", PCT),
     ("4. Quiebre", "Ventas con Quiebre", "CALCULATE ( [Ventas Netas], FactVentas[quiebre_flag] = 1 )", MONEDA),

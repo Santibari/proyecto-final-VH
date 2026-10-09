@@ -404,14 +404,19 @@ ENTERO = lambda v: f'SUBSTITUTE ( FORMAT ( {v}, "#,0" ), ",", "." )'
 
 
 def dax_kpis_promociones():
-    svg = plantilla_kpis_n(["VENTAS CON PROMOCIÓN", "MARGEN ESTIMADO", "UNIDADES POR LÍNEA"], KPI_INT_PASO, KPI_INT_W)
+    # El tercer KPI era «Unidades por línea» (2,03): no respondía ninguna pregunta. Ahora compara el crecimiento
+    # de las ventas con promoción frente a las ventas sin promoción (decisión D4: reasignar la inversión promocional).
+    svg = plantilla_kpis_n(["VENTAS CON PROMOCIÓN", "MARGEN ESTIMADO", "CRECIMIENTO CON PROMOCIÓN"],
+                           KPI_INT_PASO, KPI_INT_W)
     return "\n".join([
         f"VAR K0 = {PCT1('[% Ventas en Promocion]')}",
         f"VAR K1 = {PCT1('[Margen Estimado %]')}",
-        'VAR K2 = SUBSTITUTE ( FORMAT ( [Unidades por Linea], "0.00" ), ".", "," )',
+        "VAR CP = [Crecimiento Ventas en Promocion %]",
+        "VAR SP = [Crecimiento Ventas sin Promocion %]",
+        f'VAR K2 = IF ( ISBLANK ( CP ), "—", {pct_dax("CP")} )',
         f'VAR N0 = {MILL("[Ventas en Promocion]")} & " de " & {MILL("[Ventas Netas]")}',
         'VAR N1 = "Igual en todos los grupos"',
-        'VAR N2 = "Promedio por línea de venta"',
+        f'VAR N2 = IF ( ISBLANK ( SP ), "Seleccione un año", "Sin promoción: " & {pct_dax("SP")} & " vs año ant." )',
         f"VAR Svg = {a_dax(svg)}",
         f"RETURN\n    {uri('Svg')}",
     ])

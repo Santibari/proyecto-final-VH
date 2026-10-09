@@ -61,7 +61,7 @@
   "visualInteractions": [
     {
       "source": "v04SegAno",
-      "target": "v13LineaEstacionalidad",
+      "target": "v15LineaAcumulado",
       "type": "NoFilter"
     }
   ]
