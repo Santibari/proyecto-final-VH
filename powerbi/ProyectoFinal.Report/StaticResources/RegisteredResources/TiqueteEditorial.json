@@ -3,19 +3,19 @@
   "dataColors": [
     "#0E4D64",
     "#5E7F8C",
-    "#C9C2B3",
-    "#A87B22",
-    "#9A4A2C",
-    "#7D858C",
-    "#9C7A12",
-    "#3F6B5E"
+    "#B9C4CA",
+    "#4F86A3",
+    "#4A545B",
+    "#9AA4AB",
+    "#2F6F8A",
+    "#7D8A92"
   ],
   "background": "#FFFDF8",
   "foreground": "#1E2B2F",
   "tableAccent": "#0E4D64",
   "good": "#0E4D64",
-  "bad": "#9A4A2C",
-  "neutral": "#A87B22",
+  "bad": "#4A545B",
+  "neutral": "#4F86A3",
   "textClasses": {
     "label": {
       "fontFace": "Segoe UI",

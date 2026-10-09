@@ -11,84 +11,6 @@
   },
   "visual": {
     "visualType": "tableEx",
-    "query": {
-      "queryState": {
-        "Values": {
-          "projections": [
-            {
-              "field": {
-                "Column": {
-                  "Expression": {
-                    "SourceRef": {
-                      "Entity": "DimCalendario"
-                    }
-                  },
-                  "Property": "Año"
-                }
-              },
-              "queryRef": "DimCalendario.Año",
-              "nativeQueryRef": "Año"
-            },
-            {
-              "field": {
-                "Measure": {
-                  "Expression": {
-                    "SourceRef": {
-                      "Entity": "_Medidas"
-                    }
-                  },
-                  "Property": "Ventas Ene-Sep"
-                }
-              },
-              "queryRef": "_Medidas.Ventas Ene-Sep",
-              "nativeQueryRef": "Ventas Ene-Sep"
-            },
-            {
-              "field": {
-                "Measure": {
-                  "Expression": {
-                    "SourceRef": {
-                      "Entity": "_Medidas"
-                    }
-                  },
-                  "Property": "Ventas Ene-Sep Año Anterior"
-                }
-              },
-              "queryRef": "_Medidas.Ventas Ene-Sep Año Anterior",
-              "nativeQueryRef": "Ventas Ene-Sep Año Anterior"
-            },
-            {
-              "field": {
-                "Measure": {
-                  "Expression": {
-                    "SourceRef": {
-                      "Entity": "_Medidas"
-                    }
-                  },
-                  "Property": "Crecimiento Ventas Ene-Sep %"
-                }
-              },
-              "queryRef": "_Medidas.Crecimiento Ventas Ene-Sep %",
-              "nativeQueryRef": "Crecimiento Ventas Ene-Sep %"
-            },
-            {
-              "field": {
-                "Measure": {
-                  "Expression": {
-                    "SourceRef": {
-                      "Entity": "_Medidas"
-                    }
-                  },
-                  "Property": "Crecimiento vs Hace 2 Años %"
-                }
-              },
-              "queryRef": "_Medidas.Crecimiento vs Hace 2 Años %",
-              "nativeQueryRef": "Crecimiento vs Hace 2 Años %"
-            }
-          ]
-        }
-      }
-    },
     "objects": {
       "columnHeaders": [
         {
@@ -133,6 +55,41 @@
               "expr": {
                 "Literal": {
                   "Value": "2D"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "rowHeaders": [
+        {
+          "properties": {
+            "fontColor": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "Literal": {
+                      "Value": "'#1E2B2F'"
+                    }
+                  }
+                }
+              }
+            },
+            "backColor": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "Literal": {
+                      "Value": "'#F5F0E6'"
+                    }
+                  }
+                }
+              }
+            },
+            "fontSize": {
+              "expr": {
+                "Literal": {
+                  "Value": "10D"
                 }
               }
             }
@@ -238,6 +195,34 @@
           }
         }
       ],
+      "subTotals": [
+        {
+          "properties": {
+            "backColor": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "Literal": {
+                      "Value": "'#F5F0E6'"
+                    }
+                  }
+                }
+              }
+            },
+            "fontColor": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "Literal": {
+                      "Value": "'#1E2B2F'"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      ],
       "total": [
         {
           "properties": {
@@ -266,6 +251,84 @@
           }
         }
       ]
+    },
+    "query": {
+      "queryState": {
+        "Values": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "DimCalendario"
+                    }
+                  },
+                  "Property": "Año"
+                }
+              },
+              "queryRef": "DimCalendario.Año",
+              "nativeQueryRef": "Año"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "_Medidas"
+                    }
+                  },
+                  "Property": "Ventas Ene-Sep"
+                }
+              },
+              "queryRef": "_Medidas.Ventas Ene-Sep",
+              "nativeQueryRef": "Ventas Ene-Sep"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "_Medidas"
+                    }
+                  },
+                  "Property": "Ventas Ene-Sep Año Anterior"
+                }
+              },
+              "queryRef": "_Medidas.Ventas Ene-Sep Año Anterior",
+              "nativeQueryRef": "Ventas Ene-Sep Año Anterior"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "_Medidas"
+                    }
+                  },
+                  "Property": "Crecimiento Ventas Ene-Sep %"
+                }
+              },
+              "queryRef": "_Medidas.Crecimiento Ventas Ene-Sep %",
+              "nativeQueryRef": "Crecimiento Ventas Ene-Sep %"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "_Medidas"
+                    }
+                  },
+                  "Property": "Crecimiento vs Hace 2 Años %"
+                }
+              },
+              "queryRef": "_Medidas.Crecimiento vs Hace 2 Años %",
+              "nativeQueryRef": "Crecimiento vs Hace 2 Años %"
+            }
+          ]
+        }
+      }
     },
     "visualContainerObjects": {
       "title": [

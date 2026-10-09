@@ -11,70 +11,6 @@
   },
   "visual": {
     "visualType": "tableEx",
-    "query": {
-      "queryState": {
-        "Values": {
-          "projections": [
-            {
-              "field": {
-                "Column": {
-                  "Expression": {
-                    "SourceRef": {
-                      "Entity": "DimGeografia"
-                    }
-                  },
-                  "Property": "Region"
-                }
-              },
-              "queryRef": "DimGeografia.Region",
-              "nativeQueryRef": "Region"
-            },
-            {
-              "field": {
-                "Measure": {
-                  "Expression": {
-                    "SourceRef": {
-                      "Entity": "_Medidas"
-                    }
-                  },
-                  "Property": "Venta por Linea"
-                }
-              },
-              "queryRef": "_Medidas.Venta por Linea",
-              "nativeQueryRef": "Venta por Linea"
-            },
-            {
-              "field": {
-                "Measure": {
-                  "Expression": {
-                    "SourceRef": {
-                      "Entity": "_Medidas"
-                    }
-                  },
-                  "Property": "Ticket Promedio (ID dataset)"
-                }
-              },
-              "queryRef": "_Medidas.Ticket Promedio (ID dataset)",
-              "nativeQueryRef": "Ticket Promedio (ID dataset)"
-            },
-            {
-              "field": {
-                "Measure": {
-                  "Expression": {
-                    "SourceRef": {
-                      "Entity": "_Medidas"
-                    }
-                  },
-                  "Property": "Lineas de Venta"
-                }
-              },
-              "queryRef": "_Medidas.Lineas de Venta",
-              "nativeQueryRef": "Lineas de Venta"
-            }
-          ]
-        }
-      }
-    },
     "objects": {
       "columnHeaders": [
         {
@@ -119,6 +55,41 @@
               "expr": {
                 "Literal": {
                   "Value": "2D"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "rowHeaders": [
+        {
+          "properties": {
+            "fontColor": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "Literal": {
+                      "Value": "'#1E2B2F'"
+                    }
+                  }
+                }
+              }
+            },
+            "backColor": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "Literal": {
+                      "Value": "'#F5F0E6'"
+                    }
+                  }
+                }
+              }
+            },
+            "fontSize": {
+              "expr": {
+                "Literal": {
+                  "Value": "10D"
                 }
               }
             }
@@ -224,6 +195,34 @@
           }
         }
       ],
+      "subTotals": [
+        {
+          "properties": {
+            "backColor": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "Literal": {
+                      "Value": "'#F5F0E6'"
+                    }
+                  }
+                }
+              }
+            },
+            "fontColor": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "Literal": {
+                      "Value": "'#1E2B2F'"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      ],
       "total": [
         {
           "properties": {
@@ -252,6 +251,70 @@
           }
         }
       ]
+    },
+    "query": {
+      "queryState": {
+        "Values": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "DimGeografia"
+                    }
+                  },
+                  "Property": "Region"
+                }
+              },
+              "queryRef": "DimGeografia.Region",
+              "nativeQueryRef": "Region"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "_Medidas"
+                    }
+                  },
+                  "Property": "Venta por Linea"
+                }
+              },
+              "queryRef": "_Medidas.Venta por Linea",
+              "nativeQueryRef": "Venta por Linea"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "_Medidas"
+                    }
+                  },
+                  "Property": "Ticket Promedio (ID dataset)"
+                }
+              },
+              "queryRef": "_Medidas.Ticket Promedio (ID dataset)",
+              "nativeQueryRef": "Ticket Promedio (ID dataset)"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "_Medidas"
+                    }
+                  },
+                  "Property": "Lineas de Venta"
+                }
+              },
+              "queryRef": "_Medidas.Lineas de Venta",
+              "nativeQueryRef": "Lineas de Venta"
+            }
+          ]
+        }
+      }
     },
     "visualContainerObjects": {
       "title": [

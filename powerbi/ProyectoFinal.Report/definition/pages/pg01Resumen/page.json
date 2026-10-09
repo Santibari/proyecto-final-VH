@@ -60,8 +60,8 @@
   },
   "visualInteractions": [
     {
-      "source": "v04SegAno",
-      "target": "v15LineaAcumulado",
+      "source": "v01SegAno",
+      "target": "v12LineaAcumulado",
       "type": "NoFilter"
     }
   ]

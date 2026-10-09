@@ -26,12 +26,12 @@ sys.stdout.reconfigure(encoding="utf-8")
 # Validada con .claude/skills/dashboard-design-studio/scripts/paleta.py sobre el papel #F5F0E6
 AZUL = "#0E4D64"        # identidad (azul petróleo): dato principal, 2026, encabezados
 AZUL_CLARO = "#5E7F8C"  # comparación (año anterior, hace 2 años)
-COMP2 = "#C9C2B3"       # comparación lejana (hace 2 años en series)
-# Semáforo sin verde ni rojo: tonos de la misma familia del papel y la tinta.
-VERDE = "#0E4D64"       # crece sostenido → azul petróleo (identidad)
-ROJO = "#9A4A2C"        # cae sostenido → terracota
-NARANJA = "#A87B22"     # oscila / rebote / quiebre → ocre
-GRIS = "#7D858C"        # neutro / referencia
+COMP2 = "#B9C4CA"       # comparación lejana (gris azulado claro)
+# Gráficas solo en azules y grises (pedido del equipo): el sentido lo da la posición y el tono, no el semáforo.
+VERDE = "#0E4D64"       # crece sostenido → azul petróleo
+ROJO = "#4A545B"        # cae sostenido → gris pizarra
+NARANJA = "#4F86A3"     # oscila / rebote / quiebre → azul medio
+GRIS = "#9AA4AB"        # estable / referencia → gris claro
 FONDO = "#F5F0E6"       # papel
 TARJETA = "#FFFDF8"     # superficie de las tarjetas
 BORDE = "#E2DACB"
@@ -316,7 +316,7 @@ def boton_pildora(texto_, enlace):
     return {"visualType": "actionButton", "objects": {
         "icon": [{"properties": {"show": lit(False)}, "selector": {"id": e}} for e in estados],
         "text": [{"properties": {"show": lit(True), "text": lit(texto_), "fontColor": color(tinta[e]),
-                                 "fontSize": lit(9), "fontFamily": lit(SEMI), "bold": lit(True)},
+                                 "fontSize": lit(9.5), "fontFamily": lit(MONO), "bold": lit(True)},
                   "selector": {"id": e}} for e in estados] + [general],
         "outline": [{"properties": {"show": lit(True), "lineColor": color(AZUL), "weight": lit(1)},
                      "selector": {"id": e}} for e in estados] + [general],
@@ -351,9 +351,11 @@ SLICER_W = 152
 
 def encabezado(p, slicers=True, titulo_svg=False):
     """Cabecera editorial: regla gruesa (fondo), kicker, titular en serif, subtítulo y segmentadores a la derecha."""
-    p.agregar("Kicker", 52, 30, 900, 30, texto([[etiqueta(p.kicker or p.nombre_visible, AZUL)]]),
-              fondo=False, escalar=False)
-    if p.nombre != "pg00Portada":
+    en_barra = p.nombre in NAV_PORTADA  # la barra del tiquete reemplaza el kicker y «← TIQUETE»
+    if not en_barra:
+        p.agregar("Kicker", 52, 30, 900, 30, texto([[etiqueta(p.kicker or p.nombre_visible, AZUL)]]),
+                  fondo=False, escalar=False)
+    if p.nombre != "pg00Portada" and not en_barra:
         p.agregar("TxtVolver", 1010, 30, 150, 30, texto([[("← TIQUETE", estilo(9.5, True, SEC))]]),
                   fondo=False, escalar=False)
         p.agregar("BtnVolver", 1010, 30, 150, 30, boton_pagina("pg00Portada"), fondo=False, escalar=False)
@@ -486,17 +488,21 @@ def pagina_comercial():
                      color_valores=["Crecimiento Ventas Ene-Sep %", "Crecimiento vs Hace 2 Años %",
                                     "Lectura Tendencia"]),
               titulo="Región → ciudad (expanda con +): ventas y crecimiento")
-    p.agregar("MatRegionFormato", 970, 186, 926, 440,
-              matriz([col("DimGeografia", "Region")],
-                     [(med("Crecimiento Ventas Ene-Sep %"), "Crec. vs año ant.")],
-                     columnas=[col("DimFormato", "Formato")],
-                     color_valores=["Crecimiento Ventas Ene-Sep %"], modo="backColor", tam=12, relleno=8),
-              titulo="Región × formato: crecimiento (petróleo = crece sostenido, terracota = cae, ocre = rebote)")
+    # Antes: mapa de calor región × formato (difícil de leer). Ahora: barras por formato frente a dos años base,
+    # con el mismo lenguaje del gráfico de categorías; el detalle por región queda en la matriz de la izquierda.
+    p.agregar("BarFormatoDosComp", 970, 186, 926, 440,
+              barras(col("DimFormato", "Formato"),
+                     [(med("Crecimiento Ventas Ene-Sep %"), "vs año anterior"),
+                      (med("Crecimiento vs Hace 2 Años %"), "vs hace 2 años")],
+                     colores=[("Crecimiento Ventas Ene-Sep %", AZUL), ("Crecimiento vs Hace 2 Años %", COMP2)],
+                     ordenar=med("Crecimiento Ventas Ene-Sep %"),
+                     tooltips=[(med("Ventas Ene-Sep"), "Ventas ene–sep")]),
+              titulo="Formatos: crecimiento frente a dos años base")
     p.agregar("BarCategoriaDosComp", 24, 642, 930, 418,
               barras(col("DimCategoria", "Categoria"),
                      [(med("Crecimiento Ventas Ene-Sep %"), "vs año anterior"),
                       (med("Crecimiento vs Hace 2 Años %"), "vs hace 2 años")],
-                     colores=[("Crecimiento Ventas Ene-Sep %", AZUL), ("Crecimiento vs Hace 2 Años %", AZUL_CLARO)],
+                     colores=[("Crecimiento Ventas Ene-Sep %", AZUL), ("Crecimiento vs Hace 2 Años %", COMP2)],
                      ordenar=med("Crecimiento Ventas Ene-Sep %")),
               titulo="Categorías: crecimiento frente a dos años base (solo Abarrotes crece en ambos)")
     # Antes: barras de aporte en $ por ciudad (repetían la columna «Variación $» de la matriz).
@@ -534,14 +540,16 @@ def pagina_promociones():
                      tooltips=[(med("Crecimiento vs Hace 2 Años %"), "Crec. vs hace 2 años"),
                                (med("Ventas Ene-Sep"), "Ventas ene–sep")]),
               titulo="Crecimiento por tipo de promoción")
-    # Antes: mezcla 100 % de canales por formato (Tienda física ≈ 81 % en todos: no decía nada nuevo).
-    # Ahora: mapa de calor canal × formato con la lectura de tendencia, que sí muestra dónde hay movimiento.
-    p.agregar("MatCanalFormato", 970, 322, 926, 360,
-              matriz([col("DimCondicionVenta", "Canal")],
-                     [(med("Crecimiento Ventas Ene-Sep %"), "Crec. vs año ant.")],
-                     columnas=[col("DimFormato", "Formato")],
-                     color_valores=["Crecimiento Ventas Ene-Sep %"], modo="backColor", tam=15, relleno=14),
-              titulo="Canal × formato: crecimiento (ocre = rebote; ningún canal crece de forma sostenida)")
+    # Antes: mapa de calor canal × formato. Ahora: mapa de Colombia con el desempeño de cada región (SVG, sin depender
+    # de los mapas de Bing/Azure) y su ranking; responde a los segmentadores y resalta la región seleccionada.
+    mx, mw = en_reticula(970, 926)
+    p.reglas.append((mx, 322, mw))
+    p.agregar("TitMapa", mx, 326, mw, 30,
+              texto([[("Regiones: quién crece y quién cae (puesto y color según el crecimiento ene–sep vs año anterior)",
+                       estilo(12, False, TEXTO, SEMI))]]), fondo=False, escalar=False)
+    mh = 682 - 360
+    agregar_svg(p, "SvgMapaRegiones", mx, 360, round(mh * medidas_diseno.MAPA_W / medidas_diseno.MAPA_H), mh,
+                "SVG Mapa Regiones")
     # Antes: barras de canales (repetían la matriz canal × formato) y ventas por medio de pago (solo reparto, sin
     # hallazgo). Ahora: matriz de oportunidad por categoría, que responde directamente la P2.
     oportunidad = {"visualType": "scatterChart",
@@ -755,7 +763,7 @@ def registrar_tema(defin):
     """Tema propio (paleta y tipografías) registrado como CustomTheme en report.json."""
     tema = {
         "name": "Tiquete editorial",
-        "dataColors": [AZUL, AZUL_CLARO, COMP2, NARANJA, ROJO, GRIS, "#9C7A12", "#3F6B5E"],
+        "dataColors": [AZUL, AZUL_CLARO, COMP2, NARANJA, ROJO, GRIS, "#2F6F8A", "#7D8A92"],
         "background": TARJETA, "foreground": TEXTO, "tableAccent": AZUL,
         "good": VERDE, "bad": ROJO, "neutral": NARANJA,
         "textClasses": {
@@ -856,34 +864,42 @@ def validar(defin):
     return ok
 
 
-BTN_W, BTN_H, BTN_SEP = 150, 28, 12
+# Barra de navegación con el estilo del tiquete: letra monoespaciada, secciones numeradas como en el índice de la
+# portada y la página actual «impresa» en una franja petróleo con letra blanca (como la línea resaltada de un recibo).
+BARRA = [("pg00Portada", "↩ TIQUETE"), ("pg01Resumen", "01 RESUMEN"), ("pg02Comercial", "02 COMERCIAL"),
+         ("pg03Promociones", "03 CLIENTES Y CANALES"), ("pg04Disponibilidad", "04 DISPONIBILIDAD"),
+         ("pg05Conclusiones", "05 CONCLUSIONES")]
+BARRA_X, BARRA_Y, BARRA_H, BARRA_SEP = 52, 28, 26, 10
+CAR_MONO = 7.9  # ancho aproximado de un carácter de Consolas a 10,5 pt sobre el lienzo de 1920
+
+
+def item_barra(texto_, actual):
+    v = texto([[(texto_, estilo(10.5, True, "#FFFFFF" if actual else (AZUL if texto_.startswith("↩") else SEC), MONO))]])
+    v["objects"]["general"][0]["properties"]["paragraphs"][0]["horizontalTextAlignment"] = "center"
+    return v
+
+
+def agregar_barra(p):
+    x = BARRA_X
+    for destino, rotulo in BARRA:
+        w = round(len(rotulo) * CAR_MONO + 22)
+        actual = destino == p.nombre
+        sufijo = destino[4:]
+        p.agregar("Nav" + sufijo, x, BARRA_Y, w, BARRA_H, item_barra(rotulo, actual), z=620, fondo=False, escalar=False)
+        vco = p.visuales[-1]["visual"]["visualContainerObjects"]
+        vco["padding"] = [{"properties": {"top": lit(3), "left": lit(0), "right": lit(0), "bottom": lit(0)}}]
+        if actual:
+            vco["background"] = [{"properties": {"show": lit(True), "color": color(AZUL), "transparency": lit(0)}}]
+        else:
+            p.agregar("BtnNav" + sufijo, x, BARRA_Y, w, BARRA_H, boton_pagina(destino), z=621, fondo=False, escalar=False)
+        x += w + BARRA_SEP
 
 
 def agregar_navegacion(paginas):
-    """Botones «← Anterior» y «Siguiente →» en el orden de lectura de las páginas visibles.
-
-    Portada: solo «Siguiente». Conclusiones (última): «Siguiente» vuelve a la portada.
-    Validación (oculta): «Anterior» a conclusiones y vuelta a la portada."""
-    visibles = [p for p in paginas if not p.oculta]
-    x_sig = 1858 - BTN_W
-    x_ant = x_sig - BTN_SEP - BTN_W
-    for i, p in enumerate(paginas):
-        if p.tooltip:
-            continue
-        if p.oculta:
-            anterior, siguiente = visibles[-1], visibles[0]
-        else:
-            j = visibles.index(p)
-            anterior = visibles[j - 1] if j > 0 else None
-            siguiente = visibles[j + 1] if j + 1 < len(visibles) else visibles[0]
-        texto_sig = "PORTADA  ↺" if siguiente is visibles[0] else "SIGUIENTE  →"
-        # En la portada no hay cabecera: los botones van abajo, a la altura de la ayuda del tiquete.
-        y = 1002 if p.nombre == "pg00Portada" else 114
-        if anterior is not None:
-            p.agregar("BtnAnterior", x_ant, y, BTN_W, BTN_H, boton_ir("←  ANTERIOR", anterior.nombre),
-                      z=610, fondo=False, escalar=False)
-        p.agregar("BtnSiguiente", x_sig, y, BTN_W, BTN_H, boton_ir(texto_sig, siguiente.nombre),
-                  z=611, fondo=False, escalar=False)
+    """Barra del tiquete en las cinco páginas del recorrido (la portada ya tiene su índice en el tiquete)."""
+    for p in paginas:
+        if p.nombre in NAV_PORTADA:  # la validación (oculta) conserva su cabecera técnica
+            agregar_barra(p)
 
 
 def main():

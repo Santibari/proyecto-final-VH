@@ -298,9 +298,9 @@ MEDIDAS = [
      "        A < -0.02 && B < -0.02, \"Cae (sostenido)\",\n"
      "        ABS ( A ) > 0.02, \"Oscila (rebote)\",\n        \"Estable\"\n    )", None),
     ("7. Formato condicional", "Color Crecimiento",
-     "-- Petróleo = crece sostenido, terracota = cae sostenido, ocre = oscila, gris = estable\n"
+     "-- Azul petróleo = crece sostenido, gris pizarra = cae sostenido, azul medio = oscila, gris claro = estable\n"
      "SWITCH (\n    [Lectura Tendencia],\n    \"Crece (sostenido)\", \"#0E4D64\",\n"
-     "    \"Cae (sostenido)\", \"#9A4A2C\",\n    \"Oscila (rebote)\", \"#A87B22\",\n    \"#7D858C\"\n)", None),
+     "    \"Cae (sostenido)\", \"#4A545B\",\n    \"Oscila (rebote)\", \"#4F86A3\",\n    \"#9AA4AB\"\n)", None),
     ("3. Tiempo (Ene-Sep)", "Ventas Acumuladas Ene-Sep",
      "-- Ventas acumuladas desde enero hasta el mes del eje, solo hasta el mes de corte (septiembre):\n"
      "-- así los tres años se comparan en el mismo tramo y la curva no se prolonga en oct–dic.\n"

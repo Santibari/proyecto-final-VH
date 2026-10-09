@@ -12,8 +12,10 @@ import re
 
 # ------------------------------------------------------------------ paleta (validada con paleta.py)
 TINTA, SEC, IDENT, BORDE = "#1E2B2F", "#5B6770", "#0E4D64", "#E2DACB"
-VERDE, ROJO, NAR, GRIS = "#0E4D64", "#9A4A2C", "#A87B22", "#7D858C"  # sin verde ni rojo: petróleo, terracota, ocre, gris
-ORO, PLATA, BRONCE = "#C9A227", "#A9B1B9", "#B9773F"
+# Solo azules y grises: crece sostenido = petróleo, rebote = azul medio, estable = gris claro, cae sostenido = gris pizarra
+VERDE, ROJO, NAR, GRIS = "#0E4D64", "#4A545B", "#4F86A3", "#9AA4AB"
+ORO, PLATA, BRONCE = "#0E4D64", "#5E7F8C", "#9AA4AB"  # puestos 1-3 en la misma familia de azules y grises
+COMP2 = "#B9C4CA"  # comparación lejana (gris azulado claro)
 FUENTE = "Segoe UI, Arial, sans-serif"
 MONO = "Consolas, Courier New, monospace"
 
@@ -182,7 +184,7 @@ def dax_posiciones(w=816, fila=50, top=80):
                 f"<rect x='{cero:.1f}' y='⟨Y + 15⟩' width='0' height='{fila - 30}' rx='4' fill='⟨[@c]⟩'>"
                 f"<animate attributeName='width' from='0' to='⟨FORMAT ( WB, \"0.0\", \"en-US\" )⟩' dur='.9s' begin='0.⟨[@r] - 1⟩s' fill='freeze' calcMode='spline' keySplines='.2 .8 .2 1'/>"
                 f"<animate attributeName='x' from='{cero:.1f}' to='⟨FORMAT ( XB, \"0.0\", \"en-US\" )⟩' dur='.9s' begin='0.⟨[@r] - 1⟩s' fill='freeze' calcMode='spline' keySplines='.2 .8 .2 1'/></rect>"
-                f"<text x='{w - 6}' y='⟨Y + {fila / 2 + 7}⟩' text-anchor='end' font-size='20' font-weight='700' fill='⟨[@c]⟩'>⟨{pct_dax('[@g]')}⟩</text>")
+                f"<text x='{w - 6}' y='⟨Y + {fila / 2 + 7}⟩' text-anchor='end' font-size='20' font-weight='700' fill='⟨IF ( [@c] = \"{GRIS}\", \"{SEC}\", [@c] )⟩'>⟨{pct_dax('[@g]')}⟩</text>")
     fila_dax = a_dax(fila_svg)
     # Las variables por fila se calculan dentro del CONCATENATEX con un VAR local
     fila_expr = (f"VAR Y = 36 + ( [@r] - 1 ) * {fila}\n"
@@ -457,7 +459,7 @@ def dax_fidelizacion(w=FID_W, h=FID_H):
            f"<text x='{c2:.0f}' y='236' text-anchor='middle' font-family='{MONO}' font-size='28' font-weight='700' fill='{TINTA}'>⟨MN⟩</text>"
            f"<text x='{c1:.0f}' y='256' text-anchor='middle' font-size='13' fill='{SEC}'>margen estimado</text>"
            f"<text x='{c2:.0f}' y='256' text-anchor='middle' font-size='13' fill='{SEC}'>margen estimado</text>"
-           f"<rect x='0' y='{barra_y}' width='{w}' height='18' rx='3' fill='#C9C2B3'/>"
+           f"<rect x='0' y='{barra_y}' width='{w}' height='18' rx='3' fill='{COMP2}'/>"
            f"<rect x='0' y='{barra_y}' width='0' height='18' rx='3' fill='{IDENT}'>"
            f"<animate attributeName='width' from='0' to='⟨FORMAT ( PS * {w}, \"0.0\", \"en-US\" )⟩' dur='.9s' fill='freeze' calcMode='spline' keySplines='.2 .8 .2 1'/></rect>"
            f"<text x='0' y='{barra_y + 42}' font-size='14' fill='{TINTA}'><tspan font-weight='700'>⟨PST⟩</tspan> de las ventas ene–sep</text>"
@@ -484,6 +486,83 @@ def dax_fidelizacion(w=FID_W, h=FID_H):
     ]).replace('VAR FS = DimCondicionVenta[Cliente fidelizado] = "Sí"\n', '')
 
 
+
+# ------------------------------------------------------------------ mapa de regiones (página de clientes)
+# Silueta de Colombia (Natural Earth 1:50m, paquete npm world-atlas), proyección equirectangular a 19 px por grado,
+# simplificada con Douglas-Peucker. Se dibuja como SVG para no depender de los mapas de Bing/Azure de Power BI.
+COLOMBIA_PATH = "M155.8 20.1 L143.7 23.8 L138.2 32.8 L134.4 34.3 L129.8 39.6 L126.4 46.2 L123.8 59.5 L116.9 70.8 L122.8 69.6 L124.7 71.9 L127.7 72.4 L130.3 81.6 L135.0 86.2 L136.0 90.6 L134.0 102.5 L135.4 104.6 L139.0 105.5 L142.8 111.9 L159.5 112.8 L166.9 110.8 L178.4 113.4 L191.8 129.2 L201.1 127.7 L210.0 128.5 L221.6 126.0 L228.8 128.1 L228.9 132.8 L222.2 145.3 L221.6 159.9 L225.3 172.1 L232.0 180.6 L221.6 192.4 L226.2 192.4 L233.9 200.1 L240.3 222.3 L236.4 223.0 L236.2 214.8 L230.3 205.3 L227.3 206.1 L220.1 212.3 L215.2 207.8 L214.1 210.4 L215.6 212.8 L189.6 211.8 L183.8 213.0 L183.7 225.4 L193.9 225.5 L196.8 229.1 L197.0 233.3 L190.9 231.6 L179.9 234.5 L179.6 248.1 L187.9 255.2 L188.3 260.0 L192.3 268.2 L181.6 326.0 L174.5 318.0 L170.8 319.0 L166.9 317.4 L179.7 296.8 L163.5 287.6 L159.7 288.2 L154.3 289.9 L147.6 286.4 L138.7 291.1 L125.0 291.0 L121.0 288.8 L120.1 280.3 L114.5 277.7 L114.0 273.0 L111.3 269.2 L100.2 263.9 L97.0 256.5 L89.6 249.3 L71.2 243.8 L61.7 237.1 L59.5 237.8 L57.5 241.0 L40.4 238.0 L39.0 233.4 L35.6 231.8 L34.6 229.6 L32.1 229.8 L22.9 225.6 L9.4 214.6 L13.8 210.4 L18.0 211.8 L17.7 200.7 L21.0 198.3 L27.7 197.8 L32.5 193.9 L35.2 190.8 L34.7 187.7 L37.3 187.0 L41.1 181.9 L46.4 171.1 L42.9 171.5 L42.6 168.4 L41.1 170.5 L40.1 164.8 L38.0 165.5 L41.2 161.9 L42.4 155.8 L40.8 144.4 L37.7 140.3 L43.2 135.7 L39.0 128.1 L40.9 120.6 L30.8 108.1 L33.8 102.3 L33.4 99.2 L37.7 101.7 L41.2 99.1 L41.3 96.6 L44.1 94.0 L38.8 84.0 L40.5 81.3 L50.7 91.8 L49.3 94.0 L51.9 94.8 L52.2 87.6 L49.4 82.6 L61.7 74.7 L66.4 67.5 L73.8 66.0 L72.9 60.6 L75.7 51.6 L72.5 52.8 L77.4 43.9 L88.9 34.4 L98.6 36.6 L95.1 39.1 L97.3 41.0 L102.2 30.4 L118.0 30.9 L129.2 23.0 L137.7 19.6 L140.3 13.9 L148.3 9.5 L152.5 9.3 L156.9 11.1 L159.3 16.6 L155.8 20.1 Z"
+MAPA_LON0, MAPA_LAT1, MAPA_K, MAPA_O = -79.1, 12.5, 19.0, 8
+# Punto de cada región: promedio de sus ciudades, corrido un poco donde los puntos se tocarían
+REGION_LATLON = {
+    "Caribe": (10.6, -74.9), "Noroccidente": (6.6, -75.6), "Nororiente": (7.5, -72.9),
+    "Eje Cafetero": (5.1, -75.9), "Centro": (4.3, -74.3), "Orinoquía": (3.9, -72.4), "Suroccidente": (3.2, -76.6),
+}
+CIUDADES_LATLON = [(10.96, -74.80), (10.39, -75.51), (11.24, -74.20), (4.71, -74.07), (4.44, -75.23), (5.07, -75.52),
+                   (4.81, -75.69), (6.25, -75.56), (7.12, -73.12), (7.89, -72.50), (4.14, -73.63), (3.45, -76.53)]
+MAPA_W, MAPA_H = 890, 340
+
+
+def _xy(lat, lon):
+    return MAPA_O + (lon - MAPA_LON0) * MAPA_K, MAPA_O + (MAPA_LAT1 - lat) * MAPA_K
+
+
+def dax_mapa(w=MAPA_W, h=MAPA_H, fila=38, top=40):
+    """Mapa de burbujas por región (color = lectura de tendencia, número = puesto) + ranking con barras."""
+    x_lista = 300
+    cero = 640
+    ancho_pos, ancho_neg = w - cero - 96, cero - 470
+    ciudades = "".join(f"<circle cx='{_xy(a, o)[0]:.1f}' cy='{_xy(a, o)[1]:.1f}' r='2.2' fill='{SEC}' fill-opacity='.45'/>"
+                       for a, o in CIUDADES_LATLON)
+    sw_x = "SWITCH ( DimGeografia[Region], " + ", ".join(f'"{r}", {_xy(*ll)[0]:.1f}' for r, ll in REGION_LATLON.items()) + ", -100 )"
+    sw_y = "SWITCH ( DimGeografia[Region], " + ", ".join(f'"{r}", {_xy(*ll)[1]:.1f}' for r, ll in REGION_LATLON.items()) + ", -100 )"
+    leyenda = [("Crece sostenido", VERDE), ("Rebote", NAR), ("Estable", GRIS), ("Cae sostenido", ROJO)]
+    ley = "".join(f"<circle cx='{x_lista + 8 + i * 148}' cy='{h - 10}' r='6' fill='{c}'/>"
+                  f"<text x='{x_lista + 20 + i * 148}' y='{h - 5}' font-size='13' fill='{SEC}'>{t}</text>"
+                  for i, (t, c) in enumerate(leyenda))
+    cab = (f"<svg xmlns='http://www.w3.org/2000/svg' width='{w}' height='{h}' viewBox='0 0 {w} {h}' font-family='{FUENTE}'>"
+           f"<path d='{COLOMBIA_PATH}' fill='#DCE3E7' stroke='#B9C4CA' stroke-width='1.2' stroke-linejoin='round'/>"
+           f"{ciudades}"
+           f"<text x='{x_lista}' y='18' font-size='12' letter-spacing='1.5' font-weight='700' fill='{SEC}'>PUESTO · REGIÓN</text>"
+           f"<text x='{w - 4}' y='18' text-anchor='end' font-size='12' letter-spacing='1.5' font-weight='700' fill='{SEC}'>CRECIMIENTO VS ⟨Anio - 1⟩</text>"
+           f"<line x1='{cero}' x2='{cero}' y1='{top - 6}' y2='⟨{top - 6} + NR * {fila}⟩' stroke='{SEC}' stroke-opacity='.5'/>"
+           f"{ley}")
+    ease = "calcMode='spline' keySplines='.2 .8 .2 1'"
+    # Una región: burbuja en el mapa + fila del ranking. La opacidad baja si hay otra región seleccionada.
+    fila_svg = (
+        f"<g opacity='⟨Op⟩'>"
+        f"<circle cx='⟨FORMAT ( MX, \"0.0\", \"en-US\" )⟩' cy='⟨FORMAT ( MY, \"0.0\", \"en-US\" )⟩' r='0' fill='⟨[@c]⟩' stroke='#FFFFFF' stroke-width='2'>"
+        f"<animate attributeName='r' from='0' to='13' dur='.6s' begin='0.⟨[@r] - 1⟩s' fill='freeze' {ease}/></circle>"
+        f"<text x='⟨FORMAT ( MX, \"0.0\", \"en-US\" )⟩' y='⟨FORMAT ( MY + 5, \"0.0\", \"en-US\" )⟩' text-anchor='middle' font-size='13' font-weight='800' fill='#FFFFFF'>⟨[@r]⟩</text>"
+        f"<line x1='{x_lista}' x2='{w}' y1='⟨Y + {fila}⟩' y2='⟨Y + {fila}⟩' stroke='{BORDE}'/>"
+        f"<circle cx='{x_lista + 14}' cy='⟨Y + {fila / 2}⟩' r='13' fill='⟨[@c]⟩'/>"
+        f"<text x='{x_lista + 14}' y='⟨Y + {fila / 2 + 5}⟩' text-anchor='middle' font-size='13' font-weight='800' fill='#FFFFFF'>⟨[@r]⟩</text>"
+        f"<text x='{x_lista + 38}' y='⟨Y + {fila / 2 + 6}⟩' font-size='17' font-weight='⟨IF ( [@r] <= 3, 700, 500 )⟩' fill='{TINTA}'>⟨DimGeografia[Region]⟩</text>"
+        f"<rect x='{cero}' y='⟨Y + 11⟩' width='0' height='{fila - 22}' rx='3' fill='⟨[@c]⟩'>"
+        f"<animate attributeName='width' from='0' to='⟨FORMAT ( WB, \"0.0\", \"en-US\" )⟩' dur='.9s' begin='0.⟨[@r] - 1⟩s' fill='freeze' {ease}/>"
+        f"<animate attributeName='x' from='{cero}' to='⟨FORMAT ( XB, \"0.0\", \"en-US\" )⟩' dur='.9s' begin='0.⟨[@r] - 1⟩s' fill='freeze' {ease}/></rect>"
+        f"<text x='{w - 4}' y='⟨Y + {fila / 2 + 6}⟩' text-anchor='end' font-size='17' font-weight='700' fill='⟨IF ( [@c] = \"{GRIS}\", \"{SEC}\", [@c] )⟩'>⟨{pct_dax('[@g]')}⟩</text>"
+        f"</g>")
+    fila_expr = (f"VAR Y = {top - 6} + ( [@r] - 1 ) * {fila}\n"
+                 f"            VAR MX = {sw_x}\n"
+                 f"            VAR MY = {sw_y}\n"
+                 f"            VAR Op = IF ( DimGeografia[Region] IN Sel, \"1\", \".25\" )\n"
+                 f"            VAR WB = ROUND ( ABS ( [@g] ) * Esc, 1 )\n"
+                 f"            VAR XB = IF ( [@g] >= 0, {cero}, {cero} - WB )\n"
+                 f"            RETURN {a_dax(fila_svg)}")
+    return "\n".join([
+        "VAR Sel = VALUES ( DimGeografia[Region] )",
+        BLOQUE_REGIONES,
+        "VAR NR = COUNTROWS ( R )",
+        "VAR MaxP = MAXX ( R, MAX ( [@g], 0 ) )",
+        "VAR MaxN = MAXX ( R, MAX ( - [@g], 0 ) )",
+        f"VAR Esc = MIN ( IF ( MaxP > 0, {ancho_pos:.1f} / MaxP, 1E9 ), IF ( MaxN > 0, {ancho_neg:.1f} / MaxN, 1E9 ) )",
+        f"VAR Filas = CONCATENATEX ( R,\n            {fila_expr},\n        \"\", [@r], DESC )",
+        'VAR Msg = IF ( ISBLANK ( Anio ), "Seleccione un solo año", "Sin año anterior para comparar" )',
+        f"VAR Svg = IF ( NR = 0, {SVG_MENSAJE}, {a_dax(cab)} & Filas & \"</svg>\" )",
+        f"RETURN\n    {uri('Svg')}",
+    ])
+
+
 def medidas():
     """(carpeta, nombre, DAX, formato, categoría de datos)."""
     c = "8. Diseño (SVG y textos)"
@@ -497,6 +576,7 @@ def medidas():
         (c, "SVG KPIs Promociones", dax_kpis_promociones(), None, "ImageUrl"),
         (c, "SVG KPIs Disponibilidad", dax_kpis_disponibilidad(), None, "ImageUrl"),
         (c, "SVG Fidelizacion", dax_fidelizacion(), None, "ImageUrl"),
+        (c, "SVG Mapa Regiones", dax_mapa(), None, "ImageUrl"),
     ]
 
 
