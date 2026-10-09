@@ -1,17 +1,17 @@
 table DimCalendario
-	lineageTag: 7229e07b-6ffc-5a14-89af-0d5ffb578981
 	dataCategory: Time
+	lineageTag: 7229e07b-6ffc-5a14-89af-0d5ffb578981
 
 	column Fecha
 		dataType: dateTime
-		isKey
 		formatString: dd/mm/yyyy
 		lineageTag: ef4c4012-6be5-51bf-8471-37e4c7189540
 		summarizeBy: none
+		isKey
 		isNameInferred
 		sourceColumn: [Fecha]
 
-	column Año
+	column 'Año'
 		dataType: int64
 		formatString: 0
 		lineageTag: ca8c56da-f58b-5dbc-95d3-6be637869ab9
@@ -28,8 +28,8 @@ table DimCalendario
 
 	column MesNum
 		dataType: int64
-		isHidden
 		formatString: 0
+		isHidden
 		lineageTag: 658521d1-b836-58a4-a012-83c06cd50898
 		summarizeBy: none
 		isNameInferred
@@ -39,11 +39,11 @@ table DimCalendario
 		dataType: string
 		lineageTag: fab04ce0-8c70-5865-86e2-8d42a14611cb
 		summarizeBy: none
+		sortByColumn: MesNum
 		isNameInferred
 		sourceColumn: [Mes]
-		sortByColumn: MesNum
 
-	column AñoMes
+	column 'AñoMes'
 		dataType: string
 		lineageTag: bcf2fca8-6a3d-522d-a395-2bb35392efbc
 		summarizeBy: none
@@ -89,4 +89,3 @@ table DimCalendario
 				    )
 
 	annotation PBI_ResultType = Table
-

@@ -4,6 +4,7 @@ model Model
 	sourceQueryCulture: es-MX
 	valueFilterBehavior: independent
 	dataAccessOptions
+		fastCombine
 		legacyRedirects
 		returnErrorValuesAsNull
 
@@ -11,7 +12,7 @@ annotation __PBI_TimeIntelligenceEnabled = 0
 
 annotation PBI_ProTooling = ["DevMode"]
 
-annotation PBI_QueryOrder = ["FactVentas","DimGeografia","DimFormato","DimCategoria","DimPromocion","DimCondicionVenta","_Medidas","RutaCSV","Base"]
+annotation PBI_QueryOrder = ["FactVentas","DimGeografia","DimFormato","DimCategoria","DimPromocion","DimCondicionVenta","_Medidas","RutaCSV","Base","UrlCSV"]
 
 ref table FactVentas
 ref table DimCalendario

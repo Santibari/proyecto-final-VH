@@ -1,11 +1,19 @@
-expression RutaCSV = "C:\Users\diego\Documents\GitHub\proyecto-final-VH\data\raw\03_cadena_supermercados.csv" meta [IsParameterQuery = true, Type = "Text", IsParameterQueryRequired = true]
+expression RutaCSV = "C:\Users\USUARIO\Documents\Sabana universidad\Sabana 7 semestre\Herramientas de dataviz BI\proyecto-final-VH\data\raw\03_cadena_supermercados.csv" meta [IsParameterQuery = true, Type = "Text", IsParameterQueryRequired = false]
 	lineageTag: 7cfd7ffb-bf20-5762-bea6-87432c034a43
+
+	annotation PBI_ResultType = Text
+
+expression UrlCSV = "https://raw.githubusercontent.com/Santibari/proyecto-final-VH/main/data/raw/03_cadena_supermercados.csv" meta [IsParameterQuery = true, Type = "Text", IsParameterQueryRequired = true]
+	lineageTag: d84f0531-8214-5370-8a1d-37b31d9cb32d
 
 	annotation PBI_ResultType = Text
 
 expression Base =
 		let
-		    Origen = Csv.Document(File.Contents(RutaCSV), [Delimiter = ",", Columns = 19, Encoding = 65001, QuoteStyle = QuoteStyle.Csv]),
+		    Opciones = [Delimiter = ",", Columns = 19, Encoding = 65001, QuoteStyle = QuoteStyle.Csv],
+		    ArchivoLocal = try Binary.Buffer(File.Contents(RutaCSV)) otherwise null,
+		    Archivo = if ArchivoLocal <> null then ArchivoLocal else Binary.Buffer(Web.Contents(UrlCSV)),
+		    Origen = Csv.Document(Archivo, Opciones),
 		    Encabezados = Table.PromoteHeaders(Origen, [PromoteAllScalars = true]),
 		    SinBOM = Table.TransformColumnNames(Encabezados, each Text.Remove(_, {Character.FromNumber(65279)})),
 		    Tipos = Table.TransformColumnTypes(SinBOM, {
@@ -21,4 +29,3 @@ expression Base =
 	lineageTag: 8a48c8a3-4afb-5db8-96d1-0f81f74cdecd
 
 	annotation PBI_ResultType = Table
-

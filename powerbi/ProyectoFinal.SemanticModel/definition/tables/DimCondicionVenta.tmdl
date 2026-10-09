@@ -38,4 +38,3 @@ table DimCondicionVenta
 				    Nombres
 
 	annotation PBI_ResultType = Table
-

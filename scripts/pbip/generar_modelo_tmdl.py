@@ -6,7 +6,7 @@ Requisitos:
   * Power BI Desktop CERRADO mientras se ejecuta.
 
 Qué hace (idempotente: se puede volver a ejecutar):
-  * definition/expressions.tmdl  → parámetro RutaCSV + consulta Base (no cargada)
+  * definition/expressions.tmdl  → parámetros RutaCSV (local) y UrlCSV (GitHub, respaldo) + consulta Base
   * definition/tables/*.tmdl      → FactVentas, dimensiones, DimCalendario, _Medidas
                                     (+ medidas de diseño de medidas_diseno.py)
   * definition/relationships.tmdl → relaciones 1:* de filtro único
@@ -24,6 +24,8 @@ import medidas_diseno  # noqa: E402  (medidas del rediseño: SVG animados y text
 
 RAIZ = Path(__file__).resolve().parents[2]
 CSV = RAIZ / "data" / "raw" / "03_cadena_supermercados.csv"
+# Respaldo cuando la ruta local no existe (otro computador): el mismo CSV en el repositorio público.
+URL_CSV = "https://raw.githubusercontent.com/Santibari/proyecto-final-VH/main/data/raw/03_cadena_supermercados.csv"
 NAMESPACE = uuid.UUID("6f1c2a0e-3b7d-4c55-9a1e-03c0ffee2026")
 
 TABLAS_PROPIAS = ["FactVentas", "DimCalendario", "DimGeografia", "DimFormato",
@@ -89,10 +91,21 @@ in
 
 # --------------------------------------------------------------------------- expresiones
 def expresiones():
+    """Origen del CSV portable entre computadores.
+
+    1) RutaCSV: copia local (sirve sin internet). Se escribe con la ruta de quien ejecuta el script,
+       pero si en otro PC esa ruta no existe, NO falla:
+    2) UrlCSV: el mismo archivo publicado en el repositorio público de GitHub.
+    Binary.Buffer obliga a leer el archivo dentro del try; sin él, el error de "archivo no
+    encontrado" aparecería después (evaluación diferida) y el try no lo atraparía.
+    """
     ruta = str(CSV).replace('"', '""')
     base = """
 let
-    Origen = Csv.Document(File.Contents(RutaCSV), [Delimiter = ",", Columns = 19, Encoding = 65001, QuoteStyle = QuoteStyle.Csv]),
+    Opciones = [Delimiter = ",", Columns = 19, Encoding = 65001, QuoteStyle = QuoteStyle.Csv],
+    ArchivoLocal = try Binary.Buffer(File.Contents(RutaCSV)) otherwise null,
+    Archivo = if ArchivoLocal <> null then ArchivoLocal else Binary.Buffer(Web.Contents(UrlCSV)),
+    Origen = Csv.Document(Archivo, Opciones),
     Encabezados = Table.PromoteHeaders(Origen, [PromoteAllScalars = true]),
     SinBOM = Table.TransformColumnNames(Encabezados, each Text.Remove(_, {Character.FromNumber(65279)})),
     Tipos = Table.TransformColumnTypes(SinBOM, {
@@ -106,8 +119,11 @@ let
 in
     Tipos
 """
-    return (f'expression RutaCSV = "{ruta}" meta [IsParameterQuery = true, Type = "Text", IsParameterQueryRequired = true]\n'
+    return (f'expression RutaCSV = "{ruta}" meta [IsParameterQuery = true, Type = "Text", IsParameterQueryRequired = false]\n'
             f"\tlineageTag: {tag('expr.RutaCSV')}\n\n"
+            "\tannotation PBI_ResultType = Text\n\n"
+            f'expression UrlCSV = "{URL_CSV}" meta [IsParameterQuery = true, Type = "Text", IsParameterQueryRequired = true]\n'
+            f"\tlineageTag: {tag('expr.UrlCSV')}\n\n"
             "\tannotation PBI_ResultType = Text\n\n"
             "expression Base =\n"
             f"{indentar(base, 2)}\n"
@@ -363,6 +379,10 @@ def actualizar_model_tmdl(defin):
         texto = re.sub(r"annotation __PBI_TimeIntelligenceEnabled = \d", "annotation __PBI_TimeIntelligenceEnabled = 0", texto)
     else:
         texto = texto.rstrip("\n") + "\n\nannotation __PBI_TimeIntelligenceEnabled = 0\n"
+    # fastCombine = "Ignorar niveles de privacidad" del archivo. La consulta Base combina un archivo
+    # local y una URL (respaldo); sin esto, cada computador nuevo vería el aviso de privacidad.
+    if "fastCombine" not in texto and "\tdataAccessOptions\n" in texto:
+        texto = texto.replace("\tdataAccessOptions\n", "\tdataAccessOptions\n\t\tfastCombine\n", 1)
     faltantes = [t for t in TABLAS_PROPIAS if not re.search(rf"^ref table {re.escape(q(t))}\s*$", texto, re.M)]
     if faltantes:
         texto = texto.rstrip("\n") + "\n\n" + "\n".join(f"ref table {q(t)}" for t in faltantes) + "\n"

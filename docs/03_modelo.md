@@ -48,7 +48,7 @@ No se elimina ninguna fila.
 
 | Paso | Consulta | Qué hace | Por qué |
 |---|---|---|---|
-| 1 | `RutaCSV` (parámetro) | Ruta del CSV | Si la carpeta cambia al entregar, solo se edita este parámetro. |
+| 1 | `RutaCSV` y `UrlCSV` (parámetros) | Ruta local del CSV y la misma copia en el repositorio público de GitHub | `Base` intenta leer la ruta local y, si no existe en ese computador, descarga la copia de GitHub. Así el proyecto abre en cualquier PC sin editar rutas. `Binary.Buffer` obliga a leer el archivo dentro del `try`; sin él, el error aparecería después y no se atraparía. El modelo tiene activado "Ignorar niveles de privacidad" (`fastCombine`) para que combinar las dos fuentes no muestre avisos. |
 | 2 | `Base` (no se carga) | Lee el CSV con **codificación 65001 (UTF-8)**, promueve encabezados, quita el BOM y asigna tipos con **configuración regional en-US** | Las tildes se ven bien y `descuento_pct` "10.18" se lee como 10,18 y no como 1018. |
 | 3 | `FactVentas` | Agrega `quiebre_flag` = 1 si quiebre = "Sí", si no 0. Agrega `clave_condicion` = canal \| medio_pago \| cliente_fidelizado. Selecciona columnas. | Una bandera numérica se puede sumar y promediar. La clave conecta con la dimensión basura. |
 | 4 | Dimensiones | `Table.Distinct` de las columnas de cada dimensión desde `Base` y cambio de nombres | Cada dimensión sale del mismo dato, así que no puede haber claves huérfanas. |

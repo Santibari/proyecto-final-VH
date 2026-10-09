@@ -10,7 +10,7 @@ Dashboard interactivo en Power BI para la gerencia de tiendas y de categoría.
 | `docs/` | Entregables de cada fase (perfilamiento, problema, modelo, hallazgos, auditoría). |
 | `scripts/validacion/` | Scripts en Python que recalculan las cifras de control desde el CSV. |
 | `powerbi/` | Proyecto de Power BI (`.pbip`) y `.pbix` final. |
-| `.claude/skills/` | Skills de Claude Code activas: `pbi-report-builder` y `pbip-dependency-analyzer`. |
+| `.claude/skills/` | Skills de Claude Code activas: `dashboard-design-studio` (diseño), `pbi-report-builder` (construcción) y `pbip-dependency-analyzer` (auditoría). |
 | `.claude/skills_no_instaladas/` | Skills revisadas y descartadas (ver sección 15 del plan). |
 
 ## Avance
@@ -42,6 +42,17 @@ python scripts/validacion/02_evidencia_problema.py
 ```bash
 python scripts/validacion/04_validacion_hallazgos.py
 ```
+
+## Abrir el proyecto en cualquier computador
+
+1. Clonar o descargar el repositorio y abrir `powerbi/ProyectoFinal.pbip` con Power BI Desktop.
+2. Hacer clic en **Actualizar**. El CSV se busca así:
+   - primero en la ruta local guardada en el parámetro `RutaCSV` (funciona sin internet en el computador de quien la guardó);
+   - si esa ruta no existe en este computador, se descarga automáticamente desde GitHub (parámetro `UrlCSV`, repositorio público).
+3. Solo la primera vez en cada computador, Power BI pregunta cómo conectarse a `raw.githubusercontent.com`: elegir **Anónimo → Conectar**.
+
+No hay que editar ninguna ruta. El aviso de niveles de privacidad no aparece porque el proyecto tiene activada la opción "Ignorar niveles de privacidad" (`fastCombine` en `model.tmdl`): ambas fuentes son el mismo archivo público.
+Requisito: el repositorio debe seguir siendo **público**. Si se vuelve privado, la descarga de respaldo deja de funcionar y hay que corregir `RutaCSV` en *Transformar datos → Parámetros*.
 
 ## Regenerar el proyecto de Power BI (con Power BI Desktop cerrado)
 

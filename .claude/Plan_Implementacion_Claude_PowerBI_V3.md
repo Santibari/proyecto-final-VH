@@ -20,6 +20,7 @@
 | C10 | Se añade la sección 15, con las skills de Power BI y su forma de uso. | Análisis de `.claude/.Skills/`. |
 | C11 | **Decisión 8.1 tomada: solución mixta** (KPI por línea + ticket de la guía como referencia global con advertencia). | La guía es del profesor y menciona el ticket. El PDF oficial no lo exige. Por región, el ticket por ID queda entre $28 mil y $37 mil, por debajo del total ($73 mil): con compras reales eso es imposible. |
 | C12 | Se alinea el plan con el enunciado oficial (`proyecto_final_dashboard_bi_2026_2.pdf`): rúbrica, estructura mínima (con **conclusión obligatoria**), entregables, guion de 7 pasos y justificación de la herramienta. | El PDF es la fuente oficial de evaluación. |
+| C13 | Se agrega la skill propia **`dashboard-design-studio`** (dirección de arte: investigación de referencias, teoría del color, patrones de lectura, propuestas renderizadas y rúbrica de diseño). Se usa en la Fase 5, antes de `pbi-report-builder` (sección 15). | La primera portada se hizo sin investigación ni concepto y quedó genérica. Además, al validar la paleta actual, el azul claro `#8FA8C8`, el naranja `#EF8F00` y el gris `#9E9E9E` no alcanzan contraste 3:1 sobre el fondo `#F4F6F9`. |
 
 ---
 
@@ -95,7 +96,7 @@
 | **3 — Modelo** | Modelo estrella (sección 6), calendario y Power Query documentado. Guardar como **.pbip**. | Modelo validado + `docs/03_modelo.md` |
 | **4 — Exploración** | Analizar todas las dimensiones con periodo comparable y materialidad. | Candidatos a hallazgo |
 | **4.5 — Validación de hallazgos** | Para cada uno: dato, cálculo, magnitud, n, interpretación, limitación, decisión y visual. Validar con un script independiente sobre el CSV. El equipo aprueba. | `docs/04_matriz_hallazgos.md` |
-| **5 — Diseño** | Wireframe basado solo en los hallazgos aprobados. | Propuesta aprobada |
+| **5 — Diseño** | Diseño basado solo en los hallazgos aprobados, siguiendo la skill `dashboard-design-studio`: referencias (moodboard), concepto, paleta validada, retícula, 2–3 propuestas renderizadas y calificación con su rúbrica (todos los criterios ≥ 4, promedio ≥ 4,3). El equipo elige la propuesta. | Propuesta aprobada + moodboard + rúbrica |
 | **6 — Construcción** | Construir en Power BI Desktop (el equipo) con apoyo de `pbi-report-builder` cuando convenga (sección 15). | PBIX/PBIP funcional |
 | **7 — Validación técnica** | Contrastar totales, medidas, filtros y DAX contra el CSV. Auditar el modelo con `pbip-dependency-analyzer`. | Checklist de pruebas |
 | **8 — Auditoría + sustentación** | Revisar contra la rúbrica B1–B5 (sección 12.1). Preparar guion (sección 13), guion de interacciones (13.2) y banco de preguntas (13.1). Ensayar con cronómetro. | Auditoría + guion |
@@ -232,7 +233,9 @@ Las páginas pueden fusionarse según la evidencia (por ejemplo, la 4 y la 5), p
 
 ## 10. Diseño visual e interactividad
 
-- Patrón Z o F justificado en cada página.
+- El diseño visual se decide con la skill `dashboard-design-studio` (sección 15) y se construye después con `pbi-report-builder`.
+- Patrón de lectura justificado en cada página: Z o póster en la portada, F o capas en las páginas analíticas, Gutenberg en conclusiones.
+- Paleta validada con `.claude/skills/dashboard-design-studio/scripts/paleta.py`: texto ≥ 4,5:1, gráficos ≥ 3:1, colores distinguibles con daltonismo. El verde y el rojo siempre van acompañados de signo (▲ ▼, +/−).
 - **Color semántico (según la guía):** un color base de identidad; **verde** para resultados positivos o crecimiento; **rojo** para alertas o deterioro; **amarillo/naranja** para advertencias; **neutros** (grises) para lo que no necesita destacar. Un color nunca tiene dos significados. Si se usa la paleta IBCS de la skill (verde `#44C088`, rojo `#ED7373`, real `#0C3549`, comparación `#CCCCCC`), se agrega un amarillo/naranja de advertencia.
 - Tooltips personalizados donde aporten contexto.
 - Segmentadores ligados a las preguntas (periodo, región, formato, categoría) e interacción cruzada para profundizar (por ejemplo, Orinoquía → ciudades, categorías, formatos).
@@ -330,20 +333,24 @@ Las páginas pueden fusionarse según la evidencia (por ejemplo, la 4 y la 5), p
 
 ## 15. Skills de Claude para Power BI
 
-Análisis de las 3 skills ubicadas en `.claude/.Skills/`:
+Análisis de las 3 skills originales ubicadas en `.claude/.Skills/` y de la skill propia agregada después (C13):
 
 | Skill | Para qué sirve | Utilidad en este proyecto | Uso |
 |---|---|---|---|
 | `pbi-requirements-gathering` (`SKILL.md`) | Entrevista de requisitos en 10 fases para proyectos de consultoría (seguridad, licencias, gobierno, gestión del cambio…). | **Baja.** El problema, la audiencia y las preguntas ya están definidos por la guía. Casi todas sus fases no aplican a un proyecto académico. Además depende de `references/questions.md` y `requirements-template.md`, que **no están incluidos**, e incluye promoción del autor al final. | No instalar. Las Fases 1–2 de este plan cubren su propósito. |
 | `pbi-report-builder` (`SKILL (2).md`) | Escribe páginas y visuales (formato PBIR en JSON) y medidas (TMDL) directamente en un proyecto **.pbip**. Incluye gráficos IBCS de variación. | **Media-alta en la Fase 6.** Acelera la creación de páginas, tarjetas KPI y la cuadrícula de diseño. Requisitos: que el .pbip lo cree Power BI Desktop, **con Desktop cerrado** mientras escribe, y Node.js (ya instalado). Faltan sus archivos `references/` (plantillas JSON, esquemas, IBCS), pero el SKILL.md contiene los patrones principales. Tiene referencias que no aplican (perfil del autor, skill de marca) que deben ignorarse. | Instalar. Usarla solo después de que el diseño esté aprobado. Cada visual generado debe revisarse y entenderse en Desktop. El formato fino y los tooltips se hacen manualmente. |
 | `pbip-dependency-analyzer` (`SKILL (1).md`) | Audita un .pbip: medidas o columnas sin usar, dependencias, relaciones bidireccionales, tablas aisladas, referencias rotas. | **Alta en las Fases 7–8.** Sirve para dejar el modelo limpio y para explicar en la sustentación qué usa cada visual. Es autocontenida (no le faltan archivos). | Instalar. |
+| `dashboard-design-studio` (propia del proyecto) | Dirección de arte del dashboard: investiga referencias reales (galerías de BI, periodismo de datos, diseño de producto), define un concepto ligado al dominio, construye la paleta con teoría del color (roles, armonías, 60-30-10, OKLCH, contraste WCAG, daltonismo), elige el patrón de lectura (Z, F, Gutenberg, capas, póster) y la retícula de 12 columnas, produce 2–3 propuestas renderizadas y las califica con una rúbrica de 10 criterios. Incluye `scripts/paleta.py` (contraste, daltonismo, escalas tonales) y `scripts/render_mockup.py` (HTML → PNG con retícula, desenfoque, escala de grises, imagen de fondo y posiciones de visuales). | **Alta en la Fase 5** y en cualquier rediseño (portada incluida). Da argumentos explicables para B4 (color y distribución): cada color y cada posición tienen una justificación. | Instalar. Se usa **antes** de `pbi-report-builder`: esta skill decide cómo se ve; la otra lo escribe en el .pbip. |
 
 **Problema de ubicación:** Claude Code solo reconoce skills en `.claude/skills/<nombre>/SKILL.md`. La carpeta `.claude/.Skills/` (con punto y mayúscula) y los nombres `SKILL (1).md` y `SKILL (2).md` hacen que **ninguna de las tres esté activa hoy**. En la Fase 0 se reorganizan así:
 ```
 .claude/skills/pbi-report-builder/SKILL.md
 .claude/skills/pbip-dependency-analyzer/SKILL.md
+.claude/skills/dashboard-design-studio/SKILL.md   (+ references/ y scripts/)
 ```
-**Condición para usarlas:** ambas requieren trabajar con el proyecto guardado como **.pbip**. Por eso la Fase 3 guarda el modelo en ese formato desde el inicio.
+**Condición para usarlas:** `pbi-report-builder` y `pbip-dependency-analyzer` requieren trabajar con el proyecto guardado como **.pbip**. Por eso la Fase 3 guarda el modelo en ese formato desde el inicio. `dashboard-design-studio` necesita Python con `playwright` para renderizar las propuestas (`pip install playwright` y `python -m playwright install chromium`); `paleta.py` no tiene dependencias.
+
+**Orden de uso en el diseño:** `dashboard-design-studio` (investigar → concepto → paleta → retícula → propuestas → rúbrica → aprobación del equipo) → `pbi-report-builder` (construcción) → comparación en Desktop contra la propuesta aprobada.
 
 ## 16. Regla final de trabajo
 

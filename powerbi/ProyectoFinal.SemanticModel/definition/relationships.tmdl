@@ -21,4 +21,3 @@ relationship 7b05ce42-b52e-5e50-a149-e4c390eef6b2
 relationship d55c9c1a-e923-5191-a438-9275344a7411
 	fromColumn: FactVentas.clave_condicion
 	toColumn: DimCondicionVenta.clave_condicion
-

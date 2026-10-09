@@ -25,4 +25,3 @@ table DimPromocion
 				    ConPromo
 
 	annotation PBI_ResultType = Table
-
