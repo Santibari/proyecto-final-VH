@@ -4,10 +4,10 @@
   "position": {
     "x": 60,
     "y": 186,
-    "z": 1007,
+    "z": 18000,
     "height": 440,
     "width": 894,
-    "tabOrder": 7
+    "tabOrder": 6000
   },
   "visual": {
     "visualType": "pivotTable",
@@ -27,7 +27,8 @@
                 }
               },
               "queryRef": "DimGeografia.Region",
-              "nativeQueryRef": "Region"
+              "nativeQueryRef": "Region",
+              "active": true
             },
             {
               "field": {
@@ -41,7 +42,8 @@
                 }
               },
               "queryRef": "DimGeografia.Ciudad",
-              "nativeQueryRef": "Ciudad"
+              "nativeQueryRef": "Ciudad",
+              "active": false
             }
           ]
         },

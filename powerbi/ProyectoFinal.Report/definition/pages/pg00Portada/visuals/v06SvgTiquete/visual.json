@@ -2,12 +2,12 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.13.0/schema.json",
   "name": "v06SvgTiquete",
   "position": {
-    "x": 1244,
-    "y": 176,
-    "z": 1006,
+    "x": 1243.5960591133005,
+    "y": 159.60591133004925,
+    "z": 5000,
     "height": 760,
     "width": 568,
-    "tabOrder": 6
+    "tabOrder": 5000
   },
   "visual": {
     "visualType": "image",

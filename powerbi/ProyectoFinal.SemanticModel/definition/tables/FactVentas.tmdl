@@ -18,10 +18,12 @@ table FactVentas
 	column fecha
 		dataType: dateTime
 		isHidden
-		formatString: dd/mm/yyyy
+		formatString: Long Date
 		lineageTag: 9e2dbe6e-6a4d-5fa0-ab89-ec4714b6de34
 		summarizeBy: none
 		sourceColumn: fecha
+
+		annotation UnderlyingDateTimeDataType = Date
 
 	column ciudad
 		dataType: string

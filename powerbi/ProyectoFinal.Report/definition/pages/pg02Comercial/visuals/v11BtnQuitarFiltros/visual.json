@@ -4,10 +4,10 @@
   "position": {
     "x": 1190,
     "y": 114,
-    "z": 600,
+    "z": 4000,
     "height": 28,
     "width": 176,
-    "tabOrder": 11
+    "tabOrder": 10000
   },
   "visual": {
     "visualType": "actionButton",
@@ -481,7 +481,14 @@
             "type": {
               "expr": {
                 "Literal": {
-                  "Value": "'ClearAllSlicers'"
+                  "Value": "'Bookmark'"
+                }
+              }
+            },
+            "bookmark": {
+              "expr": {
+                "Literal": {
+                  "Value": "'fc024126f9ae539dac70'"
                 }
               }
             }

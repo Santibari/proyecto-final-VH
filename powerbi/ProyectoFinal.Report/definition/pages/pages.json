@@ -6,9 +6,7 @@
     "pg02Comercial",
     "pg03Promociones",
     "pg04Disponibilidad",
-    "pg05Conclusiones",
-    "pg99Validacion",
-    "pg98TooltipRegion"
+    "pg05Conclusiones"
   ],
   "activePageName": "pg00Portada"
 }

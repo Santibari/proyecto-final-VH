@@ -495,19 +495,7 @@ cultureInfo es-MX
 			          "ConceptualProperty": "Region Seleccionada"
 			        }
 			      },
-			      "State": "Generated",
-			      "Terms": [
-			        {
-			          "Región": {
-			            "State": "Suggested",
-			            "Source": {
-			              "Type": "External",
-			              "Agent": "PowerBI.VisualColumnRename"
-			            },
-			            "Weight": 0.9
-			          }
-			        }
-			      ]
+			      "State": "Generated"
 			    }
 			  }
 			}

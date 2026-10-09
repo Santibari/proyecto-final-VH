@@ -2,12 +2,12 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.13.0/schema.json",
   "name": "v07TxtRegiones",
   "position": {
-    "x": 52,
-    "y": 338,
-    "z": 1007,
-    "height": 26,
-    "width": 900,
-    "tabOrder": 7
+    "x": 0,
+    "y": 0,
+    "z": 1,
+    "height": 1,
+    "width": 1,
+    "tabOrder": 900
   },
   "visual": {
     "visualType": "textbox",
@@ -19,12 +19,7 @@
               {
                 "textRuns": [
                   {
-                    "value": "REGIONES · CRECIMIENTO ENE–SEP FRENTE AL AÑO ANTERIOR",
-                    "textStyle": {
-                      "fontSize": "9.5pt",
-                      "color": "#5B6770",
-                      "fontWeight": "bold"
-                    }
+                    "value": ""
                   }
                 ]
               }
@@ -32,94 +27,7 @@
           }
         }
       ]
-    },
-    "visualContainerObjects": {
-      "title": [
-        {
-          "properties": {
-            "show": {
-              "expr": {
-                "Literal": {
-                  "Value": "false"
-                }
-              }
-            }
-          }
-        }
-      ],
-      "subTitle": [
-        {
-          "properties": {
-            "show": {
-              "expr": {
-                "Literal": {
-                  "Value": "false"
-                }
-              }
-            }
-          }
-        }
-      ],
-      "background": [
-        {
-          "properties": {
-            "show": {
-              "expr": {
-                "Literal": {
-                  "Value": "false"
-                }
-              }
-            }
-          }
-        }
-      ],
-      "border": [
-        {
-          "properties": {
-            "show": {
-              "expr": {
-                "Literal": {
-                  "Value": "false"
-                }
-              }
-            }
-          }
-        }
-      ],
-      "padding": [
-        {
-          "properties": {
-            "top": {
-              "expr": {
-                "Literal": {
-                  "Value": "0D"
-                }
-              }
-            },
-            "left": {
-              "expr": {
-                "Literal": {
-                  "Value": "0D"
-                }
-              }
-            },
-            "right": {
-              "expr": {
-                "Literal": {
-                  "Value": "4D"
-                }
-              }
-            },
-            "bottom": {
-              "expr": {
-                "Literal": {
-                  "Value": "0D"
-                }
-              }
-            }
-          }
-        }
-      ]
     }
-  }
+  },
+  "isHidden": true
 }

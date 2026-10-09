@@ -4,10 +4,10 @@
   "position": {
     "x": 52,
     "y": 700,
-    "z": 1005,
+    "z": 4000,
     "height": 150,
     "width": 1080,
-    "tabOrder": 5
+    "tabOrder": 4000
   },
   "visual": {
     "visualType": "textbox",
@@ -21,16 +21,16 @@
                   {
                     "value": "AUDIENCIA   ",
                     "textStyle": {
-                      "fontSize": "9.5pt",
-                      "color": "#5B6770",
-                      "fontWeight": "bold"
+                      "fontWeight": "bold",
+                      "fontSize": "13.5pt",
+                      "color": "#5b6770"
                     }
                   },
                   {
                     "value": "Gerencia de tiendas y gerencia de categoría",
                     "textStyle": {
                       "fontSize": "13.5pt",
-                      "color": "#1E2B2F"
+                      "color": "#1e2b2f"
                     }
                   }
                 ]
@@ -40,16 +40,16 @@
                   {
                     "value": "DATOS   ",
                     "textStyle": {
-                      "fontSize": "9.5pt",
-                      "color": "#5B6770",
-                      "fontWeight": "bold"
+                      "fontWeight": "bold",
+                      "fontSize": "13.5pt",
+                      "color": "#5b6770"
                     }
                   },
                   {
                     "value": "60.000 líneas de venta · 12 ciudades · 7 regiones · 01/01/2024–30/09/2026",
                     "textStyle": {
                       "fontSize": "13.5pt",
-                      "color": "#1E2B2F"
+                      "color": "#1e2b2f"
                     }
                   }
                 ]
@@ -59,16 +59,16 @@
                   {
                     "value": "INTEGRANTES   ",
                     "textStyle": {
-                      "fontSize": "9.5pt",
-                      "color": "#5B6770",
-                      "fontWeight": "bold"
+                      "fontWeight": "bold",
+                      "fontSize": "13.5pt",
+                      "color": "#5b6770"
                     }
                   },
                   {
-                    "value": "Nombre 1 · Nombre 2 · Nombre 3",
+                    "value": "Sara López, Santiago Bazzani, Diego Ussa",
                     "textStyle": {
                       "fontSize": "13.5pt",
-                      "color": "#1E2B2F"
+                      "color": "#5b6770"
                     }
                   }
                 ]

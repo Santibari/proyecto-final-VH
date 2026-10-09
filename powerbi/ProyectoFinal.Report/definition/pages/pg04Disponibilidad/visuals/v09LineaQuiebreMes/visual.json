@@ -4,10 +4,10 @@
   "position": {
     "x": 60,
     "y": 322,
-    "z": 1009,
+    "z": 20000,
     "height": 300,
     "width": 1800,
-    "tabOrder": 9
+    "tabOrder": 8000
   },
   "visual": {
     "visualType": "lineChart",
@@ -27,7 +27,8 @@
                 }
               },
               "queryRef": "DimCalendario.AñoMes",
-              "nativeQueryRef": "AñoMes"
+              "nativeQueryRef": "AñoMes",
+              "active": true
             }
           ]
         },

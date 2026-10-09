@@ -4,10 +4,10 @@
   "position": {
     "x": 970,
     "y": 642,
-    "z": 1010,
+    "z": 21000,
     "height": 418,
     "width": 890,
-    "tabOrder": 10
+    "tabOrder": 9000
   },
   "visual": {
     "visualType": "waterfallChart",
@@ -27,7 +27,8 @@
                 }
               },
               "queryRef": "DimGeografia.Region",
-              "nativeQueryRef": "Region"
+              "nativeQueryRef": "Region",
+              "active": true
             },
             {
               "field": {
@@ -41,7 +42,8 @@
                 }
               },
               "queryRef": "DimGeografia.Ciudad",
-              "nativeQueryRef": "Ciudad"
+              "nativeQueryRef": "Ciudad",
+              "active": false
             }
           ]
         },

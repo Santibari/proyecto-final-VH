@@ -4,10 +4,10 @@
   "position": {
     "x": 1694,
     "y": 40,
-    "z": 503,
+    "z": 3000,
     "height": 68,
     "width": 164,
-    "tabOrder": 6
+    "tabOrder": 5000
   },
   "visual": {
     "visualType": "slicer",
@@ -28,6 +28,7 @@
               },
               "queryRef": "DimCategoria.Categoria",
               "nativeQueryRef": "Categoria",
+              "active": true,
               "displayName": "Categoría"
             }
           ]
@@ -142,11 +143,6 @@
         }
       ]
     },
-    "syncGroup": {
-      "groupName": "Categoria",
-      "fieldChanges": true,
-      "filterChanges": true
-    },
     "visualContainerObjects": {
       "title": [
         {
@@ -234,6 +230,11 @@
           }
         }
       ]
+    },
+    "syncGroup": {
+      "groupName": "Categoria",
+      "fieldChanges": true,
+      "filterChanges": true
     }
   }
 }

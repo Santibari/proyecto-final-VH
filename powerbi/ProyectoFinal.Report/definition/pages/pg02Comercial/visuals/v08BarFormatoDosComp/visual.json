@@ -4,10 +4,10 @@
   "position": {
     "x": 970,
     "y": 186,
-    "z": 1008,
+    "z": 19000,
     "height": 440,
     "width": 890,
-    "tabOrder": 8
+    "tabOrder": 7000
   },
   "visual": {
     "visualType": "clusteredBarChart",
@@ -27,7 +27,27 @@
                 }
               },
               "queryRef": "DimFormato.Formato",
-              "nativeQueryRef": "Formato"
+              "nativeQueryRef": "Formato",
+              "active": true
+            }
+          ]
+        },
+        "Tooltips": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "_Medidas"
+                    }
+                  },
+                  "Property": "Ventas Ene-Sep"
+                }
+              },
+              "queryRef": "_Medidas.Ventas Ene-Sep",
+              "nativeQueryRef": "Ventas Ene-Sep",
+              "displayName": "Ventas ene–sep"
             }
           ]
         },
@@ -62,25 +82,6 @@
               "queryRef": "_Medidas.Crecimiento vs Hace 2 Años %",
               "nativeQueryRef": "Crecimiento vs Hace 2 Años %",
               "displayName": "vs hace 2 años"
-            }
-          ]
-        },
-        "Tooltips": {
-          "projections": [
-            {
-              "field": {
-                "Measure": {
-                  "Expression": {
-                    "SourceRef": {
-                      "Entity": "_Medidas"
-                    }
-                  },
-                  "Property": "Ventas Ene-Sep"
-                }
-              },
-              "queryRef": "_Medidas.Ventas Ene-Sep",
-              "nativeQueryRef": "Ventas Ene-Sep",
-              "displayName": "Ventas ene–sep"
             }
           ]
         }

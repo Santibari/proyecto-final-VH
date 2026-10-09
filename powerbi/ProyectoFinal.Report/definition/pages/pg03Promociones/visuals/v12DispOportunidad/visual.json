@@ -4,10 +4,10 @@
   "position": {
     "x": 60,
     "y": 698,
-    "z": 1012,
+    "z": 23000,
     "height": 362,
     "width": 1204,
-    "tabOrder": 12
+    "tabOrder": 11000
   },
   "visual": {
     "visualType": "scatterChart",
@@ -27,45 +27,8 @@
                 }
               },
               "queryRef": "DimCategoria.Categoria",
-              "nativeQueryRef": "Categoria"
-            }
-          ]
-        },
-        "X": {
-          "projections": [
-            {
-              "field": {
-                "Measure": {
-                  "Expression": {
-                    "SourceRef": {
-                      "Entity": "_Medidas"
-                    }
-                  },
-                  "Property": "Participacion Ventas Ene-Sep %"
-                }
-              },
-              "queryRef": "_Medidas.Participacion Ventas Ene-Sep %",
-              "nativeQueryRef": "Participacion Ventas Ene-Sep %",
-              "displayName": "Peso en las ventas ene–sep"
-            }
-          ]
-        },
-        "Y": {
-          "projections": [
-            {
-              "field": {
-                "Measure": {
-                  "Expression": {
-                    "SourceRef": {
-                      "Entity": "_Medidas"
-                    }
-                  },
-                  "Property": "Crecimiento Ventas Ene-Sep %"
-                }
-              },
-              "queryRef": "_Medidas.Crecimiento Ventas Ene-Sep %",
-              "nativeQueryRef": "Crecimiento Ventas Ene-Sep %",
-              "displayName": "Crecimiento vs año anterior"
+              "nativeQueryRef": "Categoria",
+              "active": true
             }
           ]
         },
@@ -119,6 +82,45 @@
               "queryRef": "_Medidas.Lectura Tendencia",
               "nativeQueryRef": "Lectura Tendencia",
               "displayName": "Lectura"
+            }
+          ]
+        },
+        "X": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "_Medidas"
+                    }
+                  },
+                  "Property": "Participacion Ventas Ene-Sep %"
+                }
+              },
+              "queryRef": "_Medidas.Participacion Ventas Ene-Sep %",
+              "nativeQueryRef": "Participacion Ventas Ene-Sep %",
+              "active": true,
+              "displayName": "Peso en las ventas ene–sep"
+            }
+          ]
+        },
+        "Y": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "_Medidas"
+                    }
+                  },
+                  "Property": "Crecimiento Ventas Ene-Sep %"
+                }
+              },
+              "queryRef": "_Medidas.Crecimiento Ventas Ene-Sep %",
+              "nativeQueryRef": "Crecimiento Ventas Ene-Sep %",
+              "displayName": "Crecimiento vs año anterior"
             }
           ]
         }

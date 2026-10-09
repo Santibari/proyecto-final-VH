@@ -4,10 +4,10 @@
   "position": {
     "x": 60,
     "y": 642,
-    "z": 1009,
+    "z": 20000,
     "height": 418,
     "width": 894,
-    "tabOrder": 9
+    "tabOrder": 8000
   },
   "visual": {
     "visualType": "clusteredBarChart",
@@ -27,7 +27,8 @@
                 }
               },
               "queryRef": "DimCategoria.Categoria",
-              "nativeQueryRef": "Categoria"
+              "nativeQueryRef": "Categoria",
+              "active": true
             }
           ]
         },

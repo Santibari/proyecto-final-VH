@@ -4,10 +4,10 @@
   "position": {
     "x": 1279,
     "y": 638,
-    "z": 1012,
+    "z": 23000,
     "height": 422,
     "width": 581,
-    "tabOrder": 12
+    "tabOrder": 11000
   },
   "visual": {
     "visualType": "lineClusteredColumnComboChart",
@@ -27,7 +27,27 @@
                 }
               },
               "queryRef": "DimCategoria.Categoria",
-              "nativeQueryRef": "Categoria"
+              "nativeQueryRef": "Categoria",
+              "active": true
+            }
+          ]
+        },
+        "Tooltips": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "_Medidas"
+                    }
+                  },
+                  "Property": "Lineas con Quiebre"
+                }
+              },
+              "queryRef": "_Medidas.Lineas con Quiebre",
+              "nativeQueryRef": "Lineas con Quiebre",
+              "displayName": "Líneas con quiebre"
             }
           ]
         },
@@ -66,25 +86,6 @@
               "queryRef": "_Medidas.% Quiebre Cadena",
               "nativeQueryRef": "% Quiebre Cadena",
               "displayName": "Promedio de la cadena"
-            }
-          ]
-        },
-        "Tooltips": {
-          "projections": [
-            {
-              "field": {
-                "Measure": {
-                  "Expression": {
-                    "SourceRef": {
-                      "Entity": "_Medidas"
-                    }
-                  },
-                  "Property": "Lineas con Quiebre"
-                }
-              },
-              "queryRef": "_Medidas.Lineas con Quiebre",
-              "nativeQueryRef": "Lineas con Quiebre",
-              "displayName": "Líneas con quiebre"
             }
           ]
         }

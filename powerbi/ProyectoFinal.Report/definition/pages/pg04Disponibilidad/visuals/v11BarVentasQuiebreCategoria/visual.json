@@ -4,10 +4,10 @@
   "position": {
     "x": 670,
     "y": 638,
-    "z": 1011,
+    "z": 22000,
     "height": 422,
     "width": 594,
-    "tabOrder": 11
+    "tabOrder": 10000
   },
   "visual": {
     "visualType": "clusteredBarChart",
@@ -27,26 +27,8 @@
                 }
               },
               "queryRef": "DimCategoria.Categoria",
-              "nativeQueryRef": "Categoria"
-            }
-          ]
-        },
-        "Y": {
-          "projections": [
-            {
-              "field": {
-                "Measure": {
-                  "Expression": {
-                    "SourceRef": {
-                      "Entity": "_Medidas"
-                    }
-                  },
-                  "Property": "Ventas con Quiebre"
-                }
-              },
-              "queryRef": "_Medidas.Ventas con Quiebre",
-              "nativeQueryRef": "Ventas con Quiebre",
-              "displayName": "Ventas con quiebre"
+              "nativeQueryRef": "Categoria",
+              "active": true
             }
           ]
         },
@@ -81,6 +63,25 @@
               "queryRef": "_Medidas.Lineas con Quiebre",
               "nativeQueryRef": "Lineas con Quiebre",
               "displayName": "Líneas"
+            }
+          ]
+        },
+        "Y": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "_Medidas"
+                    }
+                  },
+                  "Property": "Ventas con Quiebre"
+                }
+              },
+              "queryRef": "_Medidas.Ventas con Quiebre",
+              "nativeQueryRef": "Ventas con Quiebre",
+              "displayName": "Ventas con quiebre"
             }
           ]
         }

@@ -425,23 +425,10 @@ def pagina_resumen():
     seg = encabezado(p, titulo_svg=True)
     agregar_svg(p, "SvgTitulo", 60, 66, 1110, 60, "SVG Titulo Resumen")
     agregar_svg(p, "SvgKpis", 60, 186, medidas_diseno.KPI_W, medidas_diseno.KPI_H, "SVG KPIs")
-    # Antes: podio SVG con el top 3 (repetía la tabla de posiciones y, al ser imagen, no filtraba).
-    # Ahora: barras nativas de las 7 regiones; un clic en una región filtra toda la página.
-    p.agregar("TxtRegiones", 52, 338, 900, 26,
-              texto([[etiqueta("Regiones · crecimiento ene–sep frente al año anterior")]]), fondo=False, escalar=False)
-    p.agregar("TitRegiones", 52, 360, 900, 44,
-              texto([[("Clic en una región para filtrar la página", estilo(18, True, TEXTO, SERIF))]]),
-              fondo=False, escalar=False)
-    reg = barras(col("DimGeografia", "Region"),
-                 [(med("Crecimiento Ventas Ene-Sep %"), "Crecimiento vs año anterior")],
-                 color_cond="Color Crecimiento", ordenar=med("Crecimiento Ventas Ene-Sep %"),
-                 tooltips=[(med("Crecimiento vs Hace 2 Años %"), "Crecimiento vs hace 2 años"),
-                           (med("Lectura Tendencia"), "Lectura")])
-    reg["objects"]["valueAxis"] = [{"properties": {"show": lit(False)}}]
-    reg["objects"]["categoryAxis"] = [{"properties": {"fontSize": lit(11), "labelColor": color(TEXTO)}}]
-    reg["objects"]["labels"] = [{"properties": {"show": lit(True), "fontSize": lit(11), "color": color(TEXTO)}}]
-    reg["visualContainerObjects"] = {"visualTooltip": tooltip_region()}
-    p.agregar("BarCrecRegion", 52, 410, 900, 398, reg, fondo=False, escalar=False)
+    # Podio animado con el top 3 de regiones (pedido del equipo: vuelve al resumen). A la derecha, la tabla de
+    # posiciones completa; el filtro por región se hace con el segmentador de la cabecera.
+    agregar_svg(p, "SvgPodio", 60, 338, 888, 460, "SVG Podio")
+    p.n += 2  # conserva la numeración de los visuales siguientes (antes había 3 visuales en este bloque)
     agregar_svg(p, "SvgPosiciones", 1044, 338, 816, 474, "SVG Posiciones")
     # Antes: ventas mensuales por año (líneas que se cruzan sin patrón). Ahora: ventas acumuladas ene–sep:
     # las tres curvas casi se superponen, que es el mensaje "el negocio está plano".

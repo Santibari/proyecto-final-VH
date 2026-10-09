@@ -4,10 +4,10 @@
   "position": {
     "x": 60,
     "y": 638,
-    "z": 1010,
+    "z": 21000,
     "height": 422,
     "width": 594,
-    "tabOrder": 10
+    "tabOrder": 9000
   },
   "visual": {
     "visualType": "clusteredBarChart",
@@ -27,26 +27,8 @@
                 }
               },
               "queryRef": "DimGeografia.Ciudad",
-              "nativeQueryRef": "Ciudad"
-            }
-          ]
-        },
-        "Y": {
-          "projections": [
-            {
-              "field": {
-                "Measure": {
-                  "Expression": {
-                    "SourceRef": {
-                      "Entity": "_Medidas"
-                    }
-                  },
-                  "Property": "Ventas con Quiebre"
-                }
-              },
-              "queryRef": "_Medidas.Ventas con Quiebre",
-              "nativeQueryRef": "Ventas con Quiebre",
-              "displayName": "Ventas con quiebre"
+              "nativeQueryRef": "Ciudad",
+              "active": true
             }
           ]
         },
@@ -81,6 +63,25 @@
               "queryRef": "_Medidas.Lineas con Quiebre",
               "nativeQueryRef": "Lineas con Quiebre",
               "displayName": "Líneas"
+            }
+          ]
+        },
+        "Y": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "_Medidas"
+                    }
+                  },
+                  "Property": "Ventas con Quiebre"
+                }
+              },
+              "queryRef": "_Medidas.Ventas con Quiebre",
+              "nativeQueryRef": "Ventas con Quiebre",
+              "displayName": "Ventas con quiebre"
             }
           ]
         }

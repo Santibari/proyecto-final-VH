@@ -4,10 +4,10 @@
   "position": {
     "x": 1190,
     "y": 40,
-    "z": 500,
+    "z": 0,
     "height": 68,
     "width": 164,
-    "tabOrder": 3
+    "tabOrder": 2000
   },
   "visual": {
     "visualType": "slicer",
@@ -28,6 +28,7 @@
               },
               "queryRef": "DimCalendario.Año",
               "nativeQueryRef": "Año",
+              "active": true,
               "displayName": "Año"
             }
           ]
@@ -189,11 +190,6 @@
         }
       ]
     },
-    "syncGroup": {
-      "groupName": "Año",
-      "fieldChanges": true,
-      "filterChanges": true
-    },
     "visualContainerObjects": {
       "title": [
         {
@@ -281,6 +277,11 @@
           }
         }
       ]
+    },
+    "syncGroup": {
+      "groupName": "Año",
+      "fieldChanges": true,
+      "filterChanges": true
     }
   }
 }

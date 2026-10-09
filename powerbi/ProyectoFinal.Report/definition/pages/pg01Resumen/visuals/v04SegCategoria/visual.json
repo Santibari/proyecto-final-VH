@@ -28,6 +28,7 @@
               },
               "queryRef": "DimCategoria.Categoria",
               "nativeQueryRef": "Categoria",
+              "active": true,
               "displayName": "Categoría"
             }
           ]
@@ -142,11 +143,6 @@
         }
       ]
     },
-    "syncGroup": {
-      "groupName": "Categoria",
-      "fieldChanges": true,
-      "filterChanges": true
-    },
     "visualContainerObjects": {
       "title": [
         {
@@ -234,6 +230,11 @@
           }
         }
       ]
+    },
+    "syncGroup": {
+      "groupName": "Categoria",
+      "fieldChanges": true,
+      "filterChanges": true
     }
   }
 }
