@@ -19,11 +19,11 @@
               {
                 "textRuns": [
                   {
-                    "value": "GRUPO 3 · INTELIGENCIA DE NEGOCIOS 2026-2",
+                    "value": "GRUPO 2 · INTELIGENCIA DE NEGOCIOS 2026-2",
                     "textStyle": {
+                      "fontWeight": "bold",
                       "fontSize": "9.5pt",
-                      "color": "#5B6770",
-                      "fontWeight": "bold"
+                      "color": "#5b6770"
                     }
                   }
                 ],
